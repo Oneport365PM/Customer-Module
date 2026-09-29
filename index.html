@@ -500,6 +500,128 @@
     .owner-chip .name { font-weight: 700; font-size: 14px; color: var(--op-dark-green); }
     .owner-chip .role { font-size: 12px; color: var(--op-silver-light); }
 
+    .panel-head.split { justify-content: space-between; align-items: center; }
+
+    .field-group + .field-group {
+      border-top: 1px solid var(--op-border-divider);
+      margin-top: 22px;
+      padding-top: 22px;
+    }
+    .group-title {
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      margin-bottom: 14px;
+    }
+
+    .side-col { display: flex; flex-direction: column; gap: var(--op-space-4); }
+
+    /* ---------- Modal (matches Backoffice2.0) ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 56, 25, .45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: var(--op-space-4);
+    }
+    .modal {
+      background: var(--op-white);
+      border-radius: var(--op-radius-xl);
+      width: 100%;
+      max-width: 460px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--op-space-6);
+      box-shadow: var(--op-elevation-3);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: var(--op-space-3);
+    }
+    .modal-head h3 { margin: 0 0 4px; font-family: var(--op-font-display); font-weight: 600; font-size: 18px; color: var(--op-dark-green); }
+    .modal-close { border: none; background: none; font-size: 22px; line-height: 1; color: var(--op-silver-light); padding: 2px 6px; }
+    .modal-close:hover { color: var(--op-dark-green); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: var(--op-space-6); }
+
+    /* Floating notched-label input — the OnePort 365 input foundation */
+    .field { margin-bottom: 18px; }
+    .req { color: var(--op-error); }
+    .op-input-wrap {
+      position: relative;
+      display: block;
+      border: 1.5px solid var(--op-border-input);
+      border-radius: var(--op-radius-md);
+      padding: 15px 14px;
+      background: var(--op-white);
+    }
+    .op-input-wrap:hover { border-color: var(--op-dark-green); }
+    .op-input-wrap:focus-within { border: 2px solid var(--op-dark-green); padding: 14px 13px; box-shadow: var(--op-focus-ring); }
+    .op-notch {
+      position: absolute;
+      top: -8px;
+      left: 11px;
+      background: var(--op-white);
+      padding: 0 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--op-silver-light);
+      pointer-events: none;
+    }
+    .op-input-wrap:hover .op-notch, .op-input-wrap:focus-within .op-notch { color: var(--op-dark-green); }
+    .op-input-wrap.has-error { border: 2px solid var(--op-error); padding: 14px 13px; }
+    .op-input-wrap.has-error .op-notch { color: var(--op-error); }
+    .op-input-wrap.is-readonly { background: var(--op-chip-neutral-bg); border-color: var(--op-border-card); }
+    .op-input-wrap.is-readonly .op-notch { background: var(--op-chip-neutral-bg); color: var(--op-silver-light); }
+    .field input, .field select {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      font-family: var(--op-font-body);
+      color: var(--op-dark-green);
+      background: transparent;
+    }
+    .field select { cursor: pointer; }
+    .field input:disabled { color: var(--op-silver-dark); opacity: 1; -webkit-text-fill-color: var(--op-silver-dark); }
+    .field-error { color: var(--op-error); font-size: 11.5px; margin-top: 6px; }
+
+    .btn {
+      border: none;
+      border-radius: var(--op-radius-md);
+      padding: 13px 18px;
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      transition: background-color .16s, color .16s;
+    }
+    .btn-primary { background: var(--op-accent-lime); color: var(--op-dark-green); }
+    .btn-primary:hover { background: var(--op-accent-lime-hover); }
+    .btn-outline { background: var(--op-white); border: 1.5px solid var(--op-dark-green); color: var(--op-dark-green); }
+    .btn-outline:hover { background: var(--op-dark-green); color: var(--op-accent-lime); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--op-dark-green);
+      color: var(--op-cream);
+      padding: 10px 18px;
+      border-radius: var(--op-radius-md);
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: var(--op-elevation-hero);
+      z-index: 60;
+      max-width: calc(100% - 32px);
+    }
+
     .not-found {
       background: var(--op-white);
       border: 1px dashed var(--op-border-card);
@@ -567,12 +689,6 @@
     }
 
     .panel .spread-bar { margin-bottom: 14px; }
-
-    .detail-section + .detail-section {
-      border-top: 1px solid var(--op-border-divider);
-      margin-top: var(--op-space-6);
-      padding-top: var(--op-space-6);
-    }
 
     .deal-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-3); }
     .deal-stat {
@@ -733,6 +849,30 @@
     const STATUS_LABELS = { active: "Active", pending: "Pending", inactive: "Inactive" };
 
     const state = { search: "", page: 1 };
+
+    const ACCOUNT_MANAGERS = ["Adeshewa Adelowo", "Babatope Ayeni", "Deborah Oje", "Kayode Akintade"];
+
+    // Account manager changes are kept in this browser until the page is wired to the API.
+    const MANAGER_STORE_KEY = "op365.customers.accountManagers";
+
+    function loadManagerChanges() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(MANAGER_STORE_KEY) || "{}");
+        customers.forEach((c) => {
+          if (ACCOUNT_MANAGERS.includes(saved[c.id])) c.accountManager = saved[c.id];
+        });
+      } catch (e) { /* storage unavailable: keep the defaults */ }
+    }
+
+    function saveManagerChange(id, name) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(MANAGER_STORE_KEY) || "{}");
+        saved[id] = name;
+        localStorage.setItem(MANAGER_STORE_KEY, JSON.stringify(saved));
+      } catch (e) { /* storage unavailable: change lasts for this visit only */ }
+    }
+
+    loadManagerChanges();
 
     // ---------------------------------------------------------------
     // Helpers
@@ -1151,11 +1291,11 @@
       `;
     }
 
-    function detailSection(num, title, body, single = false) {
+    function fieldGroup(title, body) {
       return `
-        <div class="detail-section">
-          ${panelHead(num, title)}
-          <div class="fields ${single ? "single" : ""}">${body}</div>
+        <div class="field-group">
+          <div class="group-title">${title}</div>
+          <div class="fields">${body}</div>
         </div>
       `;
     }
@@ -1199,40 +1339,158 @@
       `;
     }
 
+    function accountManagerCard(c) {
+      return `
+        <section class="panel">
+          <div class="panel-head split">
+            <span class="panel-title">Account manager</span>
+            <button class="view-btn" id="change-manager" type="button">Change</button>
+          </div>
+          <div class="owner-chip">
+            ${avatar(c.accountManager, "sm")}
+            <div>
+              <div class="name">${escapeHtml(c.accountManager)}</div>
+              <div class="role">Account manager</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
     function renderBasicTab(c) {
       return `
         <div class="detail-grid" style="margin-top: 0">
           <section class="panel">
-            ${detailSection("01", "Basic details", `
+            <div class="panel-head"><span class="panel-title">Basic details</span></div>
+            ${fieldGroup("Company", `
               ${field("Company name", escapeHtml(c.companyName))}
-              ${field("Class", classChip(c.customerClass))}
-              ${field("Registration channel", escapeHtml(c.channel))}
               ${field("Industry", escapeHtml(c.industry))}
+              ${field("Class", classChip(c.customerClass))}
+              ${field("Status", statusBadge(c.status))}
+            `)}
+            ${fieldGroup("Registration", `
+              ${field("Registration channel", escapeHtml(c.channel))}
+              ${field("Date added", formatDate(c.createdAt))}
               ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
               ${field("Tax ID", escapeHtml(c.taxId))}
-              ${field("Status", statusBadge(c.status))}
-              ${field("Date added", formatDate(c.createdAt))}
             `)}
-            ${detailSection("02", "Address", field("Address", escapeHtml(c.address)), true)}
-            ${detailSection("03", "Primary contact", `
-              ${field("Name", escapeHtml(c.contactName))}
+            ${fieldGroup("Contact &amp; address", `
+              ${field("Primary contact", escapeHtml(c.contactName))}
               ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
               ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
+              ${field("Address", escapeHtml(c.address))}
             `)}
-            ${detailSection("04", "Account manager", `
-              <div class="owner-chip" style="max-width: 360px">
-                ${avatar(c.accountManager, "sm")}
-                <div>
-                  <div class="name">${escapeHtml(c.accountManager)}</div>
-                  <div class="role">Account manager</div>
-                </div>
-              </div>
-            `, true)}
           </section>
 
-          ${dealHistoryCard(c)}
+          <div class="side-col">
+            ${dealHistoryCard(c)}
+            ${accountManagerCard(c)}
+          </div>
         </div>
       `;
+    }
+
+    // ---------------------------------------------------------------
+    // Change account manager dialog
+    // ---------------------------------------------------------------
+    function showToast(message) {
+      document.querySelectorAll(".toast").forEach((t) => t.remove());
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.setAttribute("role", "status");
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3200);
+    }
+
+    function openManagerDialog(c, trigger) {
+      const others = ACCOUNT_MANAGERS.filter((name) => name !== c.accountManager);
+      const overlay = document.createElement("div");
+      overlay.className = "modal-overlay";
+      overlay.innerHTML = `
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="am-title">
+          <div class="modal-head">
+            <div>
+              <h3 id="am-title">Change account manager</h3>
+              <p class="muted">${escapeHtml(c.companyName)}</p>
+            </div>
+            <button class="modal-close" type="button" aria-label="Close" data-close>×</button>
+          </div>
+          <form id="am-form" novalidate>
+            <div class="field">
+              <label class="op-input-wrap is-readonly">
+                <span class="op-notch">Current account manager</span>
+                <input type="text" value="${escapeHtml(c.accountManager)}" disabled />
+              </label>
+            </div>
+            <div class="field" style="margin-bottom: 0">
+              <label class="op-input-wrap" id="am-wrap">
+                <span class="op-notch">New account manager <span class="req">*</span></span>
+                <select id="am-select" aria-describedby="am-error">
+                  <option value="">Select an account manager</option>
+                  ${others.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("")}
+                </select>
+              </label>
+              <div class="field-error" id="am-error" hidden>Select the new account manager.</div>
+            </div>
+            <div class="modal-actions">
+              <button class="btn btn-outline" type="button" data-close>Cancel</button>
+              <button class="btn btn-primary" type="submit">Save changes</button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      const select = overlay.querySelector("#am-select");
+      const wrap = overlay.querySelector("#am-wrap");
+      const error = overlay.querySelector("#am-error");
+
+      function close() {
+        document.removeEventListener("keydown", onKey);
+        overlay.remove();
+        trigger?.focus();
+      }
+
+      function onKey(e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key !== "Tab") return;
+        // Keep keyboard focus inside the dialog.
+        const focusable = [...overlay.querySelectorAll("button, select")];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+
+      document.addEventListener("keydown", onKey);
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+      overlay.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", close));
+
+      select.addEventListener("change", () => {
+        wrap.classList.remove("has-error");
+        error.hidden = true;
+      });
+
+      overlay.querySelector("#am-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = select.value;
+        if (!name) {
+          wrap.classList.add("has-error");
+          error.hidden = false;
+          select.focus();
+          return;
+        }
+        c.accountManager = name;
+        saveManagerChange(c.id, name);
+        document.removeEventListener("keydown", onKey);
+        overlay.remove();
+        router();
+        $("#change-manager")?.focus();
+        showToast(`${name} is now the account manager for ${c.companyName}`);
+      });
+
+      select.focus();
     }
 
     const INVOICE_CHIPS = {
@@ -1407,6 +1665,9 @@
 
         ${body}
       `;
+
+      const changeBtn = $("#change-manager");
+      if (changeBtn) changeBtn.addEventListener("click", () => openManagerDialog(c, changeBtn));
     }
 
     // ---------------------------------------------------------------
