@@ -36,8 +36,6 @@
       --op-chip-warning-text: #8a6a00;
       --op-chip-error-bg: #FDE0E0;
       --op-chip-error-text: #cc1414;
-      --op-chip-mode-bg: var(--op-light-green);
-      --op-chip-mode-text: var(--op-dark-green);
 
       /* ---- Borders (dark-green tinted, never flat grey) ---- */
       --op-border-card: rgba(2, 56, 25, .12);
@@ -157,77 +155,13 @@
       margin-top: 4px;
     }
 
-    /* Customer module side nav */
-    .subnav {
-      width: 232px;
-      flex-shrink: 0;
-      background: var(--op-white);
-      border-right: 1px solid var(--op-border-card);
-      padding: var(--op-space-6) var(--op-space-3);
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .subnav-title {
-      font-family: var(--op-font-display);
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--op-dark-green);
-      padding: 0 var(--op-space-3);
-      margin: 0 0 var(--op-space-6);
-    }
-
-    .subnav-eyebrow {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--op-silver-light);
-      padding: 0 var(--op-space-3);
-      margin: 0 0 var(--op-space-2);
-    }
-
-    .subnav-list { display: flex; flex-direction: column; gap: 2px; }
-
-    .subnav a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 9px var(--op-space-3);
-      border-radius: var(--op-radius-md);
-      color: var(--op-silver-dark);
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .subnav a:hover { background: var(--op-chip-neutral-bg); color: var(--op-dark-green); }
-    .subnav a.active {
-      background: var(--op-light-green);
-      color: var(--op-dark-green);
-      font-weight: 700;
-    }
-
-    .subnav .count {
-      font-size: 11px;
-      font-weight: 700;
-      min-width: 24px;
-      text-align: center;
-      padding: 1px 8px;
-      border-radius: var(--op-radius-full);
-      background: var(--op-chip-neutral-bg);
-      color: var(--op-chip-neutral-text);
-    }
-    .subnav a.active .count { background: var(--op-dark-green); color: var(--op-accent-lime); }
-
     .main {
       flex: 1;
       min-width: 0;
       padding: var(--op-space-6) 28px 40px;
     }
 
-    .content { max-width: 1160px; }
+    .content { max-width: 1320px; }
 
     /* Top bar (matches Backoffice2.0) */
     .topbar {
@@ -272,25 +206,49 @@
 
     .muted { color: var(--op-silver-light); margin: 0; font-size: 12.5px; }
 
-    /* ---------- Stat cards ---------- */
-    .stat-cards {
+    /* ---------- Spread cards (mini analytics) ---------- */
+    .spread-cards {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--op-space-4);
       margin-bottom: var(--op-space-6);
     }
-    .stat-card {
+    .spread-card {
       background: var(--op-white);
       border: 1px solid var(--op-border-card);
       border-radius: var(--op-radius-xl);
-      padding: var(--op-space-4);
+      padding: var(--op-space-4) 18px 18px;
       box-shadow: var(--op-elevation-2);
     }
-    .stat-card.highlight { background: var(--op-light-green); box-shadow: none; }
-    .stat-label { font-size: 12px; font-weight: 600; color: var(--op-silver-light); margin-bottom: var(--op-space-3); }
-    .stat-card.highlight .stat-label { color: var(--op-dark-green); }
-    .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
-    .stat-sub { font-size: 12.5px; color: var(--op-silver-light); margin-top: 10px; }
+    .spread-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--op-silver-light);
+      margin-bottom: var(--op-space-3);
+    }
+    .spread-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+    .spread-total .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
+    .spread-total .unit { font-size: 12.5px; color: var(--op-silver-light); }
+
+    .spread-bar {
+      display: flex;
+      gap: 2px;
+      height: 10px;
+      border-radius: var(--op-radius-full);
+      overflow: hidden;
+      background: var(--op-chip-neutral-bg);
+      margin-bottom: 14px;
+    }
+    .spread-bar span { display: block; height: 100%; }
+
+    .spread-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .spread-legend li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--op-silver-dark); }
+    .spread-legend .swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .spread-legend .name { flex: 1; }
+    .spread-legend .num { font-weight: 700; color: var(--op-dark-green); min-width: 20px; text-align: right; }
+    .spread-legend .pct { color: var(--op-silver-light); font-size: 12px; min-width: 38px; text-align: right; }
 
     /* ---------- Toolbar ---------- */
     .toolbar {
@@ -316,24 +274,6 @@
     .search-input:focus-visible { border-color: var(--op-dark-green); border-width: 2px; padding: 8.5px 11.5px; box-shadow: var(--op-focus-ring); outline: none; }
     .search-input::placeholder { color: var(--op-silver-light); }
 
-    .field-inline {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12.5px;
-      color: var(--op-silver-light);
-    }
-    .field-inline select {
-      padding: 8px 10px;
-      border-radius: var(--op-radius-md);
-      border: 1.5px solid var(--op-border-input);
-      background: var(--op-white);
-      font-family: inherit;
-      font-size: 13px;
-      color: var(--op-dark-green);
-    }
-    .field-inline select:hover { border-color: var(--op-dark-green); }
-
     /* ---------- Table ---------- */
     .table-wrap {
       background: var(--op-white);
@@ -343,7 +283,7 @@
       box-shadow: var(--op-elevation-1);
     }
 
-    .data-table { width: 100%; min-width: 720px; border-collapse: collapse; }
+    .data-table { width: 100%; min-width: 900px; border-collapse: collapse; }
     .data-table th {
       text-align: left;
       font-size: 11px;
@@ -433,17 +373,18 @@
     .status-inactive { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
     .status-inactive::before { background: var(--op-silver-light); }
 
-    .mode-chip {
+    .class-chip {
       display: inline-flex;
       align-items: center;
       padding: 5px 11px;
       border-radius: var(--op-radius-sm);
-      background: var(--op-chip-mode-bg);
-      color: var(--op-chip-mode-text);
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
     }
+    .class-Enterprise { background: var(--op-dark-green); color: var(--op-accent-lime); }
+    .class-SME { background: var(--op-light-green); color: var(--op-dark-green); }
+    .class-Growth { background: var(--op-chip-neutral-bg); color: var(--op-dark-green); }
 
     /* ---------- Buttons ---------- */
     .view-btn {
@@ -571,7 +512,7 @@
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
-      .stat-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .spread-cards { grid-template-columns: 1fr; }
       .detail-grid { grid-template-columns: 1fr; }
     }
 
@@ -585,19 +526,9 @@
         position: static;
       }
       .rail-avatar { margin-top: 0; }
-      .subnav {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-        border-bottom: 1px solid var(--op-border-card);
-        padding: var(--op-space-3) 16px;
-      }
-      .subnav-title, .subnav-eyebrow { display: none; }
-      .subnav-list { flex-direction: row; overflow-x: auto; }
       .main { padding: var(--op-space-4) 16px 40px; }
       .page-header h1, .hero h1 { font-size: 24px; }
-      .stat-value { font-size: 30px; }
+      .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
       .panel, .hero { padding: var(--op-space-4); }
     }
@@ -626,18 +557,6 @@
       <div class="rail-avatar" title="Current user">NK</div>
     </aside>
 
-    <!-- Customer module side nav -->
-    <nav class="subnav" aria-label="Customer navigation">
-      <h2 class="subnav-title">Customers</h2>
-      <div class="subnav-eyebrow">Views</div>
-      <div class="subnav-list">
-        <a href="#/customers" data-nav="all">All customers <span class="count" id="count-all">0</span></a>
-        <a href="#/customers?status=active" data-nav="active">Active <span class="count" id="count-active">0</span></a>
-        <a href="#/customers?status=pending" data-nav="pending">Pending <span class="count" id="count-pending">0</span></a>
-        <a href="#/customers?status=inactive" data-nav="inactive">Inactive <span class="count" id="count-inactive">0</span></a>
-      </div>
-    </nav>
-
     <main class="main">
       <header class="topbar">
         <div class="breadcrumb" id="breadcrumb"></div>
@@ -652,18 +571,18 @@
     // Sample data. Replace with an API call when the backend is ready.
     // ---------------------------------------------------------------
     const customers = [
-      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", type: "Importer", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
-      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", type: "Exporter", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
-      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", type: "Importer & Exporter", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
-      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", type: "Importer", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
-      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", type: "Importer", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
-      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", type: "Importer", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
-      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", type: "Exporter", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
-      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", type: "Importer & Exporter", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
-      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", type: "Importer", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
-      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", type: "Importer", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
-      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", type: "Exporter", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
-      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", type: "Importer", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
+      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
+      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
+      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
+      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
+      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
+      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
+      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
+      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
+      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
+      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
+      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
+      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
     const PAGE_SIZE = 8;
@@ -705,27 +624,9 @@
       return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || escapeHtml(status)}</span>`;
     }
 
-    function countBy(status) {
-      return customers.filter((c) => c.status === status).length;
-    }
-
     function parseRoute() {
       const hash = location.hash.replace(/^#/, "") || "/customers";
-      const [path, query = ""] = hash.split("?");
-      return { parts: path.split("/").filter(Boolean), params: new URLSearchParams(query) };
-    }
-
-    // ---------------------------------------------------------------
-    // Side nav + breadcrumb
-    // ---------------------------------------------------------------
-    function updateNav(activeKey) {
-      $("#count-all").textContent = customers.length;
-      Object.keys(STATUS_LABELS).forEach((s) => { $("#count-" + s).textContent = countBy(s); });
-      document.querySelectorAll(".subnav a").forEach((a) => {
-        const isActive = a.dataset.nav === activeKey;
-        a.classList.toggle("active", isActive);
-        if (isActive) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
-      });
+      return hash.split("?")[0].split("/").filter(Boolean);
     }
 
     function setBreadcrumb(items) {
@@ -736,54 +637,92 @@
         .join("<span aria-hidden=\"true\">/</span>");
     }
 
+    function classChip(customerClass) {
+      return `<span class="class-chip class-${escapeHtml(customerClass)}">${escapeHtml(customerClass)}</span>`;
+    }
+
+    // ---------------------------------------------------------------
+    // Mini analytics: three spread cards
+    // ---------------------------------------------------------------
+    const SPREADS = [
+      {
+        title: "Customer spread",
+        key: "status",
+        segments: [
+          { value: "active", label: "Active", color: "#1F8A5B" },
+          { value: "pending", label: "Pending", color: "#FFCC1A" },
+          { value: "inactive", label: "Inactive", color: "#808080" }
+        ]
+      },
+      {
+        title: "Customer class spread",
+        key: "customerClass",
+        segments: [
+          { value: "Enterprise", label: "Enterprise", color: "#023819" },
+          { value: "SME", label: "SME", color: "#7FAE2E" },
+          { value: "Growth", label: "Growth", color: "#BFFB4F" }
+        ]
+      },
+      {
+        title: "Customer registration spread",
+        key: "channel",
+        segments: [
+          { value: "Website", label: "Website", color: "#2F7A3F" },
+          { value: "Internal", label: "Internal", color: "#D1DBBD" }
+        ]
+      }
+    ];
+
+    function spreadCard(spread) {
+      const total = customers.length;
+      const rows = spread.segments.map((seg) => {
+        const count = customers.filter((c) => c[spread.key] === seg.value).length;
+        return { ...seg, count, pct: total ? Math.round((count / total) * 100) : 0 };
+      });
+      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
+
+      return `
+        <section class="spread-card">
+          <div class="spread-title">${spread.title}</div>
+          <div class="spread-total">
+            <span class="stat-value">${total}</span>
+            <span class="unit">total customers</span>
+          </div>
+          <div class="spread-bar" role="img" aria-label="${escapeHtml(spread.title)}: ${escapeHtml(summary)}">
+            ${rows.filter((r) => r.count).map((r) =>
+              `<span style="flex: ${r.count}; background: ${r.color}" title="${r.label}: ${r.count}"></span>`).join("")}
+          </div>
+          <ul class="spread-legend">
+            ${rows.map((r) => `
+              <li>
+                <span class="swatch" style="background: ${r.color}"></span>
+                <span class="name">${r.label}</span>
+                <span class="num">${r.count}</span>
+                <span class="pct">${r.pct}%</span>
+              </li>`).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
     // ---------------------------------------------------------------
     // All customers view
     // ---------------------------------------------------------------
-    function renderList(statusFilter) {
-      updateNav(statusFilter || "all");
-      const title = statusFilter ? `${STATUS_LABELS[statusFilter]} customers` : "All customers";
-      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: title }]);
-
-      const pct = (n) => customers.length ? Math.round((n / customers.length) * 100) : 0;
+    function renderList() {
+      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "All customers" }]);
 
       $("#view").innerHTML = `
         <div class="page-header">
-          <h1>${title}</h1>
+          <h1>All customers</h1>
           <p class="muted">Basic information for every OnePort365 customer.</p>
         </div>
 
-        <section class="stat-cards">
-          <div class="stat-card highlight">
-            <div class="stat-label">Total customers</div>
-            <div class="stat-value">${customers.length}</div>
-            <div class="stat-sub">All registered accounts</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Active</div>
-            <div class="stat-value">${countBy("active")}</div>
-            <div class="stat-sub">${pct(countBy("active"))}% of customers</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Pending</div>
-            <div class="stat-value">${countBy("pending")}</div>
-            <div class="stat-sub">Awaiting onboarding</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Inactive</div>
-            <div class="stat-value">${countBy("inactive")}</div>
-            <div class="stat-sub">No recent activity</div>
-          </div>
-        </section>
+        <div class="spread-cards">
+          ${SPREADS.map(spreadCard).join("")}
+        </div>
 
         <div class="toolbar">
-          <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or ID…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
-          <label class="field-inline">Status
-            <select id="status-filter">
-              <option value="">All statuses</option>
-              ${Object.entries(STATUS_LABELS).map(([k, v]) =>
-                `<option value="${k}" ${k === statusFilter ? "selected" : ""}>${v}</option>`).join("")}
-            </select>
-          </label>
+          <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
         </div>
 
         <div class="table-wrap">
@@ -792,8 +731,9 @@
               <tr>
                 <th>Customer</th>
                 <th>Primary contact</th>
-                <th>Type</th>
-                <th>Country</th>
+                <th>Class</th>
+                <th>Registration channel</th>
+                <th>Account manager</th>
                 <th>Status</th>
                 <th>Date added</th>
               </tr>
@@ -807,23 +747,17 @@
       $("#search").addEventListener("input", (e) => {
         state.search = e.target.value;
         state.page = 1;
-        renderRows(statusFilter);
+        renderRows();
       });
 
-      $("#status-filter").addEventListener("change", (e) => {
-        state.page = 1;
-        location.hash = e.target.value ? `#/customers?status=${e.target.value}` : "#/customers";
-      });
-
-      renderRows(statusFilter);
+      renderRows();
     }
 
-    function renderRows(statusFilter) {
+    function renderRows() {
       const term = state.search.trim().toLowerCase();
       const filtered = customers.filter((c) => {
-        if (statusFilter && c.status !== statusFilter) return false;
         if (!term) return true;
-        return [c.companyName, c.contactName, c.email, c.id].some((v) => v.toLowerCase().includes(term));
+        return [c.companyName, c.contactName, c.email, c.phone, c.id].some((v) => v.toLowerCase().includes(term));
       });
 
       const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -833,25 +767,28 @@
 
       const tbody = $("#customer-rows");
       if (!pageItems.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">No customers match your search.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="table-empty">No customers match your search.</td></tr>`;
       } else {
         tbody.innerHTML = pageItems.map((c) => `
           <tr data-id="${escapeHtml(c.id)}" tabindex="0">
             <td>
               <div class="customer-cell">
                 ${avatar(c.companyName)}
-                <div>
-                  <div class="customer-name">${escapeHtml(c.companyName)}</div>
-                  <div class="muted">${escapeHtml(c.id)}</div>
-                </div>
+                <span class="customer-name">${escapeHtml(c.companyName)}</span>
               </div>
             </td>
             <td>
-              <div>${escapeHtml(c.contactName)}</div>
-              <div class="muted">${escapeHtml(c.email)}</div>
+              <div>${escapeHtml(c.email)}</div>
+              <div class="muted">${escapeHtml(c.phone)}</div>
             </td>
-            <td><span class="mode-chip">${escapeHtml(c.type)}</span></td>
-            <td>${escapeHtml(c.country)}</td>
+            <td>${classChip(c.customerClass)}</td>
+            <td>${escapeHtml(c.channel)}</td>
+            <td>
+              <div class="owner-cell">
+                ${avatar(c.accountManager, "sm")}
+                <span>${escapeHtml(c.accountManager)}</span>
+              </div>
+            </td>
             <td>${statusBadge(c.status)}</td>
             <td>${formatDate(c.createdAt)}</td>
           </tr>
@@ -873,8 +810,8 @@
           <button class="view-btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
         </div>
       `;
-      $("#prev").addEventListener("click", () => { state.page--; renderRows(statusFilter); });
-      $("#next").addEventListener("click", () => { state.page++; renderRows(statusFilter); });
+      $("#prev").addEventListener("click", () => { state.page--; renderRows(); });
+      $("#next").addEventListener("click", () => { state.page++; renderRows(); });
     }
 
     // ---------------------------------------------------------------
@@ -895,7 +832,6 @@
 
     function renderDetails(id) {
       const c = customers.find((x) => x.id === id);
-      updateNav("all");
 
       if (!c) {
         setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
@@ -935,7 +871,8 @@
             ${panel("01", "Basic details", `
               ${field("Company name", escapeHtml(c.companyName))}
               ${field("Customer ID", escapeHtml(c.id))}
-              ${field("Customer type", `<span class="mode-chip">${escapeHtml(c.type)}</span>`)}
+              ${field("Class", classChip(c.customerClass))}
+              ${field("Registration channel", escapeHtml(c.channel))}
               ${field("Industry", escapeHtml(c.industry))}
               ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
               ${field("Tax ID", escapeHtml(c.taxId))}
@@ -976,7 +913,7 @@
     // Router
     // ---------------------------------------------------------------
     function router() {
-      const { parts, params } = parseRoute();
+      const parts = parseRoute();
       window.scrollTo(0, 0);
 
       if (parts[0] !== "customers") {
@@ -987,8 +924,7 @@
       if (parts[1]) {
         renderDetails(decodeURIComponent(parts[1]));
       } else {
-        const status = params.get("status");
-        renderList(STATUS_LABELS[status] ? status : "");
+        renderList();
       }
     }
 
