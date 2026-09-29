@@ -3,395 +3,707 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Backoffice · Customers</title>
+  <title>OnePort365 Backoffice · Customers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;500;700&display=swap" />
   <style>
+    /*
+      OnePort 365 — design tokens.
+      Copied from Backoffice2.0/design/tokens.css (source of truth: DESIGN_SYSTEM.md).
+      Do not hand-roll new colors/fonts elsewhere.
+    */
     :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-2: #f0f3f8;
-      --border: #e3e8ef;
-      --text: #1a2233;
-      --text-muted: #667085;
-      --primary: #1f5eff;
-      --primary-soft: #e8efff;
-      --nav-bg: #0f1b3d;
-      --nav-text: #c3cbe0;
-      --nav-active: #ffffff;
-      --success: #067647;
-      --success-soft: #dcfae6;
-      --warning: #b54708;
-      --warning-soft: #fef0c7;
-      --danger: #b42318;
-      --danger-soft: #fee4e2;
-      --radius: 10px;
-      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+      /* ---- Brand colour ---- */
+      --op-dark-green: #023819;
+      --op-light-green: #D1DBBD;
+      --op-accent-lime: #BFFB4F;
+      --op-accent-lime-hover: #a9e83a;
+      --op-gold: #FFCC1A;
+      --op-white: #FFFFFF;
+      --op-cream: #FDFBF1;
+      --op-silver-light: #808080;
+      --op-silver-dark: #383838;
+      --op-error: #FF1A1A;
+      --op-success: #1F8A5B;
+
+      /* ---- Semantic chip pairs (bg / text) ---- */
+      --op-chip-neutral-bg: #EDEFE8;
+      --op-chip-neutral-text: #4a5a3f;
+      --op-chip-success-bg: #E1F1E8;
+      --op-chip-success-text: #0f7a45;
+      --op-chip-warning-bg: #FFF3CC;
+      --op-chip-warning-text: #8a6a00;
+      --op-chip-error-bg: #FDE0E0;
+      --op-chip-error-text: #cc1414;
+
+      /* ---- Borders (dark-green tinted, never flat grey) ---- */
+      --op-border-card: rgba(2, 56, 25, .12);
+      --op-border-divider: rgba(2, 56, 25, .07);
+      --op-border-input: rgba(2, 56, 25, .35);
+
+      /* ---- Avatar fills (deterministic 4-cycle) ---- */
+      --op-avatar-1-bg: #023819;
+      --op-avatar-1-text: #BFFB4F;
+      --op-avatar-2-bg: #BFFB4F;
+      --op-avatar-2-text: #023819;
+      --op-avatar-3-bg: #D1DBBD;
+      --op-avatar-3-text: #023819;
+      --op-avatar-4-bg: #FFCC1A;
+      --op-avatar-4-text: #023819;
+
+      /* ---- Typography ---- */
+      --op-font-display: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --op-font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      /* ---- Spacing — 4px base ---- */
+      --op-space-1: 4px;
+      --op-space-2: 8px;
+      --op-space-3: 12px;
+      --op-space-4: 16px;
+      --op-space-6: 24px;
+      --op-space-8: 40px;
+      --op-space-10: 64px;
+
+      /* ---- Radius ---- */
+      --op-radius-sm: 6px;
+      --op-radius-md: 8px;
+      --op-radius-lg: 12px;
+      --op-radius-xl: 16px;
+      --op-radius-full: 999px;
+
+      /* ---- Elevation (soft green-tinted shadows) ---- */
+      --op-elevation-1: 0 1px 2px rgba(2, 56, 25, .05), 0 1px 3px rgba(2, 56, 25, .04);
+      --op-elevation-2: 0 2px 4px rgba(2, 56, 25, .05), 0 8px 20px -8px rgba(2, 56, 25, .14);
+      --op-elevation-3: 0 4px 8px rgba(2, 56, 25, .06), 0 18px 40px -16px rgba(2, 56, 25, .22);
+      --op-elevation-hero: 0 20px 45px -22px rgba(2, 56, 25, .8);
+
+      /* ---- Focus ring ---- */
+      --op-focus-ring: 0 0 0 3px rgba(191, 251, 79, .4);
     }
 
     * { box-sizing: border-box; }
 
-    html, body { margin: 0; height: 100%; }
+    [hidden] { display: none !important; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.5;
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
-    a { color: var(--primary); text-decoration: none; }
+    html, body { margin: 0; }
+
+    body {
+      background: var(--op-cream);
+      color: var(--op-silver-dark);
+      font-family: var(--op-font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: 2px; }
+
+    a { color: inherit; text-decoration: none; }
 
     button { font: inherit; cursor: pointer; }
 
     /* ---------- Layout ---------- */
-    .app {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      min-height: 100vh;
-    }
+    .app { display: flex; min-height: 100vh; }
 
-    .sidebar {
-      background: var(--nav-bg);
-      color: var(--nav-text);
+    /* Backoffice module rail (matches Backoffice2.0 sidebar) */
+    .rail {
+      width: 64px;
+      background: var(--op-dark-green);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: var(--op-space-6) 0;
+      gap: var(--op-space-2);
+      flex-shrink: 0;
       position: sticky;
       top: 0;
       height: 100vh;
     }
 
-    .brand {
+    .rail-icon {
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 20px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      justify-content: center;
+      border-radius: var(--op-radius-md);
+      color: var(--op-light-green);
     }
+    .rail-icon svg { width: 20px; height: 20px; }
+    .rail-icon.active { background: var(--op-accent-lime); color: var(--op-dark-green); }
+    .rail-icon:hover:not(.active) { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .rail-spacer { flex: 1; }
 
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      background: var(--primary);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-    }
-
-    .brand small {
-      display: block;
-      font-weight: 400;
-      font-size: 11px;
-      color: var(--nav-text);
-    }
-
-    .nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
-
-    .nav-section-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #7f8bab;
-      padding: 0 10px;
-      margin: 8px 0 8px;
-    }
-
-    .nav a {
+    .rail-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--op-avatar-1-bg);
+      color: var(--op-avatar-1-text);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 9px 10px;
-      border-radius: 8px;
-      color: var(--nav-text);
-      margin-bottom: 2px;
-    }
-
-    .nav a:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
-
-    .nav a.active { background: rgba(255, 255, 255, 0.12); color: var(--nav-active); font-weight: 600; }
-
-    .nav .count {
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1px 8px;
-      border-radius: 999px;
-    }
-
-    .nav-footer {
-      padding: 16px 20px;
+      justify-content: center;
+      font-family: var(--op-font-display);
+      font-weight: 600;
       font-size: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 4px;
     }
 
-    .main { min-width: 0; }
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: var(--op-space-6) 28px 40px;
+    }
 
+    .content { max-width: 1320px; }
+
+    /* Top bar (matches Backoffice2.0) */
     .topbar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 28px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-
-    .menu-toggle {
-      display: none;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 6px 10px;
-    }
-
-    .breadcrumb { color: var(--text-muted); font-size: 13px; }
-    .breadcrumb a { color: var(--text-muted); }
-    .breadcrumb a:hover { color: var(--primary); }
-    .breadcrumb .sep { margin: 0 6px; }
-    .breadcrumb strong { color: var(--text); font-weight: 600; }
-
-    .content { padding: 28px; max-width: 1200px; }
-
-    .page-header {
-      display: flex;
-      align-items: flex-end;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      gap: var(--op-space-3);
+      margin-bottom: 18px;
     }
 
-    .page-header h1 { margin: 0; font-size: 22px; }
-    .page-header p { margin: 4px 0 0; color: var(--text-muted); }
-
-    /* ---------- Stats ---------- */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-
-    .stat .label { color: var(--text-muted); font-size: 12px; }
-    .stat .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
-
-    /* ---------- Card / Table ---------- */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .toolbar {
+    .breadcrumb {
       display: flex;
-      gap: 12px;
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
+      align-items: center;
       flex-wrap: wrap;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--op-silver-light);
+      font-size: 13px;
     }
+    .breadcrumb a:hover { color: var(--op-dark-green); }
+    .breadcrumb strong { color: var(--op-dark-green); }
 
-    .input, .select {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font: inherit;
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .input { flex: 1; min-width: 200px; }
-    .input:focus, .select:focus { outline: 2px solid var(--primary-soft); border-color: var(--primary); }
-
-    .table-wrap { overflow-x: auto; }
-
-    table { width: 100%; border-collapse: collapse; }
-
-    th, td {
-      text-align: left;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
+    .brand {
+      font-family: var(--op-font-display);
+      font-weight: 700;
+      color: var(--op-dark-green);
+      font-size: 15px;
       white-space: nowrap;
     }
+    .brand span { color: var(--op-accent-lime); -webkit-text-stroke: 0.4px var(--op-dark-green); }
 
-    th {
-      font-size: 12px;
+    .page-header { margin-bottom: var(--op-space-6); }
+    .page-header h1 {
+      margin: 0 0 4px;
+      font-family: var(--op-font-display);
+      font-size: 32px;
       font-weight: 600;
-      color: var(--text-muted);
-      background: var(--surface-2);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: -.015em;
+      color: var(--op-dark-green);
+      line-height: 1.15;
     }
 
-    tbody tr { cursor: pointer; }
-    tbody tr:hover { background: #f8faff; }
-    tbody tr:last-child td { border-bottom: none; }
+    .muted { color: var(--op-silver-light); margin: 0; font-size: 12.5px; }
+
+    /* ---------- Spread cards (mini analytics) ---------- */
+    .spread-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-6);
+    }
+    .spread-card {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-4) 18px 18px;
+      box-shadow: var(--op-elevation-2);
+    }
+    .spread-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--op-silver-light);
+      margin-bottom: var(--op-space-3);
+    }
+    .spread-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+    .spread-total .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
+    .spread-total .unit { font-size: 12.5px; color: var(--op-silver-light); }
+
+    .spread-bar {
+      display: flex;
+      gap: 2px;
+      height: 10px;
+      border-radius: var(--op-radius-full);
+      overflow: hidden;
+      background: var(--op-chip-neutral-bg);
+      margin-bottom: 14px;
+    }
+    .spread-bar span { display: block; height: 100%; }
+
+    .spread-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .spread-legend li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--op-silver-dark); }
+    .spread-legend .swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .spread-legend .name { flex: 1; }
+    .spread-legend .num { font-weight: 700; color: var(--op-dark-green); min-width: 20px; text-align: right; }
+    .spread-legend .pct { color: var(--op-silver-light); font-size: 12px; min-width: 38px; text-align: right; }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--op-space-3);
+      margin-bottom: var(--op-space-4);
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 12px;
+      border-radius: var(--op-radius-md);
+      border: 1.5px solid var(--op-border-input);
+      font-size: 13.5px;
+      font-family: inherit;
+      background: var(--op-white);
+      color: var(--op-dark-green);
+    }
+    .search-input:hover { border-color: var(--op-dark-green); }
+    .search-input:focus-visible { border-color: var(--op-dark-green); border-width: 2px; padding: 8.5px 11.5px; box-shadow: var(--op-focus-ring); outline: none; }
+    .search-input::placeholder { color: var(--op-silver-light); }
+
+    /* ---------- Table ---------- */
+    .table-wrap {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      overflow-x: auto;
+      box-shadow: var(--op-elevation-1);
+    }
+
+    .data-table { width: 100%; min-width: 900px; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-weight: 700;
+      color: var(--op-silver-light);
+      background: var(--op-chip-neutral-bg);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--op-border-card);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--op-border-divider);
+      font-size: 13.5px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .data-table tbody tr { cursor: pointer; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover { background: #F4F6EF; }
 
     .customer-cell { display: flex; align-items: center; gap: 10px; }
+    .customer-name { font-weight: 700; color: var(--op-dark-green); }
 
-    .avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--primary-soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .avatar.lg { width: 56px; height: 56px; font-size: 18px; }
-
-    .muted { color: var(--text-muted); font-size: 12px; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge.active { background: var(--success-soft); color: var(--success); }
-    .badge.pending { background: var(--warning-soft); color: var(--warning); }
-    .badge.inactive { background: var(--danger-soft); color: var(--danger); }
-
-    .empty { padding: 40px; text-align: center; color: var(--text-muted); }
+    .table-empty { padding: 40px 16px; text-align: center; color: var(--op-silver-light); font-size: 13.5px; }
 
     .pagination {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: var(--op-space-3);
       padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 13px;
+      border-top: 1px solid var(--op-border-card);
+      color: var(--op-silver-light);
+      font-size: 12.5px;
+      background: var(--op-white);
+      position: sticky;
+      left: 0;
     }
 
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-weight: 500;
-    }
-
-    .btn:hover:not(:disabled) { background: var(--surface-2); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: #1a4fd8; }
-
-    .btn-group { display: flex; gap: 8px; }
-
-    /* ---------- Details ---------- */
-    .profile {
+    /* ---------- Avatars (deterministic squircles) ---------- */
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 20px;
-      flex-wrap: wrap;
+      justify-content: center;
+      font-family: var(--op-font-display);
+      font-weight: 600;
+      font-size: 12px;
+      flex-shrink: 0;
     }
+    .avatar.sm { width: 28px; height: 28px; border-radius: var(--op-radius-sm); font-size: 11px; }
+    .avatar.lg { width: 62px; height: 62px; border-radius: 16px; font-size: 20px; }
+    .avatar.fill-1 { background: var(--op-avatar-1-bg); color: var(--op-avatar-1-text); }
+    .avatar.fill-2 { background: var(--op-avatar-2-bg); color: var(--op-avatar-2-text); }
+    .avatar.fill-3 { background: var(--op-avatar-3-bg); color: var(--op-avatar-3-text); }
+    .avatar.fill-4 { background: var(--op-avatar-4-bg); color: var(--op-avatar-4-text); }
 
-    .profile h2 { margin: 0; font-size: 20px; }
-    .profile .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+    .owner-cell { display: flex; align-items: center; gap: 8px; }
+
+    /* ---------- Chips ---------- */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .status-active { background: var(--op-chip-success-bg); color: var(--op-chip-success-text); }
+    .status-pending { background: var(--op-chip-warning-bg); color: var(--op-chip-warning-text); }
+    /* Inactive is not an error, so it uses the neutral pair (red is reserved for overdue/failed). */
+    .status-inactive { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
+    .status-inactive::before { background: var(--op-silver-light); }
+
+    .class-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .class-Enterprise { background: var(--op-dark-green); color: var(--op-accent-lime); }
+    .class-SME { background: var(--op-light-green); color: var(--op-dark-green); }
+    .class-Growth { background: var(--op-chip-neutral-bg); color: var(--op-dark-green); }
+
+    /* ---------- Buttons ---------- */
+    .view-btn {
+      border: 1.5px solid var(--op-dark-green);
+      background: var(--op-white);
+      border-radius: var(--op-radius-md);
+      padding: 6px 12px;
+      font-family: var(--op-font-display);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      white-space: nowrap;
+      transition: background-color .16s, color .16s;
+    }
+    .view-btn:hover:not(:disabled) { background: var(--op-dark-green); color: var(--op-accent-lime); }
+    .view-btn:disabled { background: #8FA08C; border-color: #8FA08C; color: var(--op-cream); cursor: not-allowed; }
+
+    .btn-group { display: flex; gap: var(--op-space-2); }
+
+    .text-link {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--op-dark-green);
+      border-bottom: 1.5px solid var(--op-dark-green);
+    }
+    .text-link:hover { color: var(--op-success); border-color: var(--op-success); }
+
+    .back-link { display: inline-block; margin-bottom: var(--op-space-4); }
+
+    /* ---------- Details ---------- */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      background: var(--op-dark-green);
+      color: var(--op-cream);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-6);
+      box-shadow: var(--op-elevation-hero);
+    }
+    .hero h1 {
+      margin: 0 0 6px;
+      font-family: var(--op-font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -.015em;
+      line-height: 1.15;
+      color: var(--op-cream);
+    }
+    .hero-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--op-light-green); }
+    .hero-meta .dot { opacity: .5; }
 
     .detail-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--op-space-4);
+      margin-top: var(--op-space-6);
+      align-items: start;
+    }
+    .detail-col { display: flex; flex-direction: column; gap: var(--op-space-4); }
+
+    .panel {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      box-shadow: var(--op-elevation-2);
+      padding: var(--op-space-6);
     }
 
-    .card-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .panel-num { font-family: var(--op-font-display); font-size: 18px; color: #2f6b1e; }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--op-silver-light);
     }
 
     .fields {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px 24px;
-      padding: 20px;
     }
-
     .fields.single { grid-template-columns: 1fr; }
 
-    .field .label { color: var(--text-muted); font-size: 12px; margin-bottom: 2px; }
-    .field .value { font-weight: 500; word-break: break-word; }
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--op-silver-light);
+      margin-bottom: 4px;
+    }
+    .field-value { color: var(--op-dark-green); font-weight: 500; font-size: 14px; word-break: break-word; }
+    .field-value .text-link { font-size: 13.5px; }
 
-    .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; font-weight: 500; }
+    .owner-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F4F6EF;
+      border: 1px solid rgba(2, 56, 25, .1);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+    .owner-chip .name { font-weight: 700; font-size: 14px; color: var(--op-dark-green); }
+    .owner-chip .role { font-size: 12px; color: var(--op-silver-light); }
+
+    .not-found {
+      background: var(--op-white);
+      border: 1px dashed var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: 48px;
+      text-align: center;
+      color: var(--op-silver-light);
+    }
+    .not-found h2 { margin-top: 0; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
+
+    /* ---------- Detail tabs (matches Backoffice2.0 .tabs) ---------- */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--op-border-card);
+      margin: var(--op-space-6) 0;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px var(--op-space-4);
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--op-silver-light);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .tab-btn svg { width: 15px; height: 15px; }
+    .tab-btn:hover { color: var(--op-dark-green); }
+    .tab-btn.active { color: var(--op-dark-green); border-bottom-color: var(--op-accent-lime); font-weight: 600; }
+
+    /* ---------- KPI cards (deal + credit tabs) ---------- */
+    .kpi-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-4);
+    }
+    .kpi-card {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-4);
+      box-shadow: var(--op-elevation-2);
+    }
+    .kpi-card.highlight { background: var(--op-light-green); box-shadow: none; }
+    .kpi-label { font-size: 12px; font-weight: 600; color: var(--op-silver-light); margin-bottom: var(--op-space-3); }
+    .kpi-card.highlight .kpi-label { color: var(--op-dark-green); }
+    .kpi-value { font-family: var(--op-font-display); font-size: 30px; font-weight: 600; line-height: 1.05; color: var(--op-dark-green); }
+    .kpi-value.gold { color: #b38a00; }
+    .kpi-value.error { color: var(--op-chip-error-text); }
+    .kpi-value small { font-size: 15px; color: var(--op-silver-light); font-weight: 600; }
+    .kpi-sub { font-size: 12.5px; color: var(--op-silver-light); margin-top: 8px; }
+
+    .tab-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-4);
+      align-items: start;
+    }
+
+    .panel .spread-bar { margin-bottom: 14px; }
+    .panel-note { font-size: 13.5px; color: var(--op-silver-dark); margin: 0; }
+    .panel-note + .panel-note { margin-top: 10px; }
+
+    .insights { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .insights li { display: flex; gap: 10px; font-size: 13.5px; color: var(--op-silver-dark); }
+    .insights li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--op-dark-green);
+      flex-shrink: 0;
+    }
+    .insights strong { color: var(--op-dark-green); }
+
+    .section-title {
+      font-family: var(--op-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      margin: var(--op-space-6) 0 var(--op-space-3);
+    }
+
+    .money { font-weight: 700; color: var(--op-dark-green); }
+    .deal-lane { font-weight: 700; color: var(--op-dark-green); }
+
+    .mode-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      background: var(--op-light-green);
+      color: var(--op-dark-green);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Stage / invoice chips reuse .status-badge with these semantic pairs */
+    .chip-neutral { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
+    .chip-neutral::before { background: var(--op-silver-light); }
+    .chip-success { background: var(--op-chip-success-bg); color: var(--op-chip-success-text); }
+    .chip-warning { background: var(--op-chip-warning-bg); color: var(--op-chip-warning-text); }
+    .chip-error { background: var(--op-chip-error-bg); color: var(--op-chip-error-text); }
+    .chip-primary { background: var(--op-accent-lime); color: var(--op-dark-green); }
+
+    /* Credit score */
+    .score-wrap { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+    .score-value { font-family: var(--op-font-display); font-size: 56px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--op-dark-green); }
+    .score-value small { font-size: 18px; color: var(--op-silver-light); letter-spacing: 0; }
+    .score-scale { position: relative; display: flex; gap: 2px; height: 10px; border-radius: var(--op-radius-full); overflow: hidden; }
+    .score-scale span { flex: 1; }
+    .score-marker-track { position: relative; height: 14px; margin-top: 4px; }
+    .score-marker {
+      position: absolute;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 9px solid var(--op-dark-green);
+      transform: translateX(-7px);
+    }
+    .score-labels { display: flex; font-size: 11px; color: var(--op-silver-light); margin-top: 2px; }
+
+    .meter { height: 10px; border-radius: var(--op-radius-full); background: var(--op-chip-neutral-bg); overflow: hidden; margin: 10px 0 8px; }
+    .meter span { display: block; height: 100%; border-radius: var(--op-radius-full); }
+    .meter-legend { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--op-silver-light); gap: 8px; }
+
+    .empty-stub {
+      background: var(--op-white);
+      border: 1px dashed var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--op-silver-light);
+    }
+    .empty-stub h3 { margin: 0 0 6px; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
+    .empty-stub p { margin: 0; }
 
     /* ---------- Responsive ---------- */
-    @media (max-width: 960px) {
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .spread-cards { grid-template-columns: 1fr; }
       .detail-grid { grid-template-columns: 1fr; }
+      .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tab-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 240px;
-        z-index: 20;
-        transform: translateX(-100%);
-        transition: transform 0.2s ease;
+      .app { flex-direction: column; }
+      .rail {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 10px 16px;
+        position: static;
       }
-      .sidebar.open { transform: translateX(0); }
-      .menu-toggle { display: inline-block; }
-      .content { padding: 16px; }
-      .topbar { padding: 12px 16px; }
+      .rail-avatar { margin-top: 0; }
+      .main { padding: var(--op-space-4) 16px 40px; }
+      .page-header h1, .hero h1 { font-size: 24px; }
+      .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
+      .panel, .hero { padding: var(--op-space-4); }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Customer module side nav -->
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="brand-mark">OP</div>
-        <div>
-          Backoffice
-          <small>Customer Module</small>
-        </div>
-      </div>
-      <nav class="nav" aria-label="Customer navigation">
-        <div class="nav-section-title">Customers</div>
-        <a href="#/customers" data-nav="all">All Customers <span class="count" id="count-all">0</span></a>
-        <a href="#/customers?status=active" data-nav="active">Active <span class="count" id="count-active">0</span></a>
-        <a href="#/customers?status=pending" data-nav="pending">Pending <span class="count" id="count-pending">0</span></a>
-        <a href="#/customers?status=inactive" data-nav="inactive">Inactive <span class="count" id="count-inactive">0</span></a>
-      </nav>
-      <div class="nav-footer">Signed in as Backoffice Admin</div>
+    <!-- Backoffice module rail -->
+    <aside class="rail" aria-label="Backoffice modules">
+      <a class="rail-icon" href="#/customers" title="Dashboard" aria-label="Dashboard">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 19h4V10H4v9zm6 0h4V4h-4v15zm6 0h4v-7h-4v7z"/></svg>
+      </a>
+      <a class="rail-icon" href="#/customers" title="Shipments" aria-label="Shipments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>
+      </a>
+      <a class="rail-icon active" href="#/customers" title="Customers" aria-label="Customers" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11a4 4 0 100-8 4 4 0 000 8zM2 21a7 7 0 0114 0M16 3.5a4 4 0 010 7M22 21a7 7 0 00-4-6.3"/></svg>
+      </a>
+      <a class="rail-icon" href="#/customers" title="Chat" aria-label="Chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>
+      </a>
+      <div class="rail-spacer"></div>
+      <a class="rail-icon" href="#/customers" title="Notifications" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1112 0c0 4 2 5 2 5H4s2-1 2-5zM10 20a2 2 0 004 0"/></svg>
+      </a>
+      <div class="rail-avatar" title="Current user">NK</div>
     </aside>
 
-    <div class="main">
+    <main class="main">
       <header class="topbar">
-        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
         <div class="breadcrumb" id="breadcrumb"></div>
+        <div class="brand">OnePort<span>365</span></div>
       </header>
-      <main class="content" id="view"></main>
-    </div>
+      <div class="content" id="view"></div>
+    </main>
   </div>
 
   <script>
@@ -399,18 +711,18 @@
     // Sample data. Replace with an API call when the backend is ready.
     // ---------------------------------------------------------------
     const customers = [
-      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", type: "Importer", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Chioma Eze", createdAt: "2025-01-14" },
-      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", type: "Exporter", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Tunde Ade", createdAt: "2025-02-03" },
-      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", type: "Importer & Exporter", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Chioma Eze", createdAt: "2025-03-21" },
-      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", type: "Importer", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Femi Johnson", createdAt: "2025-04-09" },
-      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", type: "Importer", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Tunde Ade", createdAt: "2024-11-28" },
-      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", type: "Importer", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Chioma Eze", createdAt: "2025-05-17" },
-      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", type: "Exporter", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Femi Johnson", createdAt: "2025-06-02" },
-      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", type: "Importer & Exporter", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Tunde Ade", createdAt: "2025-06-25" },
-      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", type: "Importer", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Chioma Eze", createdAt: "2025-07-11" },
-      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", type: "Importer", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Femi Johnson", createdAt: "2024-09-30" },
-      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", type: "Exporter", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Tunde Ade", createdAt: "2025-08-04" },
-      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", type: "Importer", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Chioma Eze", createdAt: "2025-09-12" }
+      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
+      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
+      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
+      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
+      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
+      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
+      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
+      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
+      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
+      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
+      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
+      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
     const PAGE_SIZE = 8;
@@ -433,33 +745,28 @@
       return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
     }
 
+    // Deterministic avatar fill: the same name always gets the same brand fill (design system §08).
+    function avatarFill(name) {
+      let hash = 0;
+      for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+      return "fill-" + ((hash % 4) + 1);
+    }
+
+    function avatar(name, size = "") {
+      return `<div class="avatar ${size} ${avatarFill(name)}" aria-hidden="true">${escapeHtml(initials(name))}</div>`;
+    }
+
     function formatDate(iso) {
       return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     }
 
-    function badge(status) {
-      return `<span class="badge ${status}">${STATUS_LABELS[status] || status}</span>`;
+    function statusBadge(status) {
+      return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || escapeHtml(status)}</span>`;
     }
 
     function parseRoute() {
       const hash = location.hash.replace(/^#/, "") || "/customers";
-      const [path, query = ""] = hash.split("?");
-      const params = new URLSearchParams(query);
-      const parts = path.split("/").filter(Boolean);
-      return { parts, params };
-    }
-
-    // ---------------------------------------------------------------
-    // Side nav
-    // ---------------------------------------------------------------
-    function updateNav(activeKey) {
-      $("#count-all").textContent = customers.length;
-      Object.keys(STATUS_LABELS).forEach((s) => {
-        $("#count-" + s).textContent = customers.filter((c) => c.status === s).length;
-      });
-      document.querySelectorAll(".nav a").forEach((a) => {
-        a.classList.toggle("active", a.dataset.nav === activeKey);
-      });
+      return hash.split("?")[0].split("/").filter(Boolean);
     }
 
     function setBreadcrumb(items) {
@@ -467,83 +774,130 @@
         .map((item, i) => i === items.length - 1
           ? `<strong>${escapeHtml(item.label)}</strong>`
           : `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
-        .join('<span class="sep">/</span>');
+        .join("<span aria-hidden=\"true\">/</span>");
+    }
+
+    function classChip(customerClass) {
+      return `<span class="class-chip class-${escapeHtml(customerClass)}">${escapeHtml(customerClass)}</span>`;
+    }
+
+    // ---------------------------------------------------------------
+    // Mini analytics: three spread cards
+    // ---------------------------------------------------------------
+    const SPREADS = [
+      {
+        title: "Customer spread",
+        key: "status",
+        segments: [
+          { value: "active", label: "Active", color: "#1F8A5B" },
+          { value: "pending", label: "Pending", color: "#FFCC1A" },
+          { value: "inactive", label: "Inactive", color: "#808080" }
+        ]
+      },
+      {
+        title: "Customer class spread",
+        key: "customerClass",
+        segments: [
+          { value: "Enterprise", label: "Enterprise", color: "#023819" },
+          { value: "SME", label: "SME", color: "#7FAE2E" },
+          { value: "Growth", label: "Growth", color: "#BFFB4F" }
+        ]
+      },
+      {
+        title: "Customer registration spread",
+        key: "channel",
+        segments: [
+          { value: "Website", label: "Website", color: "#2F7A3F" },
+          { value: "Internal", label: "Internal", color: "#D1DBBD" }
+        ]
+      }
+    ];
+
+    function spreadCard(spread) {
+      const total = customers.length;
+      const rows = spread.segments.map((seg) => {
+        const count = customers.filter((c) => c[spread.key] === seg.value).length;
+        return { ...seg, count, pct: total ? Math.round((count / total) * 100) : 0 };
+      });
+      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
+
+      return `
+        <section class="spread-card">
+          <div class="spread-title">${spread.title}</div>
+          <div class="spread-total">
+            <span class="stat-value">${total}</span>
+            <span class="unit">total customers</span>
+          </div>
+          <div class="spread-bar" role="img" aria-label="${escapeHtml(spread.title)}: ${escapeHtml(summary)}">
+            ${rows.filter((r) => r.count).map((r) =>
+              `<span style="flex: ${r.count}; background: ${r.color}" title="${r.label}: ${r.count}"></span>`).join("")}
+          </div>
+          <ul class="spread-legend">
+            ${rows.map((r) => `
+              <li>
+                <span class="swatch" style="background: ${r.color}"></span>
+                <span class="name">${r.label}</span>
+                <span class="num">${r.count}</span>
+                <span class="pct">${r.pct}%</span>
+              </li>`).join("")}
+          </ul>
+        </section>
+      `;
     }
 
     // ---------------------------------------------------------------
     // All customers view
     // ---------------------------------------------------------------
-    function renderList(statusFilter) {
-      updateNav(statusFilter || "all");
-      const title = statusFilter ? `${STATUS_LABELS[statusFilter]} Customers` : "All Customers";
-      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: title }]);
-
-      const count = (s) => customers.filter((c) => c.status === s).length;
+    function renderList() {
+      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "All customers" }]);
 
       $("#view").innerHTML = `
         <div class="page-header">
-          <div>
-            <h1>${title}</h1>
-            <p>View and manage basic information for every customer.</p>
-          </div>
+          <h1>All customers</h1>
+          <p class="muted">Basic information for every OnePort365 customer.</p>
         </div>
 
-        <section class="stats">
-          <div class="stat"><div class="label">Total customers</div><div class="value">${customers.length}</div></div>
-          <div class="stat"><div class="label">Active</div><div class="value">${count("active")}</div></div>
-          <div class="stat"><div class="label">Pending</div><div class="value">${count("pending")}</div></div>
-          <div class="stat"><div class="label">Inactive</div><div class="value">${count("inactive")}</div></div>
-        </section>
+        <div class="spread-cards">
+          ${SPREADS.map(spreadCard).join("")}
+        </div>
 
-        <section class="card">
-          <div class="toolbar">
-            <input class="input" id="search" type="search" placeholder="Search by company, contact, email or ID…" value="${escapeHtml(state.search)}" />
-            <select class="select" id="status-filter" aria-label="Filter by status">
-              <option value="">All statuses</option>
-              ${Object.entries(STATUS_LABELS).map(([k, v]) =>
-                `<option value="${k}" ${k === statusFilter ? "selected" : ""}>${v}</option>`).join("")}
-            </select>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Customer</th>
-                  <th>Customer ID</th>
-                  <th>Contact</th>
-                  <th>Type</th>
-                  <th>Country</th>
-                  <th>Status</th>
-                  <th>Date Added</th>
-                </tr>
-              </thead>
-              <tbody id="customer-rows"></tbody>
-            </table>
-          </div>
+        <div class="toolbar">
+          <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Primary contact</th>
+                <th>Class</th>
+                <th>Registration channel</th>
+                <th>Account manager</th>
+                <th>Status</th>
+                <th>Date added</th>
+              </tr>
+            </thead>
+            <tbody id="customer-rows"></tbody>
+          </table>
           <div class="pagination" id="pagination"></div>
-        </section>
+        </div>
       `;
 
       $("#search").addEventListener("input", (e) => {
         state.search = e.target.value;
         state.page = 1;
-        renderRows(statusFilter);
+        renderRows();
       });
 
-      $("#status-filter").addEventListener("change", (e) => {
-        state.page = 1;
-        location.hash = e.target.value ? `#/customers?status=${e.target.value}` : "#/customers";
-      });
-
-      renderRows(statusFilter);
+      renderRows();
     }
 
-    function renderRows(statusFilter) {
+    function renderRows() {
       const term = state.search.trim().toLowerCase();
       const filtered = customers.filter((c) => {
-        if (statusFilter && c.status !== statusFilter) return false;
         if (!term) return true;
-        return [c.companyName, c.contactName, c.email, c.id].some((v) => v.toLowerCase().includes(term));
+        return [c.companyName, c.contactName, c.email, c.phone, c.id].some((v) => v.toLowerCase().includes(term));
       });
 
       const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -553,30 +907,35 @@
 
       const tbody = $("#customer-rows");
       if (!pageItems.length) {
-        tbody.innerHTML = `<tr><td colspan="7" class="empty">No customers match your search.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="table-empty">No customers match your search.</td></tr>`;
       } else {
         tbody.innerHTML = pageItems.map((c) => `
-          <tr data-id="${c.id}" tabindex="0">
+          <tr data-id="${escapeHtml(c.id)}" tabindex="0">
             <td>
               <div class="customer-cell">
-                <div class="avatar">${initials(c.companyName)}</div>
-                <div>
-                  <div><strong>${escapeHtml(c.companyName)}</strong></div>
-                  <div class="muted">${escapeHtml(c.email)}</div>
-                </div>
+                ${avatar(c.companyName)}
+                <span class="customer-name">${escapeHtml(c.companyName)}</span>
               </div>
             </td>
-            <td>${c.id}</td>
-            <td>${escapeHtml(c.contactName)}</td>
-            <td>${escapeHtml(c.type)}</td>
-            <td>${escapeHtml(c.country)}</td>
-            <td>${badge(c.status)}</td>
+            <td>
+              <div>${escapeHtml(c.email)}</div>
+              <div class="muted">${escapeHtml(c.phone)}</div>
+            </td>
+            <td>${classChip(c.customerClass)}</td>
+            <td>${escapeHtml(c.channel)}</td>
+            <td>
+              <div class="owner-cell">
+                ${avatar(c.accountManager, "sm")}
+                <span>${escapeHtml(c.accountManager)}</span>
+              </div>
+            </td>
+            <td>${statusBadge(c.status)}</td>
             <td>${formatDate(c.createdAt)}</td>
           </tr>
         `).join("");
 
         tbody.querySelectorAll("tr[data-id]").forEach((row) => {
-          const open = () => { location.hash = `#/customers/${row.dataset.id}`; };
+          const open = () => { location.hash = `#/customers/${encodeURIComponent(row.dataset.id)}`; };
           row.addEventListener("click", open);
           row.addEventListener("keydown", (e) => { if (e.key === "Enter") open(); });
         });
@@ -587,124 +946,563 @@
       $("#pagination").innerHTML = `
         <span>Showing ${from}–${to} of ${filtered.length}</span>
         <div class="btn-group">
-          <button class="btn" id="prev" ${state.page <= 1 ? "disabled" : ""}>Previous</button>
-          <button class="btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
+          <button class="view-btn" id="prev" ${state.page <= 1 ? "disabled" : ""}>Previous</button>
+          <button class="view-btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
         </div>
       `;
-      $("#prev").addEventListener("click", () => { state.page--; renderRows(statusFilter); });
-      $("#next").addEventListener("click", () => { state.page++; renderRows(statusFilter); });
+      $("#prev").addEventListener("click", () => { state.page--; renderRows(); });
+      $("#next").addEventListener("click", () => { state.page++; renderRows(); });
+    }
+
+    // ---------------------------------------------------------------
+    // Sample deal + credit data.
+    // Generated deterministically from the customer ID so every customer
+    // shows stable figures. Replace with API calls when the backend is ready.
+    // ---------------------------------------------------------------
+    const TODAY = new Date("2026-09-29T00:00:00");
+    const DAY = 86400000;
+
+    function seededRandom(seed) {
+      let h = 1779033703 ^ seed.length;
+      for (const ch of seed) { h = Math.imul(h ^ ch.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+      return () => {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
+        h ^= h >>> 16;
+        return (h >>> 0) / 4294967296;
+      };
+    }
+
+    const pick = (rand, list) => list[Math.floor(rand() * list.length)];
+    const between = (rand, min, max) => min + Math.floor(rand() * (max - min + 1));
+    const isoDate = (d) => d.toISOString().slice(0, 10);
+
+    const LANES = [
+      "Shanghai → Lagos (Apapa)", "Ningbo → Tin Can Island", "Rotterdam → Lagos (Apapa)", "Antwerp → Onne",
+      "Lagos (Apapa) → Rotterdam", "Tema → Hamburg", "Mombasa → Jebel Ali", "Dubai → Lagos (MMIA)",
+      "Guangzhou → Lagos (MMIA)", "Durban → Lagos (Apapa)", "Lagos (MMIA) → London Heathrow", "Dakar → Valencia"
+    ];
+
+    const DEAL_STAGES = [
+      { key: "Prospect", chip: "chip-neutral", color: "#D1DBBD" },
+      { key: "Contacted", chip: "chip-neutral", color: "#BFFB4F" },
+      { key: "Qualified", chip: "chip-warning", color: "#7FAE2E" },
+      { key: "Quote issued", chip: "chip-primary", color: "#2F7A3F" },
+      { key: "Won", chip: "chip-success", color: "#023819" },
+      { key: "Lost", chip: "chip-neutral", color: "#808080" }
+    ];
+    const OPEN_STAGES = ["Prospect", "Contacted", "Qualified", "Quote issued"];
+
+    const DEAL_VALUE_RANGE = { Enterprise: [18000, 120000], SME: [3000, 24000], Growth: [800, 9000] };
+
+    const cache = new Map();
+
+    function dealsFor(c) {
+      if (cache.has("deals:" + c.id)) return cache.get("deals:" + c.id);
+      const rand = seededRandom(c.id + ":deals");
+      const count = c.status === "active" ? between(rand, 6, 10) : c.status === "pending" ? between(rand, 1, 3) : between(rand, 3, 5);
+      const start = new Date(c.createdAt + "T00:00:00").getTime();
+      // Inactive customers stopped trading a while ago.
+      const end = c.status === "inactive" ? start + 300 * DAY : TODAY.getTime() - 3 * DAY;
+      const [minV, maxV] = DEAL_VALUE_RANGE[c.customerClass];
+
+      const deals = [];
+      for (let i = 0; i < count; i++) {
+        const created = new Date(start + rand() * (end - start));
+        const ageDays = (TODAY - created) / DAY;
+        let stage;
+        if (c.status === "pending") stage = pick(rand, ["Prospect", "Contacted", "Qualified"]);
+        else if (ageDays > 90 || c.status === "inactive") stage = rand() < 0.68 ? "Won" : "Lost";
+        else stage = pick(rand, OPEN_STAGES);
+        deals.push({
+          id: `DL-${c.id.slice(4)}${String(i + 1).padStart(2, "0")}`,
+          lane: pick(rand, LANES),
+          mode: rand() < 0.72 ? "Ocean Freight" : "Air Freight",
+          value: Math.round((minV + rand() * (maxV - minV)) / 10) * 10,
+          stage,
+          createdAt: isoDate(created)
+        });
+      }
+      deals.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      cache.set("deals:" + c.id, deals);
+      return deals;
+    }
+
+    const CREDIT_LIMITS = { Enterprise: [150000, 400000], SME: [20000, 80000], Growth: [5000, 20000] };
+
+    function creditFor(c) {
+      if (cache.has("credit:" + c.id)) return cache.get("credit:" + c.id);
+      if (c.status === "pending") { cache.set("credit:" + c.id, null); return null; }
+
+      const rand = seededRandom(c.id + ":credit");
+      // Chance an invoice is paid on time; inactive accounts skew towards weaker payment histories.
+      const reliability = c.status === "inactive" ? 0.2 + rand() * 0.35 : 0.3 + rand() * 0.68;
+      const terms = pick(rand, c.customerClass === "Enterprise" ? [45, 60] : [30, 45]);
+      const [minL, maxL] = CREDIT_LIMITS[c.customerClass];
+      const limit = Math.round((minL + rand() * (maxL - minL)) / 5000) * 5000;
+      const [minV, maxV] = DEAL_VALUE_RANGE[c.customerClass];
+
+      // Last 8 monthly invoices, ending today (or when an inactive customer stopped trading).
+      const lastIssue = c.status === "inactive"
+        ? new Date(new Date(c.createdAt + "T00:00:00").getTime() + 300 * DAY)
+        : new Date(TODAY.getTime() - 12 * DAY);
+      const invoices = [];
+      for (let i = 0; i < 8; i++) {
+        const issued = new Date(lastIssue.getTime() - i * 30 * DAY - between(rand, 0, 6) * DAY);
+        const due = new Date(issued.getTime() + terms * DAY);
+        const amount = Math.round((minV + rand() * (maxV - minV) * 0.8) / 10) * 10;
+        let paid = null;
+        let status;
+        const roll = rand();
+        if (due > TODAY) {
+          status = "Outstanding";
+          if (roll < 0.3) { paid = new Date(issued.getTime() + between(rand, 5, terms - 2) * DAY); status = "Paid on time"; }
+        } else if (roll < reliability) {
+          paid = new Date(due.getTime() - between(rand, 0, 10) * DAY);
+          status = "Paid on time";
+        } else if (roll < reliability + (1 - reliability) * 0.75) {
+          paid = new Date(due.getTime() + between(rand, 3, 28) * DAY);
+          status = "Paid late";
+        } else {
+          status = "Overdue";
+        }
+        invoices.push({
+          id: `INV-${c.id.slice(4)}-${String(8 - i).padStart(2, "0")}`,
+          amount, issued: isoDate(issued), due: isoDate(due), paid: paid ? isoDate(paid) : null, status
+        });
+      }
+
+      const settled = invoices.filter((inv) => inv.paid);
+      const onTime = invoices.filter((inv) => inv.status === "Paid on time").length;
+      const late = invoices.filter((inv) => inv.status === "Paid late").length;
+      const overdue = invoices.filter((inv) => inv.status === "Overdue");
+      const outstanding = invoices.filter((inv) => inv.status === "Outstanding");
+      const judged = onTime + late + overdue.length;
+      const onTimeRate = judged ? onTime / judged : 1;
+      const avgDaysToPay = settled.length
+        ? Math.round(settled.reduce((sum, inv) => sum + (new Date(inv.paid) - new Date(inv.issued)) / DAY, 0) / settled.length)
+        : 0;
+      const overdueAmount = overdue.reduce((s, inv) => s + inv.amount, 0);
+      const used = Math.min(limit, overdueAmount + outstanding.reduce((s, inv) => s + inv.amount, 0));
+      const tenureYears = (TODAY - new Date(c.createdAt + "T00:00:00")) / (365 * DAY);
+
+      let score = 35 + onTimeRate * 50 + Math.min(tenureYears, 2) * 5 - overdue.length * 9 - (used / limit > 0.8 ? 6 : 0);
+      if (c.status === "inactive") score -= 12;
+      score = Math.max(5, Math.min(98, Math.round(score)));
+
+      const credit = { limit, used, terms, invoices, onTime, late, overdue, outstanding, onTimeRate, avgDaysToPay, overdueAmount, score };
+      cache.set("credit:" + c.id, credit);
+      return credit;
+    }
+
+    function money(n) {
+      return "$" + Math.round(n).toLocaleString("en-US");
+    }
+
+    function compactMoney(n) {
+      if (n >= 1e6) return "$" + (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+      if (n >= 1e3) return "$" + (n / 1e3).toFixed(1).replace(/\.0$/, "") + "k";
+      return money(n);
+    }
+
+    function chip(label, cls) {
+      return `<span class="status-badge ${cls}">${escapeHtml(label)}</span>`;
+    }
+
+    function segmentBar(rows, label) {
+      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
+      return `
+        <div class="spread-bar" role="img" aria-label="${escapeHtml(label)}: ${escapeHtml(summary)}">
+          ${rows.filter((r) => r.count).map((r) =>
+            `<span style="flex: ${r.count}; background: ${r.color}" title="${escapeHtml(r.label)}: ${r.count}"></span>`).join("")}
+        </div>
+        <ul class="spread-legend">
+          ${rows.map((r) => `
+            <li>
+              <span class="swatch" style="background: ${r.color}"></span>
+              <span class="name">${escapeHtml(r.label)}</span>
+              <span class="num">${r.count}</span>
+              <span class="pct">${r.extra ?? ""}</span>
+            </li>`).join("")}
+        </ul>
+      `;
+    }
+
+    function kpi(label, value, sub = "", cls = "") {
+      return `
+        <div class="kpi-card ${cls.includes("highlight") ? "highlight" : ""}">
+          <div class="kpi-label">${label}</div>
+          <div class="kpi-value ${cls.replace("highlight", "")}">${value}</div>
+          ${sub ? `<div class="kpi-sub">${sub}</div>` : ""}
+        </div>
+      `;
     }
 
     // ---------------------------------------------------------------
     // Customer details view
     // ---------------------------------------------------------------
+    const DETAIL_TABS = [
+      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
+      { key: "deals", label: "Deal history", icon: '<path d="M4 19V9M12 19V5M20 19v-6"/>' },
+      { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
+    ];
+
     function field(label, value) {
-      return `<div class="field"><div class="label">${label}</div><div class="value">${value}</div></div>`;
+      return `<div><div class="field-label">${label}</div><div class="field-value">${value}</div></div>`;
     }
 
-    function renderDetails(id) {
+    function panelHead(num, title) {
+      return `<div class="panel-head"><span class="panel-num">${num}</span><span class="panel-title">${title}</span></div>`;
+    }
+
+    function panel(num, title, body, single = false) {
+      return `
+        <section class="panel">
+          ${panelHead(num, title)}
+          <div class="fields ${single ? "single" : ""}">${body}</div>
+        </section>
+      `;
+    }
+
+    function renderBasicTab(c) {
+      return `
+        <div class="detail-grid" style="margin-top: 0">
+          <div class="detail-col">
+            ${panel("01", "Basic details", `
+              ${field("Company name", escapeHtml(c.companyName))}
+              ${field("Customer ID", escapeHtml(c.id))}
+              ${field("Class", classChip(c.customerClass))}
+              ${field("Registration channel", escapeHtml(c.channel))}
+              ${field("Industry", escapeHtml(c.industry))}
+              ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
+              ${field("Tax ID", escapeHtml(c.taxId))}
+              ${field("Status", statusBadge(c.status))}
+              ${field("Date added", formatDate(c.createdAt))}
+            `)}
+            ${panel("02", "Address", `
+              ${field("Street address", escapeHtml(c.address))}
+              ${field("City", escapeHtml(c.city))}
+              ${field("Country", escapeHtml(c.country))}
+            `)}
+          </div>
+
+          <div class="detail-col">
+            ${panel("03", "Primary contact", `
+              ${field("Name", escapeHtml(c.contactName))}
+              ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
+              ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
+            `, true)}
+            ${panel("04", "Account manager", `
+              <div class="owner-chip">
+                ${avatar(c.accountManager, "sm")}
+                <div>
+                  <div class="name">${escapeHtml(c.accountManager)}</div>
+                  <div class="role">Account manager</div>
+                </div>
+              </div>
+            `, true)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDealsTab(c) {
+      const deals = dealsFor(c);
+      if (!deals.length) {
+        return `<div class="empty-stub"><h3>No deals yet</h3><p>Deals created for ${escapeHtml(c.companyName)} will appear here.</p></div>`;
+      }
+
+      const won = deals.filter((d) => d.stage === "Won");
+      const lost = deals.filter((d) => d.stage === "Lost");
+      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
+      const sum = (list) => list.reduce((s, d) => s + d.value, 0);
+      const closed = won.length + lost.length;
+      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
+      const avgDeal = sum(deals) / deals.length;
+
+      const stageRows = DEAL_STAGES.map((s) => {
+        const list = deals.filter((d) => d.stage === s.key);
+        return { label: s.key, color: s.color, count: list.length, extra: list.length ? compactMoney(sum(list)) : "" };
+      });
+
+      const ocean = deals.filter((d) => d.mode === "Ocean Freight");
+      const air = deals.filter((d) => d.mode === "Air Freight");
+      const modeRows = [
+        { label: "Ocean Freight", color: "#023819", count: ocean.length, extra: ocean.length ? compactMoney(sum(ocean)) : "" },
+        { label: "Air Freight", color: "#7FAE2E", count: air.length, extra: air.length ? compactMoney(sum(air)) : "" }
+      ];
+
+      const laneCounts = {};
+      deals.forEach((d) => { laneCounts[d.lane] = (laneCounts[d.lane] || 0) + 1; });
+      const [topLane, topLaneCount] = Object.entries(laneCounts).sort((a, b) => b[1] - a[1])[0];
+      const biggest = deals.reduce((a, b) => (b.value > a.value ? b : a));
+      const lastDeal = deals[0];
+      const daysSinceLast = Math.round((TODAY - new Date(lastDeal.createdAt + "T00:00:00")) / DAY);
+
+      const insights = [
+        winRate === null
+          ? `No deals have closed yet; <strong>${open.length}</strong> ${open.length === 1 ? "is" : "are"} still in progress.`
+          : `Won <strong>${won.length} of ${closed}</strong> closed deals (${winRate}% win rate), worth <strong>${money(sum(won))}</strong>.`,
+        `Most-used lane is <strong>${escapeHtml(topLane)}</strong> (${topLaneCount} ${topLaneCount === 1 ? "deal" : "deals"}).`,
+        `Largest deal: <strong>${money(biggest.value)}</strong> on ${escapeHtml(biggest.lane)} (${escapeHtml(biggest.stage.toLowerCase())}).`,
+        `Last deal created <strong>${formatDate(lastDeal.createdAt)}</strong>, ${daysSinceLast} days ago${daysSinceLast > 90 ? ", so a re-engagement check-in is due" : ""}.`
+      ];
+
+      return `
+        <section class="kpi-cards">
+          ${kpi("Total deals created", deals.length, `Since ${formatDate(c.createdAt)}`, "highlight")}
+          ${kpi("Deals won", won.length, `${money(sum(won))} won value`)}
+          ${kpi("Win rate", winRate === null ? "–" : `${winRate}<small>%</small>`, closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet")}
+          ${kpi("Open pipeline", compactMoney(sum(open)), `${open.length} ${open.length === 1 ? "deal" : "deals"} in progress`, "gold")}
+        </section>
+
+        <div class="tab-grid">
+          <section class="panel">
+            ${panelHead("01", "Deals by stage")}
+            ${segmentBar(stageRows, "Deals by stage")}
+          </section>
+          <div class="detail-col">
+            <section class="panel">
+              ${panelHead("02", "Freight mode")}
+              ${segmentBar(modeRows, "Deals by freight mode")}
+            </section>
+            <section class="panel">
+              ${panelHead("03", "Overview")}
+              <ul class="insights">${insights.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
+              <p class="muted" style="margin-top: 14px">Average deal size ${money(avgDeal)}.</p>
+            </section>
+          </div>
+        </div>
+
+        <h2 class="section-title">All deals</h2>
+        <div class="table-wrap">
+          <table class="data-table" style="min-width: 720px">
+            <thead>
+              <tr>
+                <th>Deal</th>
+                <th>Lane</th>
+                <th>Mode</th>
+                <th>Value (USD)</th>
+                <th>Stage</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${deals.map((d) => `
+                <tr style="cursor: default">
+                  <td>${escapeHtml(d.id)}</td>
+                  <td><span class="deal-lane">${escapeHtml(d.lane)}</span></td>
+                  <td><span class="mode-chip">${escapeHtml(d.mode)}</span></td>
+                  <td><span class="money">${money(d.value)}</span></td>
+                  <td>${chip(d.stage, DEAL_STAGES.find((s) => s.key === d.stage).chip)}</td>
+                  <td>${formatDate(d.createdAt)}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const INVOICE_CHIPS = {
+      "Paid on time": "chip-success",
+      "Paid late": "chip-warning",
+      "Overdue": "chip-error",
+      "Outstanding": "chip-neutral"
+    };
+
+    function creditRating(score) {
+      // Readiness-style scale from the design system: low → error, building → warning, ready → success.
+      if (score >= 80) return { label: "Excellent", chip: "chip-success", advice: "Low risk. Eligible for a limit increase on request." };
+      if (score >= 65) return { label: "Good", chip: "chip-success", advice: "Low risk. Maintain the current limit and terms." };
+      if (score >= 45) return { label: "Fair", chip: "chip-warning", advice: "Moderate risk. Keep the limit under review and follow up on late payments." };
+      return { label: "Poor", chip: "chip-error", advice: "High risk. Hold new credit until overdue invoices are cleared." };
+    }
+
+    function renderCreditTab(c) {
+      const credit = creditFor(c);
+      if (!credit) {
+        return `
+          <div class="empty-stub">
+            <h3>Credit assessment in progress</h3>
+            <p>${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.</p>
+          </div>
+        `;
+      }
+
+      const rating = creditRating(credit.score);
+      const utilisation = Math.round((credit.used / credit.limit) * 100);
+      const utilColor = utilisation > 80 ? "#FF1A1A" : utilisation > 60 ? "#FFCC1A" : "#1F8A5B";
+      const onTimePct = Math.round(credit.onTimeRate * 100);
+      const judged = credit.onTime + credit.late + credit.overdue.length;
+
+      const paymentRows = [
+        { label: "Paid on time", color: "#1F8A5B", count: credit.onTime },
+        { label: "Paid late", color: "#FFCC1A", count: credit.late },
+        { label: "Overdue", color: "#FF1A1A", count: credit.overdue.length },
+        { label: "Not yet due", color: "#D1DBBD", count: credit.outstanding.length }
+      ];
+
+      const overview = [
+        `Pays <strong>${onTimePct}%</strong> of invoices on time (${credit.onTime} of ${judged}), taking <strong>${credit.avgDaysToPay} days</strong> on average against Net ${credit.terms} terms.`,
+        credit.overdue.length
+          ? `<strong>${credit.overdue.length} overdue ${credit.overdue.length === 1 ? "invoice" : "invoices"}</strong> totalling ${money(credit.overdueAmount)}.`
+          : `No overdue invoices.`,
+        `Using <strong>${utilisation}%</strong> of the ${money(credit.limit)} credit limit.`,
+        `<strong>Recommendation:</strong> ${rating.advice}`
+      ];
+
+      return `
+        <section class="kpi-cards">
+          ${kpi("Credit limit", compactMoney(credit.limit), `Net ${credit.terms} payment terms`, "highlight")}
+          ${kpi("Available credit", compactMoney(credit.limit - credit.used), `${compactMoney(credit.used)} in use`)}
+          ${kpi("On-time payments", `${onTimePct}<small>%</small>`, `Avg. ${credit.avgDaysToPay} days to pay`)}
+          ${kpi("Overdue", compactMoney(credit.overdueAmount), credit.overdue.length ? `${credit.overdue.length} ${credit.overdue.length === 1 ? "invoice" : "invoices"} past due` : "Nothing past due", credit.overdueAmount ? "error" : "")}
+        </section>
+
+        <div class="tab-grid">
+          <section class="panel">
+            ${panelHead("01", "Creditworthiness")}
+            <div class="score-wrap">
+              <div class="score-value">${credit.score}<small>/100</small></div>
+              <div style="padding-bottom: 8px">${chip(rating.label, rating.chip)}</div>
+            </div>
+            <div class="score-scale" aria-hidden="true">
+              <span style="flex: 45; background: #FDE0E0"></span>
+              <span style="flex: 20; background: #FFF3CC"></span>
+              <span style="flex: 15; background: #E1F1E8"></span>
+              <span style="flex: 20; background: #B9DEC9"></span>
+            </div>
+            <div class="score-marker-track" aria-hidden="true"><span class="score-marker" style="left: ${credit.score}%"></span></div>
+            <div class="score-labels"><span style="flex: 45">Poor</span><span style="flex: 20">Fair</span><span style="flex: 15">Good</span><span style="flex: 20; text-align: right">Excellent</span></div>
+
+            <div style="margin-top: 22px">
+              <div class="field-label">Credit utilisation</div>
+              <div class="meter" role="img" aria-label="Credit utilisation ${utilisation}%"><span style="width: ${utilisation}%; background: ${utilColor}"></span></div>
+              <div class="meter-legend"><span>${money(credit.used)} used · ${utilisation}%</span><span>${money(credit.limit)} limit</span></div>
+            </div>
+          </section>
+
+          <div class="detail-col">
+            <section class="panel">
+              ${panelHead("02", "Payment behaviour")}
+              ${segmentBar(paymentRows, "Invoices by payment status")}
+            </section>
+            <section class="panel">
+              ${panelHead("03", "Overview")}
+              <ul class="insights">${overview.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
+            </section>
+          </div>
+        </div>
+
+        <h2 class="section-title">Recent invoices</h2>
+        <div class="table-wrap">
+          <table class="data-table" style="min-width: 720px">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Amount (USD)</th>
+                <th>Issued</th>
+                <th>Due</th>
+                <th>Paid</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${credit.invoices.map((inv) => `
+                <tr style="cursor: default">
+                  <td>${escapeHtml(inv.id)}</td>
+                  <td><span class="money">${money(inv.amount)}</span></td>
+                  <td>${formatDate(inv.issued)}</td>
+                  <td>${formatDate(inv.due)}</td>
+                  <td>${inv.paid ? formatDate(inv.paid) : "–"}</td>
+                  <td>${chip(inv.status, INVOICE_CHIPS[inv.status])}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderDetails(id, tabKey) {
       const c = customers.find((x) => x.id === id);
-      updateNav("all");
 
       if (!c) {
         setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
         $("#view").innerHTML = `
-          <a class="back-link" href="#/customers">← Back to all customers</a>
-          <div class="card empty">Customer <strong>${escapeHtml(id)}</strong> was not found.</div>
+          <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+          <div class="not-found">
+            <h2>Customer not found</h2>
+            <p>No customer with ID <strong>${escapeHtml(id)}</strong> exists.</p>
+          </div>
         `;
         return;
       }
 
+      const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
+      const base = `#/customers/${encodeURIComponent(c.id)}`;
+
       setBreadcrumb([
         { label: "Customers", href: "#/customers" },
-        { label: "All Customers", href: "#/customers" },
-        { label: c.companyName }
+        { label: "All customers", href: "#/customers" },
+        { label: c.companyName, href: base },
+        { label: tab.label }
       ]);
 
-      $("#view").innerHTML = `
-        <a class="back-link" href="#/customers">← Back to all customers</a>
+      const body = tab.key === "deals" ? renderDealsTab(c) : tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
 
-        <section class="card profile">
-          <div class="avatar lg">${initials(c.companyName)}</div>
+      $("#view").innerHTML = `
+        <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+
+        <section class="hero">
+          ${avatar(c.companyName, "lg")}
           <div>
-            <h2>${escapeHtml(c.companyName)}</h2>
-            <div class="meta">
-              <span class="muted">${c.id}</span>
-              ${badge(c.status)}
-              <span class="muted">Customer since ${formatDate(c.createdAt)}</span>
+            <h1>${escapeHtml(c.companyName)}</h1>
+            <div class="hero-meta">
+              <span>${escapeHtml(c.id)}</span>
+              ${statusBadge(c.status)}
+              ${classChip(c.customerClass)}
+              <span>Customer since ${formatDate(c.createdAt)}</span>
             </div>
           </div>
         </section>
 
-        <div class="detail-grid">
-          <div>
-            <section class="card">
-              <div class="card-header">Basic Details</div>
-              <div class="fields">
-                ${field("Company name", escapeHtml(c.companyName))}
-                ${field("Customer ID", c.id)}
-                ${field("Customer type", escapeHtml(c.type))}
-                ${field("Industry", escapeHtml(c.industry))}
-                ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
-                ${field("Tax ID", escapeHtml(c.taxId))}
-                ${field("Status", badge(c.status))}
-                ${field("Date added", formatDate(c.createdAt))}
-              </div>
-            </section>
+        <nav class="tabs" aria-label="Customer sections">
+          ${DETAIL_TABS.map((t) => `
+            <a class="tab-btn ${t.key === tab.key ? "active" : ""}" href="${t.key === "basic" ? base : `${base}/${t.key}`}" ${t.key === tab.key ? 'aria-current="page"' : ""}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${t.icon}</svg>
+              ${t.label}
+            </a>`).join("")}
+        </nav>
 
-            <section class="card" style="margin-top: 20px;">
-              <div class="card-header">Address</div>
-              <div class="fields">
-                ${field("Street address", escapeHtml(c.address))}
-                ${field("City", escapeHtml(c.city))}
-                ${field("Country", escapeHtml(c.country))}
-              </div>
-            </section>
-          </div>
-
-          <div>
-            <section class="card">
-              <div class="card-header">Primary Contact</div>
-              <div class="fields single">
-                ${field("Name", escapeHtml(c.contactName))}
-                ${field("Email", `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
-                ${field("Phone", `<a href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
-              </div>
-            </section>
-
-            <section class="card" style="margin-top: 20px;">
-              <div class="card-header">Account</div>
-              <div class="fields single">
-                ${field("Account manager", escapeHtml(c.accountManager))}
-              </div>
-            </section>
-          </div>
-        </div>
+        ${body}
       `;
     }
 
     // ---------------------------------------------------------------
     // Router
     // ---------------------------------------------------------------
+    let lastCustomerId = null;
+
     function router() {
-      const { parts, params } = parseRoute();
-      $("#sidebar").classList.remove("open");
-      window.scrollTo(0, 0);
+      const parts = parseRoute();
 
       if (parts[0] !== "customers") {
         location.hash = "#/customers";
         return;
       }
 
-      if (parts[1]) {
-        renderDetails(decodeURIComponent(parts[1]));
+      const customerId = parts[1] ? decodeURIComponent(parts[1]) : null;
+      // Keep scroll position when switching tabs on the same customer.
+      if (customerId !== lastCustomerId) window.scrollTo(0, 0);
+      lastCustomerId = customerId;
+
+      if (customerId) {
+        renderDetails(customerId, parts[2]);
       } else {
-        const status = params.get("status");
-        renderList(STATUS_LABELS[status] ? status : "");
+        renderList();
       }
     }
 
-    $("#menu-toggle").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
     window.addEventListener("hashchange", router);
     router();
   </script>
