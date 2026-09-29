@@ -3,395 +3,648 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Backoffice · Customers</title>
+  <title>OnePort365 Backoffice · Customers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;500;700&display=swap" />
   <style>
+    /*
+      OnePort 365 — design tokens.
+      Copied from Backoffice2.0/design/tokens.css (source of truth: DESIGN_SYSTEM.md).
+      Do not hand-roll new colors/fonts elsewhere.
+    */
     :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-2: #f0f3f8;
-      --border: #e3e8ef;
-      --text: #1a2233;
-      --text-muted: #667085;
-      --primary: #1f5eff;
-      --primary-soft: #e8efff;
-      --nav-bg: #0f1b3d;
-      --nav-text: #c3cbe0;
-      --nav-active: #ffffff;
-      --success: #067647;
-      --success-soft: #dcfae6;
-      --warning: #b54708;
-      --warning-soft: #fef0c7;
-      --danger: #b42318;
-      --danger-soft: #fee4e2;
-      --radius: 10px;
-      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+      /* ---- Brand colour ---- */
+      --op-dark-green: #023819;
+      --op-light-green: #D1DBBD;
+      --op-accent-lime: #BFFB4F;
+      --op-accent-lime-hover: #a9e83a;
+      --op-gold: #FFCC1A;
+      --op-white: #FFFFFF;
+      --op-cream: #FDFBF1;
+      --op-silver-light: #808080;
+      --op-silver-dark: #383838;
+      --op-error: #FF1A1A;
+      --op-success: #1F8A5B;
+
+      /* ---- Semantic chip pairs (bg / text) ---- */
+      --op-chip-neutral-bg: #EDEFE8;
+      --op-chip-neutral-text: #4a5a3f;
+      --op-chip-success-bg: #E1F1E8;
+      --op-chip-success-text: #0f7a45;
+      --op-chip-warning-bg: #FFF3CC;
+      --op-chip-warning-text: #8a6a00;
+      --op-chip-error-bg: #FDE0E0;
+      --op-chip-error-text: #cc1414;
+      --op-chip-mode-bg: var(--op-light-green);
+      --op-chip-mode-text: var(--op-dark-green);
+
+      /* ---- Borders (dark-green tinted, never flat grey) ---- */
+      --op-border-card: rgba(2, 56, 25, .12);
+      --op-border-divider: rgba(2, 56, 25, .07);
+      --op-border-input: rgba(2, 56, 25, .35);
+
+      /* ---- Avatar fills (deterministic 4-cycle) ---- */
+      --op-avatar-1-bg: #023819;
+      --op-avatar-1-text: #BFFB4F;
+      --op-avatar-2-bg: #BFFB4F;
+      --op-avatar-2-text: #023819;
+      --op-avatar-3-bg: #D1DBBD;
+      --op-avatar-3-text: #023819;
+      --op-avatar-4-bg: #FFCC1A;
+      --op-avatar-4-text: #023819;
+
+      /* ---- Typography ---- */
+      --op-font-display: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --op-font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      /* ---- Spacing — 4px base ---- */
+      --op-space-1: 4px;
+      --op-space-2: 8px;
+      --op-space-3: 12px;
+      --op-space-4: 16px;
+      --op-space-6: 24px;
+      --op-space-8: 40px;
+      --op-space-10: 64px;
+
+      /* ---- Radius ---- */
+      --op-radius-sm: 6px;
+      --op-radius-md: 8px;
+      --op-radius-lg: 12px;
+      --op-radius-xl: 16px;
+      --op-radius-full: 999px;
+
+      /* ---- Elevation (soft green-tinted shadows) ---- */
+      --op-elevation-1: 0 1px 2px rgba(2, 56, 25, .05), 0 1px 3px rgba(2, 56, 25, .04);
+      --op-elevation-2: 0 2px 4px rgba(2, 56, 25, .05), 0 8px 20px -8px rgba(2, 56, 25, .14);
+      --op-elevation-3: 0 4px 8px rgba(2, 56, 25, .06), 0 18px 40px -16px rgba(2, 56, 25, .22);
+      --op-elevation-hero: 0 20px 45px -22px rgba(2, 56, 25, .8);
+
+      /* ---- Focus ring ---- */
+      --op-focus-ring: 0 0 0 3px rgba(191, 251, 79, .4);
     }
 
     * { box-sizing: border-box; }
 
-    html, body { margin: 0; height: 100%; }
+    [hidden] { display: none !important; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.5;
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
-    a { color: var(--primary); text-decoration: none; }
+    html, body { margin: 0; }
+
+    body {
+      background: var(--op-cream);
+      color: var(--op-silver-dark);
+      font-family: var(--op-font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: 2px; }
+
+    a { color: inherit; text-decoration: none; }
 
     button { font: inherit; cursor: pointer; }
 
     /* ---------- Layout ---------- */
-    .app {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      min-height: 100vh;
-    }
+    .app { display: flex; min-height: 100vh; }
 
-    .sidebar {
-      background: var(--nav-bg);
-      color: var(--nav-text);
+    /* Backoffice module rail (matches Backoffice2.0 sidebar) */
+    .rail {
+      width: 64px;
+      background: var(--op-dark-green);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: var(--op-space-6) 0;
+      gap: var(--op-space-2);
+      flex-shrink: 0;
       position: sticky;
       top: 0;
       height: 100vh;
     }
 
-    .brand {
+    .rail-icon {
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 20px;
-      color: #fff;
+      justify-content: center;
+      border-radius: var(--op-radius-md);
+      color: var(--op-light-green);
+    }
+    .rail-icon svg { width: 20px; height: 20px; }
+    .rail-icon.active { background: var(--op-accent-lime); color: var(--op-dark-green); }
+    .rail-icon:hover:not(.active) { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .rail-spacer { flex: 1; }
+
+    .rail-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--op-avatar-1-bg);
+      color: var(--op-avatar-1-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--op-font-display);
+      font-weight: 600;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    /* Customer module side nav */
+    .subnav {
+      width: 232px;
+      flex-shrink: 0;
+      background: var(--op-white);
+      border-right: 1px solid var(--op-border-card);
+      padding: var(--op-space-6) var(--op-space-3);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .subnav-title {
+      font-family: var(--op-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      padding: 0 var(--op-space-3);
+      margin: 0 0 var(--op-space-6);
+    }
+
+    .subnav-eyebrow {
+      font-size: 11px;
       font-weight: 700;
-      font-size: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .brand-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      background: var(--primary);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-    }
-
-    .brand small {
-      display: block;
-      font-weight: 400;
-      font-size: 11px;
-      color: var(--nav-text);
-    }
-
-    .nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
-
-    .nav-section-title {
-      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #7f8bab;
-      padding: 0 10px;
-      margin: 8px 0 8px;
+      letter-spacing: .1em;
+      color: var(--op-silver-light);
+      padding: 0 var(--op-space-3);
+      margin: 0 0 var(--op-space-2);
     }
 
-    .nav a {
+    .subnav-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .subnav a {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 9px 10px;
-      border-radius: 8px;
-      color: var(--nav-text);
-      margin-bottom: 2px;
+      padding: 9px var(--op-space-3);
+      border-radius: var(--op-radius-md);
+      color: var(--op-silver-dark);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .subnav a:hover { background: var(--op-chip-neutral-bg); color: var(--op-dark-green); }
+    .subnav a.active {
+      background: var(--op-light-green);
+      color: var(--op-dark-green);
+      font-weight: 700;
     }
 
-    .nav a:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
-
-    .nav a.active { background: rgba(255, 255, 255, 0.12); color: var(--nav-active); font-weight: 600; }
-
-    .nav .count {
+    .subnav .count {
       font-size: 11px;
-      background: rgba(255, 255, 255, 0.1);
+      font-weight: 700;
+      min-width: 24px;
+      text-align: center;
       padding: 1px 8px;
-      border-radius: 999px;
+      border-radius: var(--op-radius-full);
+      background: var(--op-chip-neutral-bg);
+      color: var(--op-chip-neutral-text);
+    }
+    .subnav a.active .count { background: var(--op-dark-green); color: var(--op-accent-lime); }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: var(--op-space-6) 28px 40px;
     }
 
-    .nav-footer {
-      padding: 16px 20px;
-      font-size: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    .content { max-width: 1160px; }
 
-    .main { min-width: 0; }
-
+    /* Top bar (matches Backoffice2.0) */
     .topbar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 28px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-
-    .menu-toggle {
-      display: none;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 6px 10px;
-    }
-
-    .breadcrumb { color: var(--text-muted); font-size: 13px; }
-    .breadcrumb a { color: var(--text-muted); }
-    .breadcrumb a:hover { color: var(--primary); }
-    .breadcrumb .sep { margin: 0 6px; }
-    .breadcrumb strong { color: var(--text); font-weight: 600; }
-
-    .content { padding: 28px; max-width: 1200px; }
-
-    .page-header {
-      display: flex;
-      align-items: flex-end;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      gap: var(--op-space-3);
+      margin-bottom: 18px;
     }
 
-    .page-header h1 { margin: 0; font-size: 22px; }
-    .page-header p { margin: 4px 0 0; color: var(--text-muted); }
-
-    /* ---------- Stats ---------- */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-
-    .stat .label { color: var(--text-muted); font-size: 12px; }
-    .stat .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
-
-    /* ---------- Card / Table ---------- */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .toolbar {
+    .breadcrumb {
       display: flex;
-      gap: 12px;
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
+      align-items: center;
       flex-wrap: wrap;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--op-silver-light);
+      font-size: 13px;
     }
+    .breadcrumb a:hover { color: var(--op-dark-green); }
+    .breadcrumb strong { color: var(--op-dark-green); }
 
-    .input, .select {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font: inherit;
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .input { flex: 1; min-width: 200px; }
-    .input:focus, .select:focus { outline: 2px solid var(--primary-soft); border-color: var(--primary); }
-
-    .table-wrap { overflow-x: auto; }
-
-    table { width: 100%; border-collapse: collapse; }
-
-    th, td {
-      text-align: left;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
+    .brand {
+      font-family: var(--op-font-display);
+      font-weight: 700;
+      color: var(--op-dark-green);
+      font-size: 15px;
       white-space: nowrap;
     }
+    .brand span { color: var(--op-accent-lime); -webkit-text-stroke: 0.4px var(--op-dark-green); }
 
-    th {
-      font-size: 12px;
+    .page-header { margin-bottom: var(--op-space-6); }
+    .page-header h1 {
+      margin: 0 0 4px;
+      font-family: var(--op-font-display);
+      font-size: 32px;
       font-weight: 600;
-      color: var(--text-muted);
-      background: var(--surface-2);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: -.015em;
+      color: var(--op-dark-green);
+      line-height: 1.15;
     }
 
-    tbody tr { cursor: pointer; }
-    tbody tr:hover { background: #f8faff; }
-    tbody tr:last-child td { border-bottom: none; }
+    .muted { color: var(--op-silver-light); margin: 0; font-size: 12.5px; }
+
+    /* ---------- Stat cards ---------- */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-6);
+    }
+    .stat-card {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-4);
+      box-shadow: var(--op-elevation-2);
+    }
+    .stat-card.highlight { background: var(--op-light-green); box-shadow: none; }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--op-silver-light); margin-bottom: var(--op-space-3); }
+    .stat-card.highlight .stat-label { color: var(--op-dark-green); }
+    .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
+    .stat-sub { font-size: 12.5px; color: var(--op-silver-light); margin-top: 10px; }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--op-space-3);
+      margin-bottom: var(--op-space-4);
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 12px;
+      border-radius: var(--op-radius-md);
+      border: 1.5px solid var(--op-border-input);
+      font-size: 13.5px;
+      font-family: inherit;
+      background: var(--op-white);
+      color: var(--op-dark-green);
+    }
+    .search-input:hover { border-color: var(--op-dark-green); }
+    .search-input:focus-visible { border-color: var(--op-dark-green); border-width: 2px; padding: 8.5px 11.5px; box-shadow: var(--op-focus-ring); outline: none; }
+    .search-input::placeholder { color: var(--op-silver-light); }
+
+    .field-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      color: var(--op-silver-light);
+    }
+    .field-inline select {
+      padding: 8px 10px;
+      border-radius: var(--op-radius-md);
+      border: 1.5px solid var(--op-border-input);
+      background: var(--op-white);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--op-dark-green);
+    }
+    .field-inline select:hover { border-color: var(--op-dark-green); }
+
+    /* ---------- Table ---------- */
+    .table-wrap {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      overflow-x: auto;
+      box-shadow: var(--op-elevation-1);
+    }
+
+    .data-table { width: 100%; min-width: 720px; border-collapse: collapse; }
+    .data-table th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-weight: 700;
+      color: var(--op-silver-light);
+      background: var(--op-chip-neutral-bg);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--op-border-card);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--op-border-divider);
+      font-size: 13.5px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .data-table tbody tr { cursor: pointer; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover { background: #F4F6EF; }
 
     .customer-cell { display: flex; align-items: center; gap: 10px; }
+    .customer-name { font-weight: 700; color: var(--op-dark-green); }
 
-    .avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--primary-soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .avatar.lg { width: 56px; height: 56px; font-size: 18px; }
-
-    .muted { color: var(--text-muted); font-size: 12px; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge.active { background: var(--success-soft); color: var(--success); }
-    .badge.pending { background: var(--warning-soft); color: var(--warning); }
-    .badge.inactive { background: var(--danger-soft); color: var(--danger); }
-
-    .empty { padding: 40px; text-align: center; color: var(--text-muted); }
+    .table-empty { padding: 40px 16px; text-align: center; color: var(--op-silver-light); font-size: 13.5px; }
 
     .pagination {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: var(--op-space-3);
       padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 13px;
+      border-top: 1px solid var(--op-border-card);
+      color: var(--op-silver-light);
+      font-size: 12.5px;
+      background: var(--op-white);
+      position: sticky;
+      left: 0;
     }
 
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-weight: 500;
-    }
-
-    .btn:hover:not(:disabled) { background: var(--surface-2); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: #1a4fd8; }
-
-    .btn-group { display: flex; gap: 8px; }
-
-    /* ---------- Details ---------- */
-    .profile {
+    /* ---------- Avatars (deterministic squircles) ---------- */
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 20px;
-      flex-wrap: wrap;
+      justify-content: center;
+      font-family: var(--op-font-display);
+      font-weight: 600;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .avatar.sm { width: 28px; height: 28px; border-radius: var(--op-radius-sm); font-size: 11px; }
+    .avatar.lg { width: 62px; height: 62px; border-radius: 16px; font-size: 20px; }
+    .avatar.fill-1 { background: var(--op-avatar-1-bg); color: var(--op-avatar-1-text); }
+    .avatar.fill-2 { background: var(--op-avatar-2-bg); color: var(--op-avatar-2-text); }
+    .avatar.fill-3 { background: var(--op-avatar-3-bg); color: var(--op-avatar-3-text); }
+    .avatar.fill-4 { background: var(--op-avatar-4-bg); color: var(--op-avatar-4-text); }
+
+    .owner-cell { display: flex; align-items: center; gap: 8px; }
+
+    /* ---------- Chips ---------- */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .status-active { background: var(--op-chip-success-bg); color: var(--op-chip-success-text); }
+    .status-pending { background: var(--op-chip-warning-bg); color: var(--op-chip-warning-text); }
+    /* Inactive is not an error, so it uses the neutral pair (red is reserved for overdue/failed). */
+    .status-inactive { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
+    .status-inactive::before { background: var(--op-silver-light); }
+
+    .mode-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      background: var(--op-chip-mode-bg);
+      color: var(--op-chip-mode-text);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .profile h2 { margin: 0; font-size: 20px; }
-    .profile .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+    /* ---------- Buttons ---------- */
+    .view-btn {
+      border: 1.5px solid var(--op-dark-green);
+      background: var(--op-white);
+      border-radius: var(--op-radius-md);
+      padding: 6px 12px;
+      font-family: var(--op-font-display);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      white-space: nowrap;
+      transition: background-color .16s, color .16s;
+    }
+    .view-btn:hover:not(:disabled) { background: var(--op-dark-green); color: var(--op-accent-lime); }
+    .view-btn:disabled { background: #8FA08C; border-color: #8FA08C; color: var(--op-cream); cursor: not-allowed; }
+
+    .btn-group { display: flex; gap: var(--op-space-2); }
+
+    .text-link {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--op-dark-green);
+      border-bottom: 1.5px solid var(--op-dark-green);
+    }
+    .text-link:hover { color: var(--op-success); border-color: var(--op-success); }
+
+    .back-link { display: inline-block; margin-bottom: var(--op-space-4); }
+
+    /* ---------- Details ---------- */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      background: var(--op-dark-green);
+      color: var(--op-cream);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-6);
+      box-shadow: var(--op-elevation-hero);
+    }
+    .hero h1 {
+      margin: 0 0 6px;
+      font-family: var(--op-font-display);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -.015em;
+      line-height: 1.15;
+      color: var(--op-cream);
+    }
+    .hero-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--op-light-green); }
+    .hero-meta .dot { opacity: .5; }
 
     .detail-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--op-space-4);
+      margin-top: var(--op-space-6);
+      align-items: start;
+    }
+    .detail-col { display: flex; flex-direction: column; gap: var(--op-space-4); }
+
+    .panel {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      box-shadow: var(--op-elevation-2);
+      padding: var(--op-space-6);
     }
 
-    .card-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .panel-num { font-family: var(--op-font-display); font-size: 18px; color: #2f6b1e; }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--op-silver-light);
     }
 
     .fields {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px 24px;
-      padding: 20px;
     }
-
     .fields.single { grid-template-columns: 1fr; }
 
-    .field .label { color: var(--text-muted); font-size: 12px; margin-bottom: 2px; }
-    .field .value { font-weight: 500; word-break: break-word; }
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--op-silver-light);
+      margin-bottom: 4px;
+    }
+    .field-value { color: var(--op-dark-green); font-weight: 500; font-size: 14px; word-break: break-word; }
+    .field-value .text-link { font-size: 13.5px; }
 
-    .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; font-weight: 500; }
+    .owner-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F4F6EF;
+      border: 1px solid rgba(2, 56, 25, .1);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+    .owner-chip .name { font-weight: 700; font-size: 14px; color: var(--op-dark-green); }
+    .owner-chip .role { font-size: 12px; color: var(--op-silver-light); }
+
+    .not-found {
+      background: var(--op-white);
+      border: 1px dashed var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: 48px;
+      text-align: center;
+      color: var(--op-silver-light);
+    }
+    .not-found h2 { margin-top: 0; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
 
     /* ---------- Responsive ---------- */
-    @media (max-width: 960px) {
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 1100px) {
+      .stat-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .detail-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 240px;
-        z-index: 20;
-        transform: translateX(-100%);
-        transition: transform 0.2s ease;
+      .app { flex-direction: column; }
+      .rail {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 10px 16px;
+        position: static;
       }
-      .sidebar.open { transform: translateX(0); }
-      .menu-toggle { display: inline-block; }
-      .content { padding: 16px; }
-      .topbar { padding: 12px 16px; }
+      .rail-avatar { margin-top: 0; }
+      .subnav {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--op-border-card);
+        padding: var(--op-space-3) 16px;
+      }
+      .subnav-title, .subnav-eyebrow { display: none; }
+      .subnav-list { flex-direction: row; overflow-x: auto; }
+      .main { padding: var(--op-space-4) 16px 40px; }
+      .page-header h1, .hero h1 { font-size: 24px; }
+      .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
+      .panel, .hero { padding: var(--op-space-4); }
     }
   </style>
 </head>
 <body>
   <div class="app">
+    <!-- Backoffice module rail -->
+    <aside class="rail" aria-label="Backoffice modules">
+      <a class="rail-icon" href="#/customers" title="Dashboard" aria-label="Dashboard">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 19h4V10H4v9zm6 0h4V4h-4v15zm6 0h4v-7h-4v7z"/></svg>
+      </a>
+      <a class="rail-icon" href="#/customers" title="Shipments" aria-label="Shipments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>
+      </a>
+      <a class="rail-icon active" href="#/customers" title="Customers" aria-label="Customers" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11a4 4 0 100-8 4 4 0 000 8zM2 21a7 7 0 0114 0M16 3.5a4 4 0 010 7M22 21a7 7 0 00-4-6.3"/></svg>
+      </a>
+      <a class="rail-icon" href="#/customers" title="Chat" aria-label="Chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>
+      </a>
+      <div class="rail-spacer"></div>
+      <a class="rail-icon" href="#/customers" title="Notifications" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1112 0c0 4 2 5 2 5H4s2-1 2-5zM10 20a2 2 0 004 0"/></svg>
+      </a>
+      <div class="rail-avatar" title="Current user">NK</div>
+    </aside>
+
     <!-- Customer module side nav -->
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="brand-mark">OP</div>
-        <div>
-          Backoffice
-          <small>Customer Module</small>
-        </div>
-      </div>
-      <nav class="nav" aria-label="Customer navigation">
-        <div class="nav-section-title">Customers</div>
-        <a href="#/customers" data-nav="all">All Customers <span class="count" id="count-all">0</span></a>
+    <nav class="subnav" aria-label="Customer navigation">
+      <h2 class="subnav-title">Customers</h2>
+      <div class="subnav-eyebrow">Views</div>
+      <div class="subnav-list">
+        <a href="#/customers" data-nav="all">All customers <span class="count" id="count-all">0</span></a>
         <a href="#/customers?status=active" data-nav="active">Active <span class="count" id="count-active">0</span></a>
         <a href="#/customers?status=pending" data-nav="pending">Pending <span class="count" id="count-pending">0</span></a>
         <a href="#/customers?status=inactive" data-nav="inactive">Inactive <span class="count" id="count-inactive">0</span></a>
-      </nav>
-      <div class="nav-footer">Signed in as Backoffice Admin</div>
-    </aside>
+      </div>
+    </nav>
 
-    <div class="main">
+    <main class="main">
       <header class="topbar">
-        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
         <div class="breadcrumb" id="breadcrumb"></div>
+        <div class="brand">OnePort<span>365</span></div>
       </header>
-      <main class="content" id="view"></main>
-    </div>
+      <div class="content" id="view"></div>
+    </main>
   </div>
 
   <script>
@@ -399,18 +652,18 @@
     // Sample data. Replace with an API call when the backend is ready.
     // ---------------------------------------------------------------
     const customers = [
-      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", type: "Importer", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Chioma Eze", createdAt: "2025-01-14" },
-      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", type: "Exporter", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Tunde Ade", createdAt: "2025-02-03" },
-      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", type: "Importer & Exporter", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Chioma Eze", createdAt: "2025-03-21" },
-      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", type: "Importer", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Femi Johnson", createdAt: "2025-04-09" },
-      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", type: "Importer", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Tunde Ade", createdAt: "2024-11-28" },
-      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", type: "Importer", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Chioma Eze", createdAt: "2025-05-17" },
-      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", type: "Exporter", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Femi Johnson", createdAt: "2025-06-02" },
-      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", type: "Importer & Exporter", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Tunde Ade", createdAt: "2025-06-25" },
-      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", type: "Importer", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Chioma Eze", createdAt: "2025-07-11" },
-      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", type: "Importer", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Femi Johnson", createdAt: "2024-09-30" },
-      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", type: "Exporter", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Tunde Ade", createdAt: "2025-08-04" },
-      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", type: "Importer", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Chioma Eze", createdAt: "2025-09-12" }
+      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", type: "Importer", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
+      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", type: "Exporter", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
+      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", type: "Importer & Exporter", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
+      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", type: "Importer", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
+      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", type: "Importer", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
+      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", type: "Importer", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
+      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", type: "Exporter", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
+      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", type: "Importer & Exporter", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
+      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", type: "Importer", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
+      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", type: "Importer", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
+      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", type: "Exporter", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
+      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", type: "Importer", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
     const PAGE_SIZE = 8;
@@ -433,32 +686,45 @@
       return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
     }
 
+    // Deterministic avatar fill: the same name always gets the same brand fill (design system §08).
+    function avatarFill(name) {
+      let hash = 0;
+      for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+      return "fill-" + ((hash % 4) + 1);
+    }
+
+    function avatar(name, size = "") {
+      return `<div class="avatar ${size} ${avatarFill(name)}" aria-hidden="true">${escapeHtml(initials(name))}</div>`;
+    }
+
     function formatDate(iso) {
       return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     }
 
-    function badge(status) {
-      return `<span class="badge ${status}">${STATUS_LABELS[status] || status}</span>`;
+    function statusBadge(status) {
+      return `<span class="status-badge status-${status}">${STATUS_LABELS[status] || escapeHtml(status)}</span>`;
+    }
+
+    function countBy(status) {
+      return customers.filter((c) => c.status === status).length;
     }
 
     function parseRoute() {
       const hash = location.hash.replace(/^#/, "") || "/customers";
       const [path, query = ""] = hash.split("?");
-      const params = new URLSearchParams(query);
-      const parts = path.split("/").filter(Boolean);
-      return { parts, params };
+      return { parts: path.split("/").filter(Boolean), params: new URLSearchParams(query) };
     }
 
     // ---------------------------------------------------------------
-    // Side nav
+    // Side nav + breadcrumb
     // ---------------------------------------------------------------
     function updateNav(activeKey) {
       $("#count-all").textContent = customers.length;
-      Object.keys(STATUS_LABELS).forEach((s) => {
-        $("#count-" + s).textContent = customers.filter((c) => c.status === s).length;
-      });
-      document.querySelectorAll(".nav a").forEach((a) => {
-        a.classList.toggle("active", a.dataset.nav === activeKey);
+      Object.keys(STATUS_LABELS).forEach((s) => { $("#count-" + s).textContent = countBy(s); });
+      document.querySelectorAll(".subnav a").forEach((a) => {
+        const isActive = a.dataset.nav === activeKey;
+        a.classList.toggle("active", isActive);
+        if (isActive) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
       });
     }
 
@@ -467,7 +733,7 @@
         .map((item, i) => i === items.length - 1
           ? `<strong>${escapeHtml(item.label)}</strong>`
           : `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
-        .join('<span class="sep">/</span>');
+        .join("<span aria-hidden=\"true\">/</span>");
     }
 
     // ---------------------------------------------------------------
@@ -475,53 +741,67 @@
     // ---------------------------------------------------------------
     function renderList(statusFilter) {
       updateNav(statusFilter || "all");
-      const title = statusFilter ? `${STATUS_LABELS[statusFilter]} Customers` : "All Customers";
+      const title = statusFilter ? `${STATUS_LABELS[statusFilter]} customers` : "All customers";
       setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: title }]);
 
-      const count = (s) => customers.filter((c) => c.status === s).length;
+      const pct = (n) => customers.length ? Math.round((n / customers.length) * 100) : 0;
 
       $("#view").innerHTML = `
         <div class="page-header">
-          <div>
-            <h1>${title}</h1>
-            <p>View and manage basic information for every customer.</p>
-          </div>
+          <h1>${title}</h1>
+          <p class="muted">Basic information for every OnePort365 customer.</p>
         </div>
 
-        <section class="stats">
-          <div class="stat"><div class="label">Total customers</div><div class="value">${customers.length}</div></div>
-          <div class="stat"><div class="label">Active</div><div class="value">${count("active")}</div></div>
-          <div class="stat"><div class="label">Pending</div><div class="value">${count("pending")}</div></div>
-          <div class="stat"><div class="label">Inactive</div><div class="value">${count("inactive")}</div></div>
+        <section class="stat-cards">
+          <div class="stat-card highlight">
+            <div class="stat-label">Total customers</div>
+            <div class="stat-value">${customers.length}</div>
+            <div class="stat-sub">All registered accounts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active</div>
+            <div class="stat-value">${countBy("active")}</div>
+            <div class="stat-sub">${pct(countBy("active"))}% of customers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value">${countBy("pending")}</div>
+            <div class="stat-sub">Awaiting onboarding</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Inactive</div>
+            <div class="stat-value">${countBy("inactive")}</div>
+            <div class="stat-sub">No recent activity</div>
+          </div>
         </section>
 
-        <section class="card">
-          <div class="toolbar">
-            <input class="input" id="search" type="search" placeholder="Search by company, contact, email or ID…" value="${escapeHtml(state.search)}" />
-            <select class="select" id="status-filter" aria-label="Filter by status">
+        <div class="toolbar">
+          <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or ID…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
+          <label class="field-inline">Status
+            <select id="status-filter">
               <option value="">All statuses</option>
               ${Object.entries(STATUS_LABELS).map(([k, v]) =>
                 `<option value="${k}" ${k === statusFilter ? "selected" : ""}>${v}</option>`).join("")}
             </select>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Customer</th>
-                  <th>Customer ID</th>
-                  <th>Contact</th>
-                  <th>Type</th>
-                  <th>Country</th>
-                  <th>Status</th>
-                  <th>Date Added</th>
-                </tr>
-              </thead>
-              <tbody id="customer-rows"></tbody>
-            </table>
-          </div>
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Primary contact</th>
+                <th>Type</th>
+                <th>Country</th>
+                <th>Status</th>
+                <th>Date added</th>
+              </tr>
+            </thead>
+            <tbody id="customer-rows"></tbody>
+          </table>
           <div class="pagination" id="pagination"></div>
-        </section>
+        </div>
       `;
 
       $("#search").addEventListener("input", (e) => {
@@ -553,30 +833,32 @@
 
       const tbody = $("#customer-rows");
       if (!pageItems.length) {
-        tbody.innerHTML = `<tr><td colspan="7" class="empty">No customers match your search.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">No customers match your search.</td></tr>`;
       } else {
         tbody.innerHTML = pageItems.map((c) => `
-          <tr data-id="${c.id}" tabindex="0">
+          <tr data-id="${escapeHtml(c.id)}" tabindex="0">
             <td>
               <div class="customer-cell">
-                <div class="avatar">${initials(c.companyName)}</div>
+                ${avatar(c.companyName)}
                 <div>
-                  <div><strong>${escapeHtml(c.companyName)}</strong></div>
-                  <div class="muted">${escapeHtml(c.email)}</div>
+                  <div class="customer-name">${escapeHtml(c.companyName)}</div>
+                  <div class="muted">${escapeHtml(c.id)}</div>
                 </div>
               </div>
             </td>
-            <td>${c.id}</td>
-            <td>${escapeHtml(c.contactName)}</td>
-            <td>${escapeHtml(c.type)}</td>
+            <td>
+              <div>${escapeHtml(c.contactName)}</div>
+              <div class="muted">${escapeHtml(c.email)}</div>
+            </td>
+            <td><span class="mode-chip">${escapeHtml(c.type)}</span></td>
             <td>${escapeHtml(c.country)}</td>
-            <td>${badge(c.status)}</td>
+            <td>${statusBadge(c.status)}</td>
             <td>${formatDate(c.createdAt)}</td>
           </tr>
         `).join("");
 
         tbody.querySelectorAll("tr[data-id]").forEach((row) => {
-          const open = () => { location.hash = `#/customers/${row.dataset.id}`; };
+          const open = () => { location.hash = `#/customers/${encodeURIComponent(row.dataset.id)}`; };
           row.addEventListener("click", open);
           row.addEventListener("keydown", (e) => { if (e.key === "Enter") open(); });
         });
@@ -587,8 +869,8 @@
       $("#pagination").innerHTML = `
         <span>Showing ${from}–${to} of ${filtered.length}</span>
         <div class="btn-group">
-          <button class="btn" id="prev" ${state.page <= 1 ? "disabled" : ""}>Previous</button>
-          <button class="btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
+          <button class="view-btn" id="prev" ${state.page <= 1 ? "disabled" : ""}>Previous</button>
+          <button class="view-btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
         </div>
       `;
       $("#prev").addEventListener("click", () => { state.page--; renderRows(statusFilter); });
@@ -599,7 +881,16 @@
     // Customer details view
     // ---------------------------------------------------------------
     function field(label, value) {
-      return `<div class="field"><div class="label">${label}</div><div class="value">${value}</div></div>`;
+      return `<div><div class="field-label">${label}</div><div class="field-value">${value}</div></div>`;
+    }
+
+    function panel(num, title, body, single = false) {
+      return `
+        <section class="panel">
+          <div class="panel-head"><span class="panel-num">${num}</span><span class="panel-title">${title}</span></div>
+          <div class="fields ${single ? "single" : ""}">${body}</div>
+        </section>
+      `;
     }
 
     function renderDetails(id) {
@@ -609,75 +900,73 @@
       if (!c) {
         setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
         $("#view").innerHTML = `
-          <a class="back-link" href="#/customers">← Back to all customers</a>
-          <div class="card empty">Customer <strong>${escapeHtml(id)}</strong> was not found.</div>
+          <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+          <div class="not-found">
+            <h2>Customer not found</h2>
+            <p>No customer with ID <strong>${escapeHtml(id)}</strong> exists.</p>
+          </div>
         `;
         return;
       }
 
       setBreadcrumb([
         { label: "Customers", href: "#/customers" },
-        { label: "All Customers", href: "#/customers" },
+        { label: "All customers", href: "#/customers" },
         { label: c.companyName }
       ]);
 
       $("#view").innerHTML = `
-        <a class="back-link" href="#/customers">← Back to all customers</a>
+        <a class="text-link back-link" href="#/customers">← Back to all customers</a>
 
-        <section class="card profile">
-          <div class="avatar lg">${initials(c.companyName)}</div>
+        <section class="hero">
+          ${avatar(c.companyName, "lg")}
           <div>
-            <h2>${escapeHtml(c.companyName)}</h2>
-            <div class="meta">
-              <span class="muted">${c.id}</span>
-              ${badge(c.status)}
-              <span class="muted">Customer since ${formatDate(c.createdAt)}</span>
+            <h1>${escapeHtml(c.companyName)}</h1>
+            <div class="hero-meta">
+              <span>${escapeHtml(c.id)}</span>
+              ${statusBadge(c.status)}
+              <span>Customer since ${formatDate(c.createdAt)}</span>
             </div>
           </div>
         </section>
 
         <div class="detail-grid">
-          <div>
-            <section class="card">
-              <div class="card-header">Basic Details</div>
-              <div class="fields">
-                ${field("Company name", escapeHtml(c.companyName))}
-                ${field("Customer ID", c.id)}
-                ${field("Customer type", escapeHtml(c.type))}
-                ${field("Industry", escapeHtml(c.industry))}
-                ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
-                ${field("Tax ID", escapeHtml(c.taxId))}
-                ${field("Status", badge(c.status))}
-                ${field("Date added", formatDate(c.createdAt))}
-              </div>
-            </section>
-
-            <section class="card" style="margin-top: 20px;">
-              <div class="card-header">Address</div>
-              <div class="fields">
-                ${field("Street address", escapeHtml(c.address))}
-                ${field("City", escapeHtml(c.city))}
-                ${field("Country", escapeHtml(c.country))}
-              </div>
-            </section>
+          <div class="detail-col">
+            ${panel("01", "Basic details", `
+              ${field("Company name", escapeHtml(c.companyName))}
+              ${field("Customer ID", escapeHtml(c.id))}
+              ${field("Customer type", `<span class="mode-chip">${escapeHtml(c.type)}</span>`)}
+              ${field("Industry", escapeHtml(c.industry))}
+              ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
+              ${field("Tax ID", escapeHtml(c.taxId))}
+              ${field("Status", statusBadge(c.status))}
+              ${field("Date added", formatDate(c.createdAt))}
+            `)}
+            ${panel("02", "Address", `
+              ${field("Street address", escapeHtml(c.address))}
+              ${field("City", escapeHtml(c.city))}
+              ${field("Country", escapeHtml(c.country))}
+            `)}
           </div>
 
-          <div>
-            <section class="card">
-              <div class="card-header">Primary Contact</div>
-              <div class="fields single">
-                ${field("Name", escapeHtml(c.contactName))}
-                ${field("Email", `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
-                ${field("Phone", `<a href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
+          <div class="detail-col">
+            ${panel("03", "Primary contact", `
+              ${field("Name", escapeHtml(c.contactName))}
+              ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
+              ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
+            `, true)}
+            ${panel("04", "Account", `
+              <div>
+                <div class="field-label">Account manager</div>
+                <div class="owner-chip">
+                  ${avatar(c.accountManager, "sm")}
+                  <div>
+                    <div class="name">${escapeHtml(c.accountManager)}</div>
+                    <div class="role">Account manager</div>
+                  </div>
+                </div>
               </div>
-            </section>
-
-            <section class="card" style="margin-top: 20px;">
-              <div class="card-header">Account</div>
-              <div class="fields single">
-                ${field("Account manager", escapeHtml(c.accountManager))}
-              </div>
-            </section>
+            `, true)}
           </div>
         </div>
       `;
@@ -688,7 +977,6 @@
     // ---------------------------------------------------------------
     function router() {
       const { parts, params } = parseRoute();
-      $("#sidebar").classList.remove("open");
       window.scrollTo(0, 0);
 
       if (parts[0] !== "customers") {
@@ -704,7 +992,6 @@
       }
     }
 
-    $("#menu-toggle").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
     window.addEventListener("hashchange", router);
     router();
   </script>
