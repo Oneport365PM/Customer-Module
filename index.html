@@ -1733,19 +1733,19 @@
       "Logistics", "Oil & Gas", "Pharmaceuticals", "Textiles", "Other"
     ];
     const CLASSES = ["Growth", "SME", "Enterprise"];
-    const CHANNELS = ["Internal", "Website"];
 
+    // Order follows the agreed onboarding flow. Registration channel is set by the system, not the form.
     const ADD_FIELDS = [
       { group: "Company", id: "companyName", label: "Company name", required: true, autocomplete: "organization", placeholder: "e.g. Adeola Foods Ltd", span: true },
-      { group: "Company", id: "industry", label: "Industry", required: true, options: INDUSTRIES },
+      { group: "Company", id: "rcNumber", label: "RC number", required: true, message: "Enter the RC number.", placeholder: "e.g. RC 1234567" },
+      { group: "Company", id: "taxId", label: "Tax ID", required: true, message: "Enter the tax ID.", placeholder: "e.g. TIN 20394857-0001" },
+      { group: "Company", id: "industry", label: "Industry (optional)", options: INDUSTRIES, placeholderOption: "Select industry" },
       { group: "Company", id: "customerClass", label: "Class", required: true, message: "Select the customer class.", options: CLASSES },
-      { group: "Registration", id: "channel", label: "Registration channel", required: true, options: CHANNELS, value: "Internal" },
-      { group: "Registration", id: "rcNumber", label: "Registration (RC) number", required: true, message: "Enter the registration (RC) number.", placeholder: "e.g. RC 1234567" },
-      { group: "Registration", id: "taxId", label: "Tax ID", placeholder: "Optional" },
-      { group: "Contact & address", id: "contactName", label: "Primary contact", required: true, message: "Enter the primary contact's name.", autocomplete: "name", placeholder: "Full name" },
-      { group: "Contact & address", id: "email", label: "Email", required: true, message: "Enter the email address.", type: "email", autocomplete: "email", placeholder: "name@company.com" },
-      { group: "Contact & address", id: "phone", label: "Phone", required: true, message: "Enter the phone number.", type: "tel", autocomplete: "tel", placeholder: "+234 800 000 0000" },
-      { group: "Contact & address", id: "address", label: "Address", required: true, autocomplete: "street-address", placeholder: "Street, city, country", span: true },
+      { group: "Company", id: "address", label: "Company address", required: true, autocomplete: "street-address", placeholder: "Street, city, country", span: true },
+      { group: "Primary contact", id: "firstName", label: "First name", required: true, message: "Enter the primary contact's first name.", autocomplete: "given-name" },
+      { group: "Primary contact", id: "lastName", label: "Last name", required: true, message: "Enter the primary contact's last name.", autocomplete: "family-name" },
+      { group: "Primary contact", id: "email", label: "Email address", required: true, type: "email", autocomplete: "email", placeholder: "name@company.com" },
+      { group: "Primary contact", id: "phone", label: "Phone number", required: true, type: "tel", autocomplete: "tel", placeholder: "+234 800 000 0000" },
       { group: "Account manager", id: "accountManager", label: "Account manager", required: true, options: ACCOUNT_MANAGERS }
     ];
 
@@ -1754,7 +1754,7 @@
       const aria = `aria-describedby="err-${f.id}" ${f.required ? 'aria-required="true"' : ""}`;
       const control = f.options
         ? `<select id="f-${f.id}" name="${f.id}" ${aria}>
-             <option value="">Select ${escapeHtml(f.label.toLowerCase())}</option>
+             <option value="">${escapeHtml(f.placeholderOption || `Select ${f.label.toLowerCase()}`)}</option>
              ${f.options.map((o) => `<option value="${escapeHtml(o)}" ${o === f.value ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}
            </select>`
         : `<input id="f-${f.id}" name="${f.id}" type="${f.type || "text"}" ${f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""} placeholder="${escapeHtml(f.placeholder || "")}" ${aria} />`;
@@ -1861,16 +1861,18 @@
         const customer = {
           id: nextCustomerId(),
           companyName: values.companyName,
-          contactName: values.contactName,
+          contactName: `${values.firstName} ${values.lastName}`,
+          firstName: values.firstName,
+          lastName: values.lastName,
           email: values.email,
           phone: values.phone,
           customerClass: values.customerClass,
-          channel: values.channel,
+          channel: "Internal", // set by the system for customers added in the backoffice
           status: "pending",
           address: values.address,
-          industry: values.industry,
+          industry: values.industry || "Not provided",
           rcNumber: values.rcNumber,
-          taxId: values.taxId || "Not provided",
+          taxId: values.taxId,
           accountManager: values.accountManager,
           createdAt: isoDate(new Date()),
           addedInBackoffice: true
