@@ -510,10 +510,150 @@
     }
     .not-found h2 { margin-top: 0; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
 
+    /* ---------- Detail tabs (matches Backoffice2.0 .tabs) ---------- */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--op-border-card);
+      margin: var(--op-space-6) 0;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px var(--op-space-4);
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--op-silver-light);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .tab-btn svg { width: 15px; height: 15px; }
+    .tab-btn:hover { color: var(--op-dark-green); }
+    .tab-btn.active { color: var(--op-dark-green); border-bottom-color: var(--op-accent-lime); font-weight: 600; }
+
+    /* ---------- KPI cards (deal + credit tabs) ---------- */
+    .kpi-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-4);
+    }
+    .kpi-card {
+      background: var(--op-white);
+      border: 1px solid var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: var(--op-space-4);
+      box-shadow: var(--op-elevation-2);
+    }
+    .kpi-card.highlight { background: var(--op-light-green); box-shadow: none; }
+    .kpi-label { font-size: 12px; font-weight: 600; color: var(--op-silver-light); margin-bottom: var(--op-space-3); }
+    .kpi-card.highlight .kpi-label { color: var(--op-dark-green); }
+    .kpi-value { font-family: var(--op-font-display); font-size: 30px; font-weight: 600; line-height: 1.05; color: var(--op-dark-green); }
+    .kpi-value.gold { color: #b38a00; }
+    .kpi-value.error { color: var(--op-chip-error-text); }
+    .kpi-value small { font-size: 15px; color: var(--op-silver-light); font-weight: 600; }
+    .kpi-sub { font-size: 12.5px; color: var(--op-silver-light); margin-top: 8px; }
+
+    .tab-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--op-space-4);
+      margin-bottom: var(--op-space-4);
+      align-items: start;
+    }
+
+    .panel .spread-bar { margin-bottom: 14px; }
+    .panel-note { font-size: 13.5px; color: var(--op-silver-dark); margin: 0; }
+    .panel-note + .panel-note { margin-top: 10px; }
+
+    .insights { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .insights li { display: flex; gap: 10px; font-size: 13.5px; color: var(--op-silver-dark); }
+    .insights li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--op-dark-green);
+      flex-shrink: 0;
+    }
+    .insights strong { color: var(--op-dark-green); }
+
+    .section-title {
+      font-family: var(--op-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      margin: var(--op-space-6) 0 var(--op-space-3);
+    }
+
+    .money { font-weight: 700; color: var(--op-dark-green); }
+    .deal-lane { font-weight: 700; color: var(--op-dark-green); }
+
+    .mode-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 11px;
+      border-radius: var(--op-radius-sm);
+      background: var(--op-light-green);
+      color: var(--op-dark-green);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Stage / invoice chips reuse .status-badge with these semantic pairs */
+    .chip-neutral { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
+    .chip-neutral::before { background: var(--op-silver-light); }
+    .chip-success { background: var(--op-chip-success-bg); color: var(--op-chip-success-text); }
+    .chip-warning { background: var(--op-chip-warning-bg); color: var(--op-chip-warning-text); }
+    .chip-error { background: var(--op-chip-error-bg); color: var(--op-chip-error-text); }
+    .chip-primary { background: var(--op-accent-lime); color: var(--op-dark-green); }
+
+    /* Credit score */
+    .score-wrap { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+    .score-value { font-family: var(--op-font-display); font-size: 56px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--op-dark-green); }
+    .score-value small { font-size: 18px; color: var(--op-silver-light); letter-spacing: 0; }
+    .score-scale { position: relative; display: flex; gap: 2px; height: 10px; border-radius: var(--op-radius-full); overflow: hidden; }
+    .score-scale span { flex: 1; }
+    .score-marker-track { position: relative; height: 14px; margin-top: 4px; }
+    .score-marker {
+      position: absolute;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 9px solid var(--op-dark-green);
+      transform: translateX(-7px);
+    }
+    .score-labels { display: flex; font-size: 11px; color: var(--op-silver-light); margin-top: 2px; }
+
+    .meter { height: 10px; border-radius: var(--op-radius-full); background: var(--op-chip-neutral-bg); overflow: hidden; margin: 10px 0 8px; }
+    .meter span { display: block; height: 100%; border-radius: var(--op-radius-full); }
+    .meter-legend { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--op-silver-light); gap: 8px; }
+
+    .empty-stub {
+      background: var(--op-white);
+      border: 1px dashed var(--op-border-card);
+      border-radius: var(--op-radius-xl);
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--op-silver-light);
+    }
+    .empty-stub h3 { margin: 0 0 6px; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
+    .empty-stub p { margin: 0; }
+
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
       .spread-cards { grid-template-columns: 1fr; }
       .detail-grid { grid-template-columns: 1fr; }
+      .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tab-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
@@ -815,58 +955,218 @@
     }
 
     // ---------------------------------------------------------------
+    // Sample deal + credit data.
+    // Generated deterministically from the customer ID so every customer
+    // shows stable figures. Replace with API calls when the backend is ready.
+    // ---------------------------------------------------------------
+    const TODAY = new Date("2026-09-29T00:00:00");
+    const DAY = 86400000;
+
+    function seededRandom(seed) {
+      let h = 1779033703 ^ seed.length;
+      for (const ch of seed) { h = Math.imul(h ^ ch.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+      return () => {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
+        h ^= h >>> 16;
+        return (h >>> 0) / 4294967296;
+      };
+    }
+
+    const pick = (rand, list) => list[Math.floor(rand() * list.length)];
+    const between = (rand, min, max) => min + Math.floor(rand() * (max - min + 1));
+    const isoDate = (d) => d.toISOString().slice(0, 10);
+
+    const LANES = [
+      "Shanghai → Lagos (Apapa)", "Ningbo → Tin Can Island", "Rotterdam → Lagos (Apapa)", "Antwerp → Onne",
+      "Lagos (Apapa) → Rotterdam", "Tema → Hamburg", "Mombasa → Jebel Ali", "Dubai → Lagos (MMIA)",
+      "Guangzhou → Lagos (MMIA)", "Durban → Lagos (Apapa)", "Lagos (MMIA) → London Heathrow", "Dakar → Valencia"
+    ];
+
+    const DEAL_STAGES = [
+      { key: "Prospect", chip: "chip-neutral", color: "#D1DBBD" },
+      { key: "Contacted", chip: "chip-neutral", color: "#BFFB4F" },
+      { key: "Qualified", chip: "chip-warning", color: "#7FAE2E" },
+      { key: "Quote issued", chip: "chip-primary", color: "#2F7A3F" },
+      { key: "Won", chip: "chip-success", color: "#023819" },
+      { key: "Lost", chip: "chip-neutral", color: "#808080" }
+    ];
+    const OPEN_STAGES = ["Prospect", "Contacted", "Qualified", "Quote issued"];
+
+    const DEAL_VALUE_RANGE = { Enterprise: [18000, 120000], SME: [3000, 24000], Growth: [800, 9000] };
+
+    const cache = new Map();
+
+    function dealsFor(c) {
+      if (cache.has("deals:" + c.id)) return cache.get("deals:" + c.id);
+      const rand = seededRandom(c.id + ":deals");
+      const count = c.status === "active" ? between(rand, 6, 10) : c.status === "pending" ? between(rand, 1, 3) : between(rand, 3, 5);
+      const start = new Date(c.createdAt + "T00:00:00").getTime();
+      // Inactive customers stopped trading a while ago.
+      const end = c.status === "inactive" ? start + 300 * DAY : TODAY.getTime() - 3 * DAY;
+      const [minV, maxV] = DEAL_VALUE_RANGE[c.customerClass];
+
+      const deals = [];
+      for (let i = 0; i < count; i++) {
+        const created = new Date(start + rand() * (end - start));
+        const ageDays = (TODAY - created) / DAY;
+        let stage;
+        if (c.status === "pending") stage = pick(rand, ["Prospect", "Contacted", "Qualified"]);
+        else if (ageDays > 90 || c.status === "inactive") stage = rand() < 0.68 ? "Won" : "Lost";
+        else stage = pick(rand, OPEN_STAGES);
+        deals.push({
+          id: `DL-${c.id.slice(4)}${String(i + 1).padStart(2, "0")}`,
+          lane: pick(rand, LANES),
+          mode: rand() < 0.72 ? "Ocean Freight" : "Air Freight",
+          value: Math.round((minV + rand() * (maxV - minV)) / 10) * 10,
+          stage,
+          createdAt: isoDate(created)
+        });
+      }
+      deals.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      cache.set("deals:" + c.id, deals);
+      return deals;
+    }
+
+    const CREDIT_LIMITS = { Enterprise: [150000, 400000], SME: [20000, 80000], Growth: [5000, 20000] };
+
+    function creditFor(c) {
+      if (cache.has("credit:" + c.id)) return cache.get("credit:" + c.id);
+      if (c.status === "pending") { cache.set("credit:" + c.id, null); return null; }
+
+      const rand = seededRandom(c.id + ":credit");
+      // Chance an invoice is paid on time; inactive accounts skew towards weaker payment histories.
+      const reliability = c.status === "inactive" ? 0.2 + rand() * 0.35 : 0.3 + rand() * 0.68;
+      const terms = pick(rand, c.customerClass === "Enterprise" ? [45, 60] : [30, 45]);
+      const [minL, maxL] = CREDIT_LIMITS[c.customerClass];
+      const limit = Math.round((minL + rand() * (maxL - minL)) / 5000) * 5000;
+      const [minV, maxV] = DEAL_VALUE_RANGE[c.customerClass];
+
+      // Last 8 monthly invoices, ending today (or when an inactive customer stopped trading).
+      const lastIssue = c.status === "inactive"
+        ? new Date(new Date(c.createdAt + "T00:00:00").getTime() + 300 * DAY)
+        : new Date(TODAY.getTime() - 12 * DAY);
+      const invoices = [];
+      for (let i = 0; i < 8; i++) {
+        const issued = new Date(lastIssue.getTime() - i * 30 * DAY - between(rand, 0, 6) * DAY);
+        const due = new Date(issued.getTime() + terms * DAY);
+        const amount = Math.round((minV + rand() * (maxV - minV) * 0.8) / 10) * 10;
+        let paid = null;
+        let status;
+        const roll = rand();
+        if (due > TODAY) {
+          status = "Outstanding";
+          if (roll < 0.3) { paid = new Date(issued.getTime() + between(rand, 5, terms - 2) * DAY); status = "Paid on time"; }
+        } else if (roll < reliability) {
+          paid = new Date(due.getTime() - between(rand, 0, 10) * DAY);
+          status = "Paid on time";
+        } else if (roll < reliability + (1 - reliability) * 0.75) {
+          paid = new Date(due.getTime() + between(rand, 3, 28) * DAY);
+          status = "Paid late";
+        } else {
+          status = "Overdue";
+        }
+        invoices.push({
+          id: `INV-${c.id.slice(4)}-${String(8 - i).padStart(2, "0")}`,
+          amount, issued: isoDate(issued), due: isoDate(due), paid: paid ? isoDate(paid) : null, status
+        });
+      }
+
+      const settled = invoices.filter((inv) => inv.paid);
+      const onTime = invoices.filter((inv) => inv.status === "Paid on time").length;
+      const late = invoices.filter((inv) => inv.status === "Paid late").length;
+      const overdue = invoices.filter((inv) => inv.status === "Overdue");
+      const outstanding = invoices.filter((inv) => inv.status === "Outstanding");
+      const judged = onTime + late + overdue.length;
+      const onTimeRate = judged ? onTime / judged : 1;
+      const avgDaysToPay = settled.length
+        ? Math.round(settled.reduce((sum, inv) => sum + (new Date(inv.paid) - new Date(inv.issued)) / DAY, 0) / settled.length)
+        : 0;
+      const overdueAmount = overdue.reduce((s, inv) => s + inv.amount, 0);
+      const used = Math.min(limit, overdueAmount + outstanding.reduce((s, inv) => s + inv.amount, 0));
+      const tenureYears = (TODAY - new Date(c.createdAt + "T00:00:00")) / (365 * DAY);
+
+      let score = 35 + onTimeRate * 50 + Math.min(tenureYears, 2) * 5 - overdue.length * 9 - (used / limit > 0.8 ? 6 : 0);
+      if (c.status === "inactive") score -= 12;
+      score = Math.max(5, Math.min(98, Math.round(score)));
+
+      const credit = { limit, used, terms, invoices, onTime, late, overdue, outstanding, onTimeRate, avgDaysToPay, overdueAmount, score };
+      cache.set("credit:" + c.id, credit);
+      return credit;
+    }
+
+    function money(n) {
+      return "$" + Math.round(n).toLocaleString("en-US");
+    }
+
+    function compactMoney(n) {
+      if (n >= 1e6) return "$" + (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+      if (n >= 1e3) return "$" + (n / 1e3).toFixed(1).replace(/\.0$/, "") + "k";
+      return money(n);
+    }
+
+    function chip(label, cls) {
+      return `<span class="status-badge ${cls}">${escapeHtml(label)}</span>`;
+    }
+
+    function segmentBar(rows, label) {
+      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
+      return `
+        <div class="spread-bar" role="img" aria-label="${escapeHtml(label)}: ${escapeHtml(summary)}">
+          ${rows.filter((r) => r.count).map((r) =>
+            `<span style="flex: ${r.count}; background: ${r.color}" title="${escapeHtml(r.label)}: ${r.count}"></span>`).join("")}
+        </div>
+        <ul class="spread-legend">
+          ${rows.map((r) => `
+            <li>
+              <span class="swatch" style="background: ${r.color}"></span>
+              <span class="name">${escapeHtml(r.label)}</span>
+              <span class="num">${r.count}</span>
+              <span class="pct">${r.extra ?? ""}</span>
+            </li>`).join("")}
+        </ul>
+      `;
+    }
+
+    function kpi(label, value, sub = "", cls = "") {
+      return `
+        <div class="kpi-card ${cls.includes("highlight") ? "highlight" : ""}">
+          <div class="kpi-label">${label}</div>
+          <div class="kpi-value ${cls.replace("highlight", "")}">${value}</div>
+          ${sub ? `<div class="kpi-sub">${sub}</div>` : ""}
+        </div>
+      `;
+    }
+
+    // ---------------------------------------------------------------
     // Customer details view
     // ---------------------------------------------------------------
+    const DETAIL_TABS = [
+      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
+      { key: "deals", label: "Deal history", icon: '<path d="M4 19V9M12 19V5M20 19v-6"/>' },
+      { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
+    ];
+
     function field(label, value) {
       return `<div><div class="field-label">${label}</div><div class="field-value">${value}</div></div>`;
+    }
+
+    function panelHead(num, title) {
+      return `<div class="panel-head"><span class="panel-num">${num}</span><span class="panel-title">${title}</span></div>`;
     }
 
     function panel(num, title, body, single = false) {
       return `
         <section class="panel">
-          <div class="panel-head"><span class="panel-num">${num}</span><span class="panel-title">${title}</span></div>
+          ${panelHead(num, title)}
           <div class="fields ${single ? "single" : ""}">${body}</div>
         </section>
       `;
     }
 
-    function renderDetails(id) {
-      const c = customers.find((x) => x.id === id);
-
-      if (!c) {
-        setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
-        $("#view").innerHTML = `
-          <a class="text-link back-link" href="#/customers">← Back to all customers</a>
-          <div class="not-found">
-            <h2>Customer not found</h2>
-            <p>No customer with ID <strong>${escapeHtml(id)}</strong> exists.</p>
-          </div>
-        `;
-        return;
-      }
-
-      setBreadcrumb([
-        { label: "Customers", href: "#/customers" },
-        { label: "All customers", href: "#/customers" },
-        { label: c.companyName }
-      ]);
-
-      $("#view").innerHTML = `
-        <a class="text-link back-link" href="#/customers">← Back to all customers</a>
-
-        <section class="hero">
-          ${avatar(c.companyName, "lg")}
-          <div>
-            <h1>${escapeHtml(c.companyName)}</h1>
-            <div class="hero-meta">
-              <span>${escapeHtml(c.id)}</span>
-              ${statusBadge(c.status)}
-              <span>Customer since ${formatDate(c.createdAt)}</span>
-            </div>
-          </div>
-        </section>
-
-        <div class="detail-grid">
+    function renderBasicTab(c) {
+      return `
+        <div class="detail-grid" style="margin-top: 0">
           <div class="detail-col">
             ${panel("01", "Basic details", `
               ${field("Company name", escapeHtml(c.companyName))}
@@ -892,15 +1192,12 @@
               ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
               ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
             `, true)}
-            ${panel("04", "Account", `
-              <div>
-                <div class="field-label">Account manager</div>
-                <div class="owner-chip">
-                  ${avatar(c.accountManager, "sm")}
-                  <div>
-                    <div class="name">${escapeHtml(c.accountManager)}</div>
-                    <div class="role">Account manager</div>
-                  </div>
+            ${panel("04", "Account manager", `
+              <div class="owner-chip">
+                ${avatar(c.accountManager, "sm")}
+                <div>
+                  <div class="name">${escapeHtml(c.accountManager)}</div>
+                  <div class="role">Account manager</div>
                 </div>
               </div>
             `, true)}
@@ -909,20 +1206,298 @@
       `;
     }
 
+    function renderDealsTab(c) {
+      const deals = dealsFor(c);
+      if (!deals.length) {
+        return `<div class="empty-stub"><h3>No deals yet</h3><p>Deals created for ${escapeHtml(c.companyName)} will appear here.</p></div>`;
+      }
+
+      const won = deals.filter((d) => d.stage === "Won");
+      const lost = deals.filter((d) => d.stage === "Lost");
+      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
+      const sum = (list) => list.reduce((s, d) => s + d.value, 0);
+      const closed = won.length + lost.length;
+      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
+      const avgDeal = sum(deals) / deals.length;
+
+      const stageRows = DEAL_STAGES.map((s) => {
+        const list = deals.filter((d) => d.stage === s.key);
+        return { label: s.key, color: s.color, count: list.length, extra: list.length ? compactMoney(sum(list)) : "" };
+      });
+
+      const ocean = deals.filter((d) => d.mode === "Ocean Freight");
+      const air = deals.filter((d) => d.mode === "Air Freight");
+      const modeRows = [
+        { label: "Ocean Freight", color: "#023819", count: ocean.length, extra: ocean.length ? compactMoney(sum(ocean)) : "" },
+        { label: "Air Freight", color: "#7FAE2E", count: air.length, extra: air.length ? compactMoney(sum(air)) : "" }
+      ];
+
+      const laneCounts = {};
+      deals.forEach((d) => { laneCounts[d.lane] = (laneCounts[d.lane] || 0) + 1; });
+      const [topLane, topLaneCount] = Object.entries(laneCounts).sort((a, b) => b[1] - a[1])[0];
+      const biggest = deals.reduce((a, b) => (b.value > a.value ? b : a));
+      const lastDeal = deals[0];
+      const daysSinceLast = Math.round((TODAY - new Date(lastDeal.createdAt + "T00:00:00")) / DAY);
+
+      const insights = [
+        winRate === null
+          ? `No deals have closed yet; <strong>${open.length}</strong> ${open.length === 1 ? "is" : "are"} still in progress.`
+          : `Won <strong>${won.length} of ${closed}</strong> closed deals (${winRate}% win rate), worth <strong>${money(sum(won))}</strong>.`,
+        `Most-used lane is <strong>${escapeHtml(topLane)}</strong> (${topLaneCount} ${topLaneCount === 1 ? "deal" : "deals"}).`,
+        `Largest deal: <strong>${money(biggest.value)}</strong> on ${escapeHtml(biggest.lane)} (${escapeHtml(biggest.stage.toLowerCase())}).`,
+        `Last deal created <strong>${formatDate(lastDeal.createdAt)}</strong>, ${daysSinceLast} days ago${daysSinceLast > 90 ? ", so a re-engagement check-in is due" : ""}.`
+      ];
+
+      return `
+        <section class="kpi-cards">
+          ${kpi("Total deals created", deals.length, `Since ${formatDate(c.createdAt)}`, "highlight")}
+          ${kpi("Deals won", won.length, `${money(sum(won))} won value`)}
+          ${kpi("Win rate", winRate === null ? "–" : `${winRate}<small>%</small>`, closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet")}
+          ${kpi("Open pipeline", compactMoney(sum(open)), `${open.length} ${open.length === 1 ? "deal" : "deals"} in progress`, "gold")}
+        </section>
+
+        <div class="tab-grid">
+          <section class="panel">
+            ${panelHead("01", "Deals by stage")}
+            ${segmentBar(stageRows, "Deals by stage")}
+          </section>
+          <div class="detail-col">
+            <section class="panel">
+              ${panelHead("02", "Freight mode")}
+              ${segmentBar(modeRows, "Deals by freight mode")}
+            </section>
+            <section class="panel">
+              ${panelHead("03", "Overview")}
+              <ul class="insights">${insights.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
+              <p class="muted" style="margin-top: 14px">Average deal size ${money(avgDeal)}.</p>
+            </section>
+          </div>
+        </div>
+
+        <h2 class="section-title">All deals</h2>
+        <div class="table-wrap">
+          <table class="data-table" style="min-width: 720px">
+            <thead>
+              <tr>
+                <th>Deal</th>
+                <th>Lane</th>
+                <th>Mode</th>
+                <th>Value (USD)</th>
+                <th>Stage</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${deals.map((d) => `
+                <tr style="cursor: default">
+                  <td>${escapeHtml(d.id)}</td>
+                  <td><span class="deal-lane">${escapeHtml(d.lane)}</span></td>
+                  <td><span class="mode-chip">${escapeHtml(d.mode)}</span></td>
+                  <td><span class="money">${money(d.value)}</span></td>
+                  <td>${chip(d.stage, DEAL_STAGES.find((s) => s.key === d.stage).chip)}</td>
+                  <td>${formatDate(d.createdAt)}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const INVOICE_CHIPS = {
+      "Paid on time": "chip-success",
+      "Paid late": "chip-warning",
+      "Overdue": "chip-error",
+      "Outstanding": "chip-neutral"
+    };
+
+    function creditRating(score) {
+      // Readiness-style scale from the design system: low → error, building → warning, ready → success.
+      if (score >= 80) return { label: "Excellent", chip: "chip-success", advice: "Low risk. Eligible for a limit increase on request." };
+      if (score >= 65) return { label: "Good", chip: "chip-success", advice: "Low risk. Maintain the current limit and terms." };
+      if (score >= 45) return { label: "Fair", chip: "chip-warning", advice: "Moderate risk. Keep the limit under review and follow up on late payments." };
+      return { label: "Poor", chip: "chip-error", advice: "High risk. Hold new credit until overdue invoices are cleared." };
+    }
+
+    function renderCreditTab(c) {
+      const credit = creditFor(c);
+      if (!credit) {
+        return `
+          <div class="empty-stub">
+            <h3>Credit assessment in progress</h3>
+            <p>${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.</p>
+          </div>
+        `;
+      }
+
+      const rating = creditRating(credit.score);
+      const utilisation = Math.round((credit.used / credit.limit) * 100);
+      const utilColor = utilisation > 80 ? "#FF1A1A" : utilisation > 60 ? "#FFCC1A" : "#1F8A5B";
+      const onTimePct = Math.round(credit.onTimeRate * 100);
+      const judged = credit.onTime + credit.late + credit.overdue.length;
+
+      const paymentRows = [
+        { label: "Paid on time", color: "#1F8A5B", count: credit.onTime },
+        { label: "Paid late", color: "#FFCC1A", count: credit.late },
+        { label: "Overdue", color: "#FF1A1A", count: credit.overdue.length },
+        { label: "Not yet due", color: "#D1DBBD", count: credit.outstanding.length }
+      ];
+
+      const overview = [
+        `Pays <strong>${onTimePct}%</strong> of invoices on time (${credit.onTime} of ${judged}), taking <strong>${credit.avgDaysToPay} days</strong> on average against Net ${credit.terms} terms.`,
+        credit.overdue.length
+          ? `<strong>${credit.overdue.length} overdue ${credit.overdue.length === 1 ? "invoice" : "invoices"}</strong> totalling ${money(credit.overdueAmount)}.`
+          : `No overdue invoices.`,
+        `Using <strong>${utilisation}%</strong> of the ${money(credit.limit)} credit limit.`,
+        `<strong>Recommendation:</strong> ${rating.advice}`
+      ];
+
+      return `
+        <section class="kpi-cards">
+          ${kpi("Credit limit", compactMoney(credit.limit), `Net ${credit.terms} payment terms`, "highlight")}
+          ${kpi("Available credit", compactMoney(credit.limit - credit.used), `${compactMoney(credit.used)} in use`)}
+          ${kpi("On-time payments", `${onTimePct}<small>%</small>`, `Avg. ${credit.avgDaysToPay} days to pay`)}
+          ${kpi("Overdue", compactMoney(credit.overdueAmount), credit.overdue.length ? `${credit.overdue.length} ${credit.overdue.length === 1 ? "invoice" : "invoices"} past due` : "Nothing past due", credit.overdueAmount ? "error" : "")}
+        </section>
+
+        <div class="tab-grid">
+          <section class="panel">
+            ${panelHead("01", "Creditworthiness")}
+            <div class="score-wrap">
+              <div class="score-value">${credit.score}<small>/100</small></div>
+              <div style="padding-bottom: 8px">${chip(rating.label, rating.chip)}</div>
+            </div>
+            <div class="score-scale" aria-hidden="true">
+              <span style="flex: 45; background: #FDE0E0"></span>
+              <span style="flex: 20; background: #FFF3CC"></span>
+              <span style="flex: 15; background: #E1F1E8"></span>
+              <span style="flex: 20; background: #B9DEC9"></span>
+            </div>
+            <div class="score-marker-track" aria-hidden="true"><span class="score-marker" style="left: ${credit.score}%"></span></div>
+            <div class="score-labels"><span style="flex: 45">Poor</span><span style="flex: 20">Fair</span><span style="flex: 15">Good</span><span style="flex: 20; text-align: right">Excellent</span></div>
+
+            <div style="margin-top: 22px">
+              <div class="field-label">Credit utilisation</div>
+              <div class="meter" role="img" aria-label="Credit utilisation ${utilisation}%"><span style="width: ${utilisation}%; background: ${utilColor}"></span></div>
+              <div class="meter-legend"><span>${money(credit.used)} used · ${utilisation}%</span><span>${money(credit.limit)} limit</span></div>
+            </div>
+          </section>
+
+          <div class="detail-col">
+            <section class="panel">
+              ${panelHead("02", "Payment behaviour")}
+              ${segmentBar(paymentRows, "Invoices by payment status")}
+            </section>
+            <section class="panel">
+              ${panelHead("03", "Overview")}
+              <ul class="insights">${overview.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
+            </section>
+          </div>
+        </div>
+
+        <h2 class="section-title">Recent invoices</h2>
+        <div class="table-wrap">
+          <table class="data-table" style="min-width: 720px">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Amount (USD)</th>
+                <th>Issued</th>
+                <th>Due</th>
+                <th>Paid</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${credit.invoices.map((inv) => `
+                <tr style="cursor: default">
+                  <td>${escapeHtml(inv.id)}</td>
+                  <td><span class="money">${money(inv.amount)}</span></td>
+                  <td>${formatDate(inv.issued)}</td>
+                  <td>${formatDate(inv.due)}</td>
+                  <td>${inv.paid ? formatDate(inv.paid) : "–"}</td>
+                  <td>${chip(inv.status, INVOICE_CHIPS[inv.status])}</td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderDetails(id, tabKey) {
+      const c = customers.find((x) => x.id === id);
+
+      if (!c) {
+        setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
+        $("#view").innerHTML = `
+          <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+          <div class="not-found">
+            <h2>Customer not found</h2>
+            <p>No customer with ID <strong>${escapeHtml(id)}</strong> exists.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
+      const base = `#/customers/${encodeURIComponent(c.id)}`;
+
+      setBreadcrumb([
+        { label: "Customers", href: "#/customers" },
+        { label: "All customers", href: "#/customers" },
+        { label: c.companyName, href: base },
+        { label: tab.label }
+      ]);
+
+      const body = tab.key === "deals" ? renderDealsTab(c) : tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
+
+      $("#view").innerHTML = `
+        <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+
+        <section class="hero">
+          ${avatar(c.companyName, "lg")}
+          <div>
+            <h1>${escapeHtml(c.companyName)}</h1>
+            <div class="hero-meta">
+              <span>${escapeHtml(c.id)}</span>
+              ${statusBadge(c.status)}
+              ${classChip(c.customerClass)}
+              <span>Customer since ${formatDate(c.createdAt)}</span>
+            </div>
+          </div>
+        </section>
+
+        <nav class="tabs" aria-label="Customer sections">
+          ${DETAIL_TABS.map((t) => `
+            <a class="tab-btn ${t.key === tab.key ? "active" : ""}" href="${t.key === "basic" ? base : `${base}/${t.key}`}" ${t.key === tab.key ? 'aria-current="page"' : ""}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${t.icon}</svg>
+              ${t.label}
+            </a>`).join("")}
+        </nav>
+
+        ${body}
+      `;
+    }
+
     // ---------------------------------------------------------------
     // Router
     // ---------------------------------------------------------------
+    let lastCustomerId = null;
+
     function router() {
       const parts = parseRoute();
-      window.scrollTo(0, 0);
 
       if (parts[0] !== "customers") {
         location.hash = "#/customers";
         return;
       }
 
-      if (parts[1]) {
-        renderDetails(decodeURIComponent(parts[1]));
+      const customerId = parts[1] ? decodeURIComponent(parts[1]) : null;
+      // Keep scroll position when switching tabs on the same customer.
+      if (customerId !== lastCustomerId) window.scrollTo(0, 0);
+      lastCustomerId = customerId;
+
+      if (customerId) {
+        renderDetails(customerId, parts[2]);
       } else {
         renderList();
       }
