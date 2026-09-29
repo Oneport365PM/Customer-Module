@@ -169,29 +169,22 @@
       align-items: center;
       justify-content: space-between;
       gap: var(--op-space-3);
+      min-height: 52px;
       margin-bottom: 18px;
     }
 
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-weight: 600;
-      color: var(--op-silver-light);
-      font-size: 13px;
-    }
-    .breadcrumb a:hover { color: var(--op-dark-green); }
-    .breadcrumb strong { color: var(--op-dark-green); }
-
-    .brand {
+    .page-title {
+      margin: 0;
       font-family: var(--op-font-display);
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -.015em;
       color: var(--op-dark-green);
-      font-size: 15px;
-      white-space: nowrap;
+      line-height: 1.15;
     }
-    .brand span { color: var(--op-accent-lime); -webkit-text-stroke: 0.4px var(--op-dark-green); }
+
+    /* The logo file has a white background; multiply blends it into the cream page. */
+    .brand-logo { display: block; height: 52px; width: auto; margin-left: auto; mix-blend-mode: multiply; }
 
     .page-header { margin-bottom: var(--op-space-6); }
     .page-header h1 {
@@ -251,6 +244,7 @@
     .spread-legend .pct { color: var(--op-silver-light); font-size: 12px; min-width: 38px; text-align: right; }
 
     /* ---------- Toolbar ---------- */
+    .toolbar .btn { margin-left: auto; white-space: nowrap; }
     .toolbar {
       display: flex;
       align-items: center;
@@ -260,7 +254,7 @@
     }
 
     .search-input {
-      flex: 1;
+      flex: 0 1 460px;
       min-width: 220px;
       padding: 9px 12px;
       border-radius: var(--op-radius-md);
@@ -388,6 +382,8 @@
 
     /* ---------- Buttons ---------- */
     .view-btn {
+      display: inline-flex;
+      align-items: center;
       border: 1.5px solid var(--op-dark-green);
       background: var(--op-white);
       border-radius: var(--op-radius-md);
@@ -500,6 +496,174 @@
     .owner-chip .name { font-weight: 700; font-size: 14px; color: var(--op-dark-green); }
     .owner-chip .role { font-size: 12px; color: var(--op-silver-light); }
 
+    .panel-head.split { justify-content: space-between; align-items: center; }
+
+    .field-group + .field-group {
+      border-top: 1px solid var(--op-border-divider);
+      margin-top: 22px;
+      padding-top: 22px;
+    }
+    .group-title {
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      margin-bottom: 14px;
+    }
+
+    .side-col { display: flex; flex-direction: column; gap: var(--op-space-4); }
+
+    /* ---------- Modal (matches Backoffice2.0) ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 56, 25, .45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: var(--op-space-4);
+    }
+    .modal {
+      background: var(--op-white);
+      border-radius: var(--op-radius-xl);
+      width: 100%;
+      max-width: 460px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--op-space-6);
+      box-shadow: var(--op-elevation-3);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: var(--op-space-3);
+    }
+    .modal.wide { max-width: 760px; }
+    /* Long forms scroll inside the dialog; keep the title and actions in view. */
+    .modal.wide .modal-head {
+      position: sticky;
+      top: calc(-1 * var(--op-space-6));
+      z-index: 2;
+      background: var(--op-white);
+      margin: calc(-1 * var(--op-space-6)) 0 20px;
+      padding-top: var(--op-space-6);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--op-border-divider);
+    }
+    .modal .form-actions {
+      position: sticky;
+      bottom: calc(-1 * var(--op-space-6));
+      z-index: 2;
+      background: var(--op-white);
+      margin: 18px 0 calc(-1 * var(--op-space-6));
+      padding-bottom: var(--op-space-6);
+    }
+    .modal-head h3 { margin: 0 0 4px; font-family: var(--op-font-display); font-weight: 600; font-size: 18px; color: var(--op-dark-green); }
+    .modal-close { border: none; background: none; font-size: 22px; line-height: 1; color: var(--op-silver-light); padding: 2px 6px; }
+    .modal-close:hover { color: var(--op-dark-green); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: var(--op-space-6); }
+
+    /* Floating notched-label input — the OnePort 365 input foundation */
+    .field { margin-bottom: 18px; }
+
+    /* ---------- Add customer form ---------- */
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; }
+    .form-grid .span-2 { grid-column: 1 / -1; }
+    .form-grid .field { margin-bottom: 12px; }
+    .form-note {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #F4F6EF;
+      border: 1px solid rgba(2, 56, 25, .1);
+      border-radius: var(--op-radius-lg);
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--op-silver-dark);
+      margin-bottom: var(--op-space-6);
+    }
+    .form-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: var(--op-dark-green); }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid var(--op-border-divider);
+      margin-top: 22px;
+      padding-top: 22px;
+    }
+    .req { color: var(--op-error); }
+    .op-input-wrap {
+      position: relative;
+      display: block;
+      border: 1.5px solid var(--op-border-input);
+      border-radius: var(--op-radius-md);
+      padding: 15px 14px;
+      background: var(--op-white);
+    }
+    .op-input-wrap:hover { border-color: var(--op-dark-green); }
+    .op-input-wrap:focus-within { border: 2px solid var(--op-dark-green); padding: 14px 13px; box-shadow: var(--op-focus-ring); }
+    .op-notch {
+      position: absolute;
+      top: -8px;
+      left: 11px;
+      background: var(--op-white);
+      padding: 0 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--op-silver-light);
+      pointer-events: none;
+    }
+    .op-input-wrap:hover .op-notch, .op-input-wrap:focus-within .op-notch { color: var(--op-dark-green); }
+    .op-input-wrap.has-error { border: 2px solid var(--op-error); padding: 14px 13px; }
+    .op-input-wrap.has-error .op-notch { color: var(--op-error); }
+    .op-input-wrap.is-readonly { background: var(--op-chip-neutral-bg); border-color: var(--op-border-card); }
+    .op-input-wrap.is-readonly .op-notch { background: var(--op-chip-neutral-bg); color: var(--op-silver-light); }
+    .field input, .field select {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      font-family: var(--op-font-body);
+      color: var(--op-dark-green);
+      background: transparent;
+    }
+    .field select { cursor: pointer; }
+    .field input:disabled { color: var(--op-silver-dark); opacity: 1; -webkit-text-fill-color: var(--op-silver-dark); }
+    .field-error { color: var(--op-error); font-size: 11.5px; margin-top: 6px; }
+
+    .btn {
+      border: none;
+      border-radius: var(--op-radius-md);
+      padding: 13px 18px;
+      font-family: var(--op-font-display);
+      font-size: 14px;
+      font-weight: 600;
+      transition: background-color .16s, color .16s;
+    }
+    .btn-primary { background: var(--op-accent-lime); color: var(--op-dark-green); }
+    .btn-primary:hover { background: var(--op-accent-lime-hover); }
+    .btn-outline { background: var(--op-white); border: 1.5px solid var(--op-dark-green); color: var(--op-dark-green); }
+    .btn-outline:hover { background: var(--op-dark-green); color: var(--op-accent-lime); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--op-dark-green);
+      color: var(--op-cream);
+      padding: 10px 18px;
+      border-radius: var(--op-radius-md);
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: var(--op-elevation-hero);
+      z-index: 60;
+      max-width: calc(100% - 32px);
+    }
+
     .not-found {
       background: var(--op-white);
       border: 1px dashed var(--op-border-card);
@@ -516,7 +680,6 @@
       gap: 6px;
       border-bottom: 1px solid var(--op-border-card);
       margin: var(--op-space-6) 0;
-      overflow-x: auto;
     }
     .tab-btn {
       display: flex;
@@ -567,6 +730,17 @@
     }
 
     .panel .spread-bar { margin-bottom: 14px; }
+
+    .deal-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-3); }
+    .deal-stat {
+      background: #F4F6EF;
+      border: 1px solid rgba(2, 56, 25, .1);
+      border-radius: var(--op-radius-lg);
+      padding: 14px;
+    }
+    .deal-stat.highlight { background: var(--op-light-green); border-color: transparent; }
+    .deal-stat.highlight .kpi-label { color: var(--op-dark-green); }
+    .deal-stat .kpi-value { font-size: 26px; }
     .panel-note { font-size: 13.5px; color: var(--op-silver-dark); margin: 0; }
     .panel-note + .panel-note { margin-top: 10px; }
 
@@ -592,19 +766,6 @@
     }
 
     .money { font-weight: 700; color: var(--op-dark-green); }
-    .deal-lane { font-weight: 700; color: var(--op-dark-green); }
-
-    .mode-chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 11px;
-      border-radius: var(--op-radius-sm);
-      background: var(--op-light-green);
-      color: var(--op-dark-green);
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
 
     /* Stage / invoice chips reuse .status-badge with these semantic pairs */
     .chip-neutral { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
@@ -667,9 +828,14 @@
       }
       .rail-avatar { margin-top: 0; }
       .main { padding: var(--op-space-4) 16px 40px; }
-      .page-header h1, .hero h1 { font-size: 24px; }
+      .page-header h1, .hero h1, .page-title { font-size: 24px; }
+      .brand-logo { height: 40px; }
+      .search-input { flex: 1 1 100%; }
+      .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
       .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-actions .btn { flex: 1; }
       .panel, .hero { padding: var(--op-space-4); }
     }
   </style>
@@ -699,8 +865,8 @@
 
     <main class="main">
       <header class="topbar">
-        <div class="breadcrumb" id="breadcrumb"></div>
-        <div class="brand">OnePort<span>365</span></div>
+        <div id="topbar-title"></div>
+        <img class="brand-logo" alt="OnePort 365" src="data:image/png;base64,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" />
       </header>
       <div class="content" id="view"></div>
     </main>
@@ -711,24 +877,92 @@
     // Sample data. Replace with an API call when the backend is ready.
     // ---------------------------------------------------------------
     const customers = [
-      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
-      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
-      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
-      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
-      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
-      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
-      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
-      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
-      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
-      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
-      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
-      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
+      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", address: "12 Marina Road, Lagos Island, Nigeria", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
+      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", address: "45 Zaria Road, Kano, Nigeria", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
+      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", address: "8 Independence Ave, Accra, Ghana", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
+      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", address: "3 Trans-Amadi Industrial Layout, Port Harcourt, Nigeria", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
+      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", address: "Industrial Area, Enterprise Rd, Nairobi, Kenya", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
+      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", address: "Plot 22, Wuse Zone 4, Abuja, Nigeria", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
+      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", address: "17 Ring Road, Ibadan, Nigeria", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
+      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", address: "Zone Portuaire, Dakar, Senegal", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
+      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", address: "5 Ogui Road, Enugu, Nigeria", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
+      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", address: "Boulevard du 13 Janvier, Lomé, Togo", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
+      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", address: "22 Ahmadu Bello Way, Kaduna, Nigeria", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
+      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", address: "10 Paarden Eiland Rd, Cape Town, South Africa", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
     const PAGE_SIZE = 8;
     const STATUS_LABELS = { active: "Active", pending: "Pending", inactive: "Inactive" };
 
     const state = { search: "", page: 1 };
+
+    const ACCOUNT_MANAGERS = ["Adeshewa Adelowo", "Babatope Ayeni", "Deborah Oje", "Kayode Akintade"];
+
+    // Account manager changes are kept in this browser until the page is wired to the API.
+    const MANAGER_STORE_KEY = "op365.customers.accountManagers";
+
+    function loadManagerChanges() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(MANAGER_STORE_KEY) || "{}");
+        customers.forEach((c) => {
+          if (ACCOUNT_MANAGERS.includes(saved[c.id])) c.accountManager = saved[c.id];
+        });
+      } catch (e) { /* storage unavailable: keep the defaults */ }
+    }
+
+    function saveManagerChange(id, name) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(MANAGER_STORE_KEY) || "{}");
+        saved[id] = name;
+        localStorage.setItem(MANAGER_STORE_KEY, JSON.stringify(saved));
+      } catch (e) { /* storage unavailable: change lasts for this visit only */ }
+    }
+
+    // Customers added from the Add customer form are kept in this browser until the page is wired to the API.
+    const ADDED_STORE_KEY = "op365.customers.added";
+
+    function loadAddedCustomers() {
+      try {
+        const added = JSON.parse(localStorage.getItem(ADDED_STORE_KEY) || "[]");
+        if (Array.isArray(added)) {
+          added.filter((c) => c && c.id && !customers.some((x) => x.id === c.id)).forEach((c) => customers.unshift(c));
+        }
+      } catch (e) { /* storage unavailable: show the sample customers only */ }
+    }
+
+    function saveAddedCustomer(customer) {
+      try {
+        const added = JSON.parse(localStorage.getItem(ADDED_STORE_KEY) || "[]");
+        added.push(customer);
+        localStorage.setItem(ADDED_STORE_KEY, JSON.stringify(added));
+      } catch (e) { /* storage unavailable: customer lasts for this visit only */ }
+    }
+
+    // Edits to customer basic information are kept in this browser until the page is wired to the API.
+    const EDITS_STORE_KEY = "op365.customers.edits";
+    const EDITABLE_KEYS = ["companyName", "rcNumber", "taxId", "industry", "customerClass", "address", "firstName", "lastName", "contactName", "email", "phone"];
+
+    function loadCustomerEdits() {
+      try {
+        const edits = JSON.parse(localStorage.getItem(EDITS_STORE_KEY) || "{}");
+        customers.forEach((c) => {
+          const e = edits[c.id];
+          if (e) EDITABLE_KEYS.forEach((k) => { if (typeof e[k] === "string") c[k] = e[k]; });
+        });
+      } catch (e) { /* storage unavailable: keep the defaults */ }
+    }
+
+    function saveCustomerEdit(c) {
+      try {
+        const edits = JSON.parse(localStorage.getItem(EDITS_STORE_KEY) || "{}");
+        edits[c.id] = Object.fromEntries(EDITABLE_KEYS.map((k) => [k, c[k]]));
+        localStorage.setItem(EDITS_STORE_KEY, JSON.stringify(edits));
+      } catch (e) { /* storage unavailable: edit lasts for this visit only */ }
+    }
+
+    loadAddedCustomers();
+    loadCustomerEdits();
+    loadManagerChanges();
 
     // ---------------------------------------------------------------
     // Helpers
@@ -767,14 +1001,6 @@
     function parseRoute() {
       const hash = location.hash.replace(/^#/, "") || "/customers";
       return hash.split("?")[0].split("/").filter(Boolean);
-    }
-
-    function setBreadcrumb(items) {
-      $("#breadcrumb").innerHTML = items
-        .map((item, i) => i === items.length - 1
-          ? `<strong>${escapeHtml(item.label)}</strong>`
-          : `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
-        .join("<span aria-hidden=\"true\">/</span>");
     }
 
     function classChip(customerClass) {
@@ -849,20 +1075,14 @@
     // All customers view
     // ---------------------------------------------------------------
     function renderList() {
-      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "All customers" }]);
-
       $("#view").innerHTML = `
-        <div class="page-header">
-          <h1>All customers</h1>
-          <p class="muted">Basic information for every OnePort365 customer.</p>
-        </div>
-
         <div class="spread-cards">
           ${SPREADS.map(spreadCard).join("")}
         </div>
 
         <div class="toolbar">
           <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
+          <button class="btn btn-primary" id="add-customer" type="button">+ Add customer</button>
         </div>
 
         <div class="table-wrap">
@@ -884,6 +1104,9 @@
         </div>
       `;
 
+      const addBtn = $("#add-customer");
+      addBtn.addEventListener("click", () => openCustomerForm(null, addBtn));
+
       $("#search").addEventListener("input", (e) => {
         state.search = e.target.value;
         state.page = 1;
@@ -897,7 +1120,7 @@
       const term = state.search.trim().toLowerCase();
       const filtered = customers.filter((c) => {
         if (!term) return true;
-        return [c.companyName, c.contactName, c.email, c.phone, c.id].some((v) => v.toLowerCase().includes(term));
+        return [c.companyName, c.contactName, c.email, c.phone].some((v) => v.toLowerCase().includes(term));
       });
 
       const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -977,20 +1200,6 @@
     const between = (rand, min, max) => min + Math.floor(rand() * (max - min + 1));
     const isoDate = (d) => d.toISOString().slice(0, 10);
 
-    const LANES = [
-      "Shanghai → Lagos (Apapa)", "Ningbo → Tin Can Island", "Rotterdam → Lagos (Apapa)", "Antwerp → Onne",
-      "Lagos (Apapa) → Rotterdam", "Tema → Hamburg", "Mombasa → Jebel Ali", "Dubai → Lagos (MMIA)",
-      "Guangzhou → Lagos (MMIA)", "Durban → Lagos (Apapa)", "Lagos (MMIA) → London Heathrow", "Dakar → Valencia"
-    ];
-
-    const DEAL_STAGES = [
-      { key: "Prospect", chip: "chip-neutral", color: "#D1DBBD" },
-      { key: "Contacted", chip: "chip-neutral", color: "#BFFB4F" },
-      { key: "Qualified", chip: "chip-warning", color: "#7FAE2E" },
-      { key: "Quote issued", chip: "chip-primary", color: "#2F7A3F" },
-      { key: "Won", chip: "chip-success", color: "#023819" },
-      { key: "Lost", chip: "chip-neutral", color: "#808080" }
-    ];
     const OPEN_STAGES = ["Prospect", "Contacted", "Qualified", "Quote issued"];
 
     const DEAL_VALUE_RANGE = { Enterprise: [18000, 120000], SME: [3000, 24000], Growth: [800, 9000] };
@@ -998,6 +1207,7 @@
     const cache = new Map();
 
     function dealsFor(c) {
+      if (c.addedInBackoffice) return [];
       if (cache.has("deals:" + c.id)) return cache.get("deals:" + c.id);
       const rand = seededRandom(c.id + ":deals");
       const count = c.status === "active" ? between(rand, 6, 10) : c.status === "pending" ? between(rand, 1, 3) : between(rand, 3, 5);
@@ -1016,8 +1226,6 @@
         else stage = pick(rand, OPEN_STAGES);
         deals.push({
           id: `DL-${c.id.slice(4)}${String(i + 1).padStart(2, "0")}`,
-          lane: pick(rand, LANES),
-          mode: rand() < 0.72 ? "Ocean Freight" : "Air Freight",
           value: Math.round((minV + rand() * (maxV - minV)) / 10) * 10,
           stage,
           createdAt: isoDate(created)
@@ -1032,7 +1240,8 @@
 
     function creditFor(c) {
       if (cache.has("credit:" + c.id)) return cache.get("credit:" + c.id);
-      if (c.status === "pending") { cache.set("credit:" + c.id, null); return null; }
+      // No credit history yet: still onboarding, or just added in the backoffice.
+      if (c.status === "pending" || c.addedInBackoffice) { cache.set("credit:" + c.id, null); return null; }
 
       const rand = seededRandom(c.id + ":credit");
       // Chance an invoice is paid on time; inactive accounts skew towards weaker payment histories.
@@ -1143,7 +1352,6 @@
     // ---------------------------------------------------------------
     const DETAIL_TABS = [
       { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
-      { key: "deals", label: "Deal history", icon: '<path d="M4 19V9M12 19V5M20 19v-6"/>' },
       { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
     ];
 
@@ -1164,143 +1372,229 @@
       `;
     }
 
+    function fieldGroup(title, body) {
+      return `
+        <div class="field-group">
+          <div class="group-title">${title}</div>
+          <div class="fields">${body}</div>
+        </div>
+      `;
+    }
+
+    function dealHistoryCard(c) {
+      const deals = dealsFor(c);
+      const won = deals.filter((d) => d.stage === "Won");
+      const lost = deals.filter((d) => d.stage === "Lost");
+      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
+      const sum = (list) => list.reduce((total, d) => total + d.value, 0);
+      const closed = won.length + lost.length;
+      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
+
+      return `
+        <section class="panel">
+          <div class="panel-head"><span class="panel-title">Deal history</span></div>
+          <div class="deal-stats">
+            <div class="deal-stat highlight">
+              <div class="kpi-label">Total deals created</div>
+              <div class="kpi-value">${deals.length}</div>
+              <div class="kpi-sub">${compactMoney(sum(deals))} total value</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Deals won</div>
+              <div class="kpi-value">${won.length}</div>
+              <div class="kpi-sub">${compactMoney(sum(won))} won value</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Win rate</div>
+              <div class="kpi-value">${winRate === null ? "–" : `${winRate}<small>%</small>`}</div>
+              <div class="kpi-sub">${closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet"}</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Open pipeline</div>
+              <div class="kpi-value gold">${compactMoney(sum(open))}</div>
+              <div class="kpi-sub">${open.length} ${open.length === 1 ? "deal" : "deals"} in progress</div>
+            </div>
+          </div>
+          ${deals.length ? `<p class="muted" style="margin-top: 14px">Last deal created ${formatDate(deals[0].createdAt)}</p>` : ""}
+        </section>
+      `;
+    }
+
+    function accountManagerCard(c) {
+      return `
+        <section class="panel">
+          <div class="panel-head split">
+            <span class="panel-title">Account manager</span>
+            <button class="view-btn" id="change-manager" type="button">Change</button>
+          </div>
+          <div class="owner-chip">
+            ${avatar(c.accountManager, "sm")}
+            <div>
+              <div class="name">${escapeHtml(c.accountManager)}</div>
+              <div class="role">Account manager</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
     function renderBasicTab(c) {
       return `
         <div class="detail-grid" style="margin-top: 0">
-          <div class="detail-col">
-            ${panel("01", "Basic details", `
+          <section class="panel">
+            <div class="panel-head split">
+              <span class="panel-title">Basic details</span>
+              <button class="view-btn" id="edit-customer" type="button">Edit</button>
+            </div>
+            ${fieldGroup("Company", `
               ${field("Company name", escapeHtml(c.companyName))}
-              ${field("Customer ID", escapeHtml(c.id))}
-              ${field("Class", classChip(c.customerClass))}
-              ${field("Registration channel", escapeHtml(c.channel))}
               ${field("Industry", escapeHtml(c.industry))}
+              ${field("Class", classChip(c.customerClass))}
+              ${field("Status", statusBadge(c.status))}
+            `)}
+            ${fieldGroup("Registration", `
+              ${field("Registration channel", escapeHtml(c.channel))}
+              ${field("Date added", formatDate(c.createdAt))}
               ${field("Registration (RC) number", escapeHtml(c.rcNumber))}
               ${field("Tax ID", escapeHtml(c.taxId))}
-              ${field("Status", statusBadge(c.status))}
-              ${field("Date added", formatDate(c.createdAt))}
             `)}
-            ${panel("02", "Address", `
-              ${field("Street address", escapeHtml(c.address))}
-              ${field("City", escapeHtml(c.city))}
-              ${field("Country", escapeHtml(c.country))}
-            `)}
-          </div>
-
-          <div class="detail-col">
-            ${panel("03", "Primary contact", `
-              ${field("Name", escapeHtml(c.contactName))}
+            ${fieldGroup("Contact &amp; address", `
+              ${field("Primary contact", escapeHtml(c.contactName))}
               ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
               ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
-            `, true)}
-            ${panel("04", "Account manager", `
-              <div class="owner-chip">
-                ${avatar(c.accountManager, "sm")}
-                <div>
-                  <div class="name">${escapeHtml(c.accountManager)}</div>
-                  <div class="role">Account manager</div>
-                </div>
-              </div>
-            `, true)}
+              ${field("Address", escapeHtml(c.address))}
+            `)}
+          </section>
+
+          <div class="side-col">
+            ${dealHistoryCard(c)}
+            ${accountManagerCard(c)}
           </div>
         </div>
       `;
     }
 
-    function renderDealsTab(c) {
-      const deals = dealsFor(c);
-      if (!deals.length) {
-        return `<div class="empty-stub"><h3>No deals yet</h3><p>Deals created for ${escapeHtml(c.companyName)} will appear here.</p></div>`;
-      }
+    // ---------------------------------------------------------------
+    // Change account manager dialog
+    // ---------------------------------------------------------------
+    function showToast(message) {
+      document.querySelectorAll(".toast").forEach((t) => t.remove());
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.setAttribute("role", "status");
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3200);
+    }
 
-      const won = deals.filter((d) => d.stage === "Won");
-      const lost = deals.filter((d) => d.stage === "Lost");
-      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
-      const sum = (list) => list.reduce((s, d) => s + d.value, 0);
-      const closed = won.length + lost.length;
-      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
-      const avgDeal = sum(deals) / deals.length;
-
-      const stageRows = DEAL_STAGES.map((s) => {
-        const list = deals.filter((d) => d.stage === s.key);
-        return { label: s.key, color: s.color, count: list.length, extra: list.length ? compactMoney(sum(list)) : "" };
-      });
-
-      const ocean = deals.filter((d) => d.mode === "Ocean Freight");
-      const air = deals.filter((d) => d.mode === "Air Freight");
-      const modeRows = [
-        { label: "Ocean Freight", color: "#023819", count: ocean.length, extra: ocean.length ? compactMoney(sum(ocean)) : "" },
-        { label: "Air Freight", color: "#7FAE2E", count: air.length, extra: air.length ? compactMoney(sum(air)) : "" }
-      ];
-
-      const laneCounts = {};
-      deals.forEach((d) => { laneCounts[d.lane] = (laneCounts[d.lane] || 0) + 1; });
-      const [topLane, topLaneCount] = Object.entries(laneCounts).sort((a, b) => b[1] - a[1])[0];
-      const biggest = deals.reduce((a, b) => (b.value > a.value ? b : a));
-      const lastDeal = deals[0];
-      const daysSinceLast = Math.round((TODAY - new Date(lastDeal.createdAt + "T00:00:00")) / DAY);
-
-      const insights = [
-        winRate === null
-          ? `No deals have closed yet; <strong>${open.length}</strong> ${open.length === 1 ? "is" : "are"} still in progress.`
-          : `Won <strong>${won.length} of ${closed}</strong> closed deals (${winRate}% win rate), worth <strong>${money(sum(won))}</strong>.`,
-        `Most-used lane is <strong>${escapeHtml(topLane)}</strong> (${topLaneCount} ${topLaneCount === 1 ? "deal" : "deals"}).`,
-        `Largest deal: <strong>${money(biggest.value)}</strong> on ${escapeHtml(biggest.lane)} (${escapeHtml(biggest.stage.toLowerCase())}).`,
-        `Last deal created <strong>${formatDate(lastDeal.createdAt)}</strong>, ${daysSinceLast} days ago${daysSinceLast > 90 ? ", so a re-engagement check-in is due" : ""}.`
-      ];
-
-      return `
-        <section class="kpi-cards">
-          ${kpi("Total deals created", deals.length, `Since ${formatDate(c.createdAt)}`, "highlight")}
-          ${kpi("Deals won", won.length, `${money(sum(won))} won value`)}
-          ${kpi("Win rate", winRate === null ? "–" : `${winRate}<small>%</small>`, closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet")}
-          ${kpi("Open pipeline", compactMoney(sum(open)), `${open.length} ${open.length === 1 ? "deal" : "deals"} in progress`, "gold")}
-        </section>
-
-        <div class="tab-grid">
-          <section class="panel">
-            ${panelHead("01", "Deals by stage")}
-            ${segmentBar(stageRows, "Deals by stage")}
-          </section>
-          <div class="detail-col">
-            <section class="panel">
-              ${panelHead("02", "Freight mode")}
-              ${segmentBar(modeRows, "Deals by freight mode")}
-            </section>
-            <section class="panel">
-              ${panelHead("03", "Overview")}
-              <ul class="insights">${insights.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
-              <p class="muted" style="margin-top: 14px">Average deal size ${money(avgDeal)}.</p>
-            </section>
+    // Opens a dialog in the Backoffice2.0 modal style. Escape, the close button, Cancel
+    // and clicking the backdrop all close it; keyboard focus is kept inside while open.
+    function openModal({ titleId, title, subtitle = "", body, wide = false, trigger = null }) {
+      const overlay = document.createElement("div");
+      overlay.className = "modal-overlay";
+      overlay.innerHTML = `
+        <div class="modal ${wide ? "wide" : ""}" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
+          <div class="modal-head">
+            <div>
+              <h3 id="${titleId}">${title}</h3>
+              ${subtitle ? `<p class="muted">${subtitle}</p>` : ""}
+            </div>
+            <button class="modal-close" type="button" aria-label="Close" data-close>×</button>
           </div>
-        </div>
-
-        <h2 class="section-title">All deals</h2>
-        <div class="table-wrap">
-          <table class="data-table" style="min-width: 720px">
-            <thead>
-              <tr>
-                <th>Deal</th>
-                <th>Lane</th>
-                <th>Mode</th>
-                <th>Value (USD)</th>
-                <th>Stage</th>
-                <th>Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${deals.map((d) => `
-                <tr style="cursor: default">
-                  <td>${escapeHtml(d.id)}</td>
-                  <td><span class="deal-lane">${escapeHtml(d.lane)}</span></td>
-                  <td><span class="mode-chip">${escapeHtml(d.mode)}</span></td>
-                  <td><span class="money">${money(d.value)}</span></td>
-                  <td>${chip(d.stage, DEAL_STAGES.find((s) => s.key === d.stage).chip)}</td>
-                  <td>${formatDate(d.createdAt)}</td>
-                </tr>`).join("")}
-            </tbody>
-          </table>
+          ${body}
         </div>
       `;
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+
+      function onKey(e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key !== "Tab") return;
+        const focusable = [...overlay.querySelectorAll("button, select, input:not([disabled]), a[href]")];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+
+      // Removes the dialog without moving focus (used after a successful save re-renders the page).
+      function dismiss() {
+        document.removeEventListener("keydown", onKey);
+        document.body.style.overflow = "";
+        overlay.remove();
+      }
+
+      function close() {
+        dismiss();
+        trigger?.focus();
+      }
+
+      document.addEventListener("keydown", onKey);
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+      overlay.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", close));
+      return { overlay, close, dismiss };
+    }
+
+    function openManagerDialog(c, trigger) {
+      const others = ACCOUNT_MANAGERS.filter((name) => name !== c.accountManager);
+      const { overlay, dismiss } = openModal({
+        titleId: "am-title",
+        title: "Change account manager",
+        subtitle: escapeHtml(c.companyName),
+        trigger,
+        body: `
+          <form id="am-form" novalidate>
+            <div class="field">
+              <label class="op-input-wrap is-readonly">
+                <span class="op-notch">Current account manager</span>
+                <input type="text" value="${escapeHtml(c.accountManager)}" disabled />
+              </label>
+            </div>
+            <div class="field" style="margin-bottom: 0">
+              <label class="op-input-wrap" id="am-wrap">
+                <span class="op-notch">New account manager <span class="req">*</span></span>
+                <select id="am-select" aria-describedby="am-error">
+                  <option value="">Select an account manager</option>
+                  ${others.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("")}
+                </select>
+              </label>
+              <div class="field-error" id="am-error" hidden>Select the new account manager.</div>
+            </div>
+            <div class="modal-actions">
+              <button class="btn btn-outline" type="button" data-close>Cancel</button>
+              <button class="btn btn-primary" type="submit">Save changes</button>
+            </div>
+          </form>
+        `
+      });
+
+      const select = overlay.querySelector("#am-select");
+      const wrap = overlay.querySelector("#am-wrap");
+      const error = overlay.querySelector("#am-error");
+
+      select.addEventListener("change", () => {
+        wrap.classList.remove("has-error");
+        error.hidden = true;
+      });
+
+      overlay.querySelector("#am-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = select.value;
+        if (!name) {
+          wrap.classList.add("has-error");
+          error.hidden = false;
+          select.focus();
+          return;
+        }
+        c.accountManager = name;
+        saveManagerChange(c.id, name);
+        dismiss();
+        router();
+        $("#change-manager")?.focus();
+        showToast(`${name} is now the account manager for ${c.companyName}`);
+      });
+
+      select.focus();
     }
 
     const INVOICE_CHIPS = {
@@ -1323,8 +1617,10 @@
       if (!credit) {
         return `
           <div class="empty-stub">
-            <h3>Credit assessment in progress</h3>
-            <p>${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.</p>
+            <h3>${c.addedInBackoffice ? "No credit history yet" : "Credit assessment in progress"}</h3>
+            <p>${c.addedInBackoffice
+              ? `${escapeHtml(c.companyName)} has no credit history yet. A credit score and limit will appear here once the credit assessment is complete.`
+              : `${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.`}</p>
           </div>
         `;
       }
@@ -1427,8 +1723,7 @@
       const c = customers.find((x) => x.id === id);
 
       if (!c) {
-        setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
-        $("#view").innerHTML = `
+          $("#view").innerHTML = `
           <a class="text-link back-link" href="#/customers">← Back to all customers</a>
           <div class="not-found">
             <h2>Customer not found</h2>
@@ -1441,14 +1736,7 @@
       const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
       const base = `#/customers/${encodeURIComponent(c.id)}`;
 
-      setBreadcrumb([
-        { label: "Customers", href: "#/customers" },
-        { label: "All customers", href: "#/customers" },
-        { label: c.companyName, href: base },
-        { label: tab.label }
-      ]);
-
-      const body = tab.key === "deals" ? renderDealsTab(c) : tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
+      const body = tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
 
       $("#view").innerHTML = `
         <a class="text-link back-link" href="#/customers">← Back to all customers</a>
@@ -1458,7 +1746,6 @@
           <div>
             <h1>${escapeHtml(c.companyName)}</h1>
             <div class="hero-meta">
-              <span>${escapeHtml(c.id)}</span>
               ${statusBadge(c.status)}
               ${classChip(c.customerClass)}
               <span>Customer since ${formatDate(c.createdAt)}</span>
@@ -1476,6 +1763,199 @@
 
         ${body}
       `;
+
+      const changeBtn = $("#change-manager");
+      if (changeBtn) changeBtn.addEventListener("click", () => openManagerDialog(c, changeBtn));
+      const editBtn = $("#edit-customer");
+      if (editBtn) editBtn.addEventListener("click", () => openCustomerForm(c, editBtn));
+    }
+
+    // ---------------------------------------------------------------
+    // Add customer
+    // ---------------------------------------------------------------
+    const INDUSTRIES = [
+      "Agriculture", "Automotive", "Food & Beverage", "General Trading", "Heavy Machinery",
+      "Logistics", "Oil & Gas", "Pharmaceuticals", "Textiles", "Other"
+    ];
+    const CLASSES = ["Growth", "SME", "Enterprise"];
+
+    // Order follows the agreed onboarding flow. Registration channel is set by the system, not the form.
+    const ADD_FIELDS = [
+      { group: "Company", id: "companyName", label: "Company name", required: true, autocomplete: "organization", placeholder: "e.g. Adeola Foods Ltd", span: true },
+      { group: "Company", id: "rcNumber", label: "RC number", required: true, message: "Enter the RC number.", placeholder: "e.g. RC 1234567" },
+      { group: "Company", id: "taxId", label: "Tax ID", required: true, message: "Enter the tax ID.", placeholder: "e.g. TIN 20394857-0001" },
+      { group: "Company", id: "industry", label: "Industry (optional)", options: INDUSTRIES, placeholderOption: "Select industry" },
+      { group: "Company", id: "customerClass", label: "Class", required: true, message: "Select the customer class.", options: CLASSES },
+      { group: "Company", id: "address", label: "Company address", required: true, autocomplete: "street-address", placeholder: "Street, city, country", span: true },
+      { group: "Primary contact", id: "firstName", label: "First name", required: true, message: "Enter the primary contact's first name.", autocomplete: "given-name" },
+      { group: "Primary contact", id: "lastName", label: "Last name", required: true, message: "Enter the primary contact's last name.", autocomplete: "family-name" },
+      { group: "Primary contact", id: "email", label: "Email address", required: true, type: "email", autocomplete: "email", placeholder: "name@company.com" },
+      { group: "Primary contact", id: "phone", label: "Phone number", required: true, type: "tel", autocomplete: "tel", placeholder: "+234 800 000 0000" },
+      { group: "Account manager", id: "accountManager", label: "Account manager", required: true, options: ACCOUNT_MANAGERS }
+    ];
+
+    function formField(f) {
+      const notch = `<span class="op-notch">${escapeHtml(f.label)}${f.required ? ' <span class="req">*</span>' : ""}</span>`;
+      const aria = `aria-describedby="err-${f.id}" ${f.required ? 'aria-required="true"' : ""}`;
+      const control = f.options
+        ? `<select id="f-${f.id}" name="${f.id}" ${aria}>
+             <option value="">${escapeHtml(f.placeholderOption || `Select ${f.label.toLowerCase()}`)}</option>
+             ${f.options.map((o) => `<option value="${escapeHtml(o)}" ${o === f.value ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}
+           </select>`
+        : `<input id="f-${f.id}" name="${f.id}" type="${f.type || "text"}" ${f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""} placeholder="${escapeHtml(f.placeholder || "")}" value="${escapeHtml(f.value || "")}" ${aria} />`;
+      return `
+        <div class="field ${f.span ? "span-2" : ""}">
+          <label class="op-input-wrap" id="wrap-${f.id}">${notch}${control}</label>
+          <div class="field-error" id="err-${f.id}" hidden></div>
+        </div>
+      `;
+    }
+
+    function validateCustomer(values, fields, self = null) {
+      const errors = {};
+      const others = customers.filter((c) => c !== self);
+      fields.forEach((f) => {
+        if (f.required && !values[f.id]) errors[f.id] = f.message || `${f.options ? "Select" : "Enter"} the ${f.label.toLowerCase()}.`;
+      });
+
+      if (values.companyName && others.some((c) => c.companyName.toLowerCase() === values.companyName.toLowerCase())) {
+        errors.companyName = "A customer with this company name already exists.";
+      }
+      if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+        errors.email = "Enter a valid email address, like name@company.com.";
+      } else if (values.email && others.some((c) => c.email.toLowerCase() === values.email.toLowerCase())) {
+        errors.email = "Another customer already uses this email.";
+      }
+      if (values.phone && !/^\+?[0-9][0-9\s()-]{6,19}$/.test(values.phone)) {
+        errors.phone = "Enter a valid phone number, including the country code.";
+      }
+      return errors;
+    }
+
+    function nextCustomerId() {
+      const max = customers.reduce((m, c) => Math.max(m, Number(c.id.replace(/\D/g, "")) || 0), 1000);
+      return `CUS-${max + 1}`;
+    }
+
+    // Sample customers only have a full contact name; split it for the edit form.
+    function contactNameParts(c) {
+      if (c.firstName || c.lastName) return { firstName: c.firstName || "", lastName: c.lastName || "" };
+      const [first, ...rest] = c.contactName.split(/\s+/);
+      return { firstName: first || "", lastName: rest.join(" ") };
+    }
+
+    // Add customer / Edit customer dialog. `existing` is the customer being edited, if any.
+    function openCustomerForm(existing = null, trigger = null) {
+      const editing = Boolean(existing);
+      // Account manager has its own Change flow on the details page, so it is only asked for on Add.
+      const fields = (editing ? ADD_FIELDS.filter((f) => f.id !== "accountManager") : ADD_FIELDS).map((f) => {
+        if (!editing) return f;
+        const initial = { ...existing, ...contactNameParts(existing) }[f.id];
+        return { ...f, value: f.id === "industry" && !INDUSTRIES.includes(initial) ? "" : initial };
+      });
+      const groups = [...new Set(fields.map((f) => f.group))];
+
+      const { overlay, dismiss } = openModal({
+        titleId: "customer-form-title",
+        title: editing ? "Edit customer" : "Add customer",
+        subtitle: `${editing ? `${escapeHtml(existing.companyName)} · ` : ""}Fields marked <span class="req">*</span> are required.`,
+        wide: true,
+        trigger,
+        body: `
+          <form id="customer-form" novalidate>
+            ${editing ? "" : `
+            <div class="form-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+              <span>Customers added here are created as <strong>Active</strong>.</span>
+            </div>`}
+            ${groups.map((g) => `
+              <div class="field-group">
+                <div class="group-title">${escapeHtml(g)}</div>
+                <div class="form-grid">${fields.filter((f) => f.group === g).map(formField).join("")}</div>
+              </div>`).join("")}
+            <div class="form-actions">
+              <button class="btn btn-outline" type="button" data-close>Cancel</button>
+              <button class="btn btn-primary" type="submit">${editing ? "Save changes" : "Add customer"}</button>
+            </div>
+          </form>
+        `
+      });
+
+      const $m = (sel) => overlay.querySelector(sel);
+
+      function setError(id, message) {
+        const wrap = $m("#wrap-" + id);
+        const err = $m("#err-" + id);
+        const control = $m("#f-" + id);
+        wrap.classList.toggle("has-error", Boolean(message));
+        err.hidden = !message;
+        err.textContent = message || "";
+        if (message) control.setAttribute("aria-invalid", "true"); else control.removeAttribute("aria-invalid");
+      }
+
+      const readValues = () => Object.fromEntries(fields.map((f) => [f.id, $m("#f-" + f.id).value.trim()]));
+
+      // Clear a field's error as soon as it is corrected.
+      fields.forEach((f) => {
+        $m("#f-" + f.id).addEventListener(f.options ? "change" : "input", () => {
+          if (!$m("#wrap-" + f.id).classList.contains("has-error")) return;
+          setError(f.id, validateCustomer(readValues(), fields, existing)[f.id]);
+        });
+      });
+
+      $m("#customer-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const values = readValues();
+        const errors = validateCustomer(values, fields, existing);
+        fields.forEach((f) => setError(f.id, errors[f.id]));
+
+        const firstInvalid = fields.find((f) => errors[f.id]);
+        if (firstInvalid) {
+          $m("#f-" + firstInvalid.id).focus();
+          return;
+        }
+
+        const basics = {
+          companyName: values.companyName,
+          rcNumber: values.rcNumber,
+          taxId: values.taxId,
+          industry: values.industry || "Not provided",
+          customerClass: values.customerClass,
+          address: values.address,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          contactName: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          phone: values.phone
+        };
+
+        dismiss();
+
+        if (editing) {
+          Object.assign(existing, basics);
+          saveCustomerEdit(existing);
+          router();
+          $("#edit-customer")?.focus();
+          showToast(`${existing.companyName} was updated`);
+          return;
+        }
+
+        const customer = {
+          id: nextCustomerId(),
+          ...basics,
+          channel: "Internal", // set by the system for customers added in the backoffice
+          status: "active", // customers created internally are active straight away
+          accountManager: values.accountManager,
+          createdAt: isoDate(new Date()),
+          addedInBackoffice: true
+        };
+        customers.unshift(customer);
+        saveAddedCustomer(customer);
+        location.hash = `#/customers/${encodeURIComponent(customer.id)}`;
+        showToast(`${customer.companyName} was added as a new customer`);
+      });
+
+      $m("#f-companyName").focus();
     }
 
     // ---------------------------------------------------------------
@@ -1485,6 +1965,8 @@
 
     function router() {
       const parts = parseRoute();
+      // Only the list page shows its title in the top bar; other pages have their own headings.
+      $("#topbar-title").innerHTML = parts[0] === "customers" && !parts[1] ? '<h1 class="page-title">Customers</h1>' : "";
 
       if (parts[0] !== "customers") {
         location.hash = "#/customers";
@@ -1495,6 +1977,12 @@
       // Keep scroll position when switching tabs on the same customer.
       if (customerId !== lastCustomerId) window.scrollTo(0, 0);
       lastCustomerId = customerId;
+
+      if (customerId === "new") {
+        // Add customer is a dialog on the list page now; send old links there.
+        location.replace("#/customers");
+        return;
+      }
 
       if (customerId) {
         renderDetails(customerId, parts[2]);
