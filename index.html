@@ -541,6 +541,26 @@
       margin-bottom: 20px;
       gap: var(--op-space-3);
     }
+    .modal.wide { max-width: 760px; }
+    /* Long forms scroll inside the dialog; keep the title and actions in view. */
+    .modal.wide .modal-head {
+      position: sticky;
+      top: calc(-1 * var(--op-space-6));
+      z-index: 2;
+      background: var(--op-white);
+      margin: calc(-1 * var(--op-space-6)) 0 20px;
+      padding-top: var(--op-space-6);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--op-border-divider);
+    }
+    .modal .form-actions {
+      position: sticky;
+      bottom: calc(-1 * var(--op-space-6));
+      z-index: 2;
+      background: var(--op-white);
+      margin: 18px 0 calc(-1 * var(--op-space-6));
+      padding-bottom: var(--op-space-6);
+    }
     .modal-head h3 { margin: 0 0 4px; font-family: var(--op-font-display); font-weight: 600; font-size: 18px; color: var(--op-dark-green); }
     .modal-close { border: none; background: none; font-size: 22px; line-height: 1; color: var(--op-silver-light); padding: 2px 6px; }
     .modal-close:hover { color: var(--op-dark-green); }
@@ -550,7 +570,6 @@
     .field { margin-bottom: 18px; }
 
     /* ---------- Add customer form ---------- */
-    .form-panel { max-width: 880px; }
     .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 20px; }
     .form-grid .span-2 { grid-column: 1 / -1; }
     .form-grid .field { margin-bottom: 12px; }
@@ -1063,7 +1082,7 @@
 
         <div class="toolbar">
           <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
-          <a class="btn btn-primary" href="#/customers/new">+ Add customer</a>
+          <button class="btn btn-primary" id="add-customer" type="button">+ Add customer</button>
         </div>
 
         <div class="table-wrap">
@@ -1084,6 +1103,9 @@
           <div class="pagination" id="pagination"></div>
         </div>
       `;
+
+      const addBtn = $("#add-customer");
+      addBtn.addEventListener("click", () => openCustomerForm(null, addBtn));
 
       $("#search").addEventListener("input", (e) => {
         state.search = e.target.value;
@@ -1422,7 +1444,7 @@
           <section class="panel">
             <div class="panel-head split">
               <span class="panel-title">Basic details</span>
-              <a class="view-btn" href="#/customers/${encodeURIComponent(c.id)}/edit">Edit</a>
+              <button class="view-btn" id="edit-customer" type="button">Edit</button>
             </div>
             ${fieldGroup("Company", `
               ${field("Company name", escapeHtml(c.companyName))}
@@ -1465,19 +1487,62 @@
       setTimeout(() => toast.remove(), 3200);
     }
 
-    function openManagerDialog(c, trigger) {
-      const others = ACCOUNT_MANAGERS.filter((name) => name !== c.accountManager);
+    // Opens a dialog in the Backoffice2.0 modal style. Escape, the close button, Cancel
+    // and clicking the backdrop all close it; keyboard focus is kept inside while open.
+    function openModal({ titleId, title, subtitle = "", body, wide = false, trigger = null }) {
       const overlay = document.createElement("div");
       overlay.className = "modal-overlay";
       overlay.innerHTML = `
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="am-title">
+        <div class="modal ${wide ? "wide" : ""}" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
           <div class="modal-head">
             <div>
-              <h3 id="am-title">Change account manager</h3>
-              <p class="muted">${escapeHtml(c.companyName)}</p>
+              <h3 id="${titleId}">${title}</h3>
+              ${subtitle ? `<p class="muted">${subtitle}</p>` : ""}
             </div>
             <button class="modal-close" type="button" aria-label="Close" data-close>×</button>
           </div>
+          ${body}
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+
+      function onKey(e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key !== "Tab") return;
+        const focusable = [...overlay.querySelectorAll("button, select, input:not([disabled]), a[href]")];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+
+      // Removes the dialog without moving focus (used after a successful save re-renders the page).
+      function dismiss() {
+        document.removeEventListener("keydown", onKey);
+        document.body.style.overflow = "";
+        overlay.remove();
+      }
+
+      function close() {
+        dismiss();
+        trigger?.focus();
+      }
+
+      document.addEventListener("keydown", onKey);
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+      overlay.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", close));
+      return { overlay, close, dismiss };
+    }
+
+    function openManagerDialog(c, trigger) {
+      const others = ACCOUNT_MANAGERS.filter((name) => name !== c.accountManager);
+      const { overlay, dismiss } = openModal({
+        titleId: "am-title",
+        title: "Change account manager",
+        subtitle: escapeHtml(c.companyName),
+        trigger,
+        body: `
           <form id="am-form" novalidate>
             <div class="field">
               <label class="op-input-wrap is-readonly">
@@ -1500,34 +1565,12 @@
               <button class="btn btn-primary" type="submit">Save changes</button>
             </div>
           </form>
-        </div>
-      `;
-      document.body.appendChild(overlay);
+        `
+      });
 
       const select = overlay.querySelector("#am-select");
       const wrap = overlay.querySelector("#am-wrap");
       const error = overlay.querySelector("#am-error");
-
-      function close() {
-        document.removeEventListener("keydown", onKey);
-        overlay.remove();
-        trigger?.focus();
-      }
-
-      function onKey(e) {
-        if (e.key === "Escape") { close(); return; }
-        if (e.key !== "Tab") return;
-        // Keep keyboard focus inside the dialog.
-        const focusable = [...overlay.querySelectorAll("button, select")];
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-
-      document.addEventListener("keydown", onKey);
-      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-      overlay.querySelectorAll("[data-close]").forEach((btn) => btn.addEventListener("click", close));
 
       select.addEventListener("change", () => {
         wrap.classList.remove("has-error");
@@ -1545,8 +1588,7 @@
         }
         c.accountManager = name;
         saveManagerChange(c.id, name);
-        document.removeEventListener("keydown", onKey);
-        overlay.remove();
+        dismiss();
         router();
         $("#change-manager")?.focus();
         showToast(`${name} is now the account manager for ${c.companyName}`);
@@ -1724,6 +1766,8 @@
 
       const changeBtn = $("#change-manager");
       if (changeBtn) changeBtn.addEventListener("click", () => openManagerDialog(c, changeBtn));
+      const editBtn = $("#edit-customer");
+      if (editBtn) editBtn.addEventListener("click", () => openCustomerForm(c, editBtn));
     }
 
     // ---------------------------------------------------------------
@@ -1800,8 +1844,8 @@
       return { firstName: first || "", lastName: rest.join(" ") };
     }
 
-    // Shared by Add customer and Edit customer. `existing` is the customer being edited, if any.
-    function renderCustomerForm(existing = null) {
+    // Add customer / Edit customer dialog. `existing` is the customer being edited, if any.
+    function openCustomerForm(existing = null, trigger = null) {
       const editing = Boolean(existing);
       // Account manager has its own Change flow on the details page, so it is only asked for on Add.
       const fields = (editing ? ADD_FIELDS.filter((f) => f.id !== "accountManager") : ADD_FIELDS).map((f) => {
@@ -1810,54 +1854,56 @@
         return { ...f, value: f.id === "industry" && !INDUSTRIES.includes(initial) ? "" : initial };
       });
       const groups = [...new Set(fields.map((f) => f.group))];
-      const backHref = editing ? `#/customers/${encodeURIComponent(existing.id)}` : "#/customers";
 
-      $("#view").innerHTML = `
-        <a class="text-link back-link" href="${backHref}">← ${editing ? `Back to ${escapeHtml(existing.companyName)}` : "Back to all customers"}</a>
-        <div class="page-header">
-          <h1>${editing ? "Edit customer" : "Add customer"}</h1>
-          <p class="muted">${editing ? `Update the basic information for ${escapeHtml(existing.companyName)}. ` : ""}Fields marked <span class="req">*</span> are required.</p>
-        </div>
+      const { overlay, dismiss } = openModal({
+        titleId: "customer-form-title",
+        title: editing ? "Edit customer" : "Add customer",
+        subtitle: `${editing ? `${escapeHtml(existing.companyName)} · ` : ""}Fields marked <span class="req">*</span> are required.`,
+        wide: true,
+        trigger,
+        body: `
+          <form id="customer-form" novalidate>
+            ${editing ? "" : `
+            <div class="form-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+              <span>Customers added here are created as <strong>Active</strong>.</span>
+            </div>`}
+            ${groups.map((g) => `
+              <div class="field-group">
+                <div class="group-title">${escapeHtml(g)}</div>
+                <div class="form-grid">${fields.filter((f) => f.group === g).map(formField).join("")}</div>
+              </div>`).join("")}
+            <div class="form-actions">
+              <button class="btn btn-outline" type="button" data-close>Cancel</button>
+              <button class="btn btn-primary" type="submit">${editing ? "Save changes" : "Add customer"}</button>
+            </div>
+          </form>
+        `
+      });
 
-        <form class="panel form-panel" id="customer-form" novalidate>
-          ${editing ? "" : `
-          <div class="form-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-            <span>Customers added here are created as <strong>Active</strong>.</span>
-          </div>`}
-          ${groups.map((g) => `
-            <div class="field-group">
-              <div class="group-title">${escapeHtml(g)}</div>
-              <div class="form-grid">${fields.filter((f) => f.group === g).map(formField).join("")}</div>
-            </div>`).join("")}
-          <div class="form-actions">
-            <a class="btn btn-outline" href="${backHref}">Cancel</a>
-            <button class="btn btn-primary" type="submit">${editing ? "Save changes" : "Add customer"}</button>
-          </div>
-        </form>
-      `;
+      const $m = (sel) => overlay.querySelector(sel);
 
       function setError(id, message) {
-        const wrap = $("#wrap-" + id);
-        const err = $("#err-" + id);
-        const control = $("#f-" + id);
+        const wrap = $m("#wrap-" + id);
+        const err = $m("#err-" + id);
+        const control = $m("#f-" + id);
         wrap.classList.toggle("has-error", Boolean(message));
         err.hidden = !message;
         err.textContent = message || "";
         if (message) control.setAttribute("aria-invalid", "true"); else control.removeAttribute("aria-invalid");
       }
 
-      const readValues = () => Object.fromEntries(fields.map((f) => [f.id, $("#f-" + f.id).value.trim()]));
+      const readValues = () => Object.fromEntries(fields.map((f) => [f.id, $m("#f-" + f.id).value.trim()]));
 
       // Clear a field's error as soon as it is corrected.
       fields.forEach((f) => {
-        $("#f-" + f.id).addEventListener(f.options ? "change" : "input", () => {
-          if (!$("#wrap-" + f.id).classList.contains("has-error")) return;
+        $m("#f-" + f.id).addEventListener(f.options ? "change" : "input", () => {
+          if (!$m("#wrap-" + f.id).classList.contains("has-error")) return;
           setError(f.id, validateCustomer(readValues(), fields, existing)[f.id]);
         });
       });
 
-      $("#customer-form").addEventListener("submit", (e) => {
+      $m("#customer-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const values = readValues();
         const errors = validateCustomer(values, fields, existing);
@@ -1865,7 +1911,7 @@
 
         const firstInvalid = fields.find((f) => errors[f.id]);
         if (firstInvalid) {
-          $("#f-" + firstInvalid.id).focus();
+          $m("#f-" + firstInvalid.id).focus();
           return;
         }
 
@@ -1883,10 +1929,13 @@
           phone: values.phone
         };
 
+        dismiss();
+
         if (editing) {
           Object.assign(existing, basics);
           saveCustomerEdit(existing);
-          location.hash = backHref;
+          router();
+          $("#edit-customer")?.focus();
           showToast(`${existing.companyName} was updated`);
           return;
         }
@@ -1906,7 +1955,7 @@
         showToast(`${customer.companyName} was added as a new customer`);
       });
 
-      $("#f-companyName").focus();
+      $m("#f-companyName").focus();
     }
 
     // ---------------------------------------------------------------
@@ -1929,13 +1978,13 @@
       if (customerId !== lastCustomerId) window.scrollTo(0, 0);
       lastCustomerId = customerId;
 
-      const editTarget = parts[2] === "edit" ? customers.find((c) => c.id === customerId) : null;
-
       if (customerId === "new") {
-        renderCustomerForm();
-      } else if (editTarget) {
-        renderCustomerForm(editTarget);
-      } else if (customerId) {
+        // Add customer is a dialog on the list page now; send old links there.
+        location.replace("#/customers");
+        return;
+      }
+
+      if (customerId) {
         renderDetails(customerId, parts[2]);
       } else {
         renderList();
