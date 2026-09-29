@@ -167,22 +167,10 @@
     .topbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: var(--op-space-3);
       margin-bottom: 18px;
     }
-
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-weight: 600;
-      color: var(--op-silver-light);
-      font-size: 13px;
-    }
-    .breadcrumb a:hover { color: var(--op-dark-green); }
-    .breadcrumb strong { color: var(--op-dark-green); }
 
     .brand {
       font-family: var(--op-font-display);
@@ -389,6 +377,8 @@
 
     /* ---------- Buttons ---------- */
     .view-btn {
+      display: inline-flex;
+      align-items: center;
       border: 1.5px solid var(--op-dark-green);
       background: var(--op-white);
       border-radius: var(--op-radius-md);
@@ -666,7 +656,6 @@
       gap: 6px;
       border-bottom: 1px solid var(--op-border-card);
       margin: var(--op-space-6) 0;
-      overflow-x: auto;
     }
     .tab-btn {
       display: flex;
@@ -849,7 +838,6 @@
 
     <main class="main">
       <header class="topbar">
-        <div class="breadcrumb" id="breadcrumb"></div>
         <div class="brand">OnePort<span>365</span></div>
       </header>
       <div class="content" id="view"></div>
@@ -922,7 +910,30 @@
       } catch (e) { /* storage unavailable: customer lasts for this visit only */ }
     }
 
+    // Edits to customer basic information are kept in this browser until the page is wired to the API.
+    const EDITS_STORE_KEY = "op365.customers.edits";
+    const EDITABLE_KEYS = ["companyName", "rcNumber", "taxId", "industry", "customerClass", "address", "firstName", "lastName", "contactName", "email", "phone"];
+
+    function loadCustomerEdits() {
+      try {
+        const edits = JSON.parse(localStorage.getItem(EDITS_STORE_KEY) || "{}");
+        customers.forEach((c) => {
+          const e = edits[c.id];
+          if (e) EDITABLE_KEYS.forEach((k) => { if (typeof e[k] === "string") c[k] = e[k]; });
+        });
+      } catch (e) { /* storage unavailable: keep the defaults */ }
+    }
+
+    function saveCustomerEdit(c) {
+      try {
+        const edits = JSON.parse(localStorage.getItem(EDITS_STORE_KEY) || "{}");
+        edits[c.id] = Object.fromEntries(EDITABLE_KEYS.map((k) => [k, c[k]]));
+        localStorage.setItem(EDITS_STORE_KEY, JSON.stringify(edits));
+      } catch (e) { /* storage unavailable: edit lasts for this visit only */ }
+    }
+
     loadAddedCustomers();
+    loadCustomerEdits();
     loadManagerChanges();
 
     // ---------------------------------------------------------------
@@ -962,14 +973,6 @@
     function parseRoute() {
       const hash = location.hash.replace(/^#/, "") || "/customers";
       return hash.split("?")[0].split("/").filter(Boolean);
-    }
-
-    function setBreadcrumb(items) {
-      $("#breadcrumb").innerHTML = items
-        .map((item, i) => i === items.length - 1
-          ? `<strong>${escapeHtml(item.label)}</strong>`
-          : `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
-        .join("<span aria-hidden=\"true\">/</span>");
     }
 
     function classChip(customerClass) {
@@ -1044,8 +1047,6 @@
     // All customers view
     // ---------------------------------------------------------------
     function renderList() {
-      setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "All customers" }]);
-
       $("#view").innerHTML = `
         <div class="page-header split">
           <div>
@@ -1215,7 +1216,8 @@
 
     function creditFor(c) {
       if (cache.has("credit:" + c.id)) return cache.get("credit:" + c.id);
-      if (c.status === "pending") { cache.set("credit:" + c.id, null); return null; }
+      // No credit history yet: still onboarding, or just added in the backoffice.
+      if (c.status === "pending" || c.addedInBackoffice) { cache.set("credit:" + c.id, null); return null; }
 
       const rand = seededRandom(c.id + ":credit");
       // Chance an invoice is paid on time; inactive accounts skew towards weaker payment histories.
@@ -1416,7 +1418,10 @@
       return `
         <div class="detail-grid" style="margin-top: 0">
           <section class="panel">
-            <div class="panel-head"><span class="panel-title">Basic details</span></div>
+            <div class="panel-head split">
+              <span class="panel-title">Basic details</span>
+              <a class="view-btn" href="#/customers/${encodeURIComponent(c.id)}/edit">Edit</a>
+            </div>
             ${fieldGroup("Company", `
               ${field("Company name", escapeHtml(c.companyName))}
               ${field("Industry", escapeHtml(c.industry))}
@@ -1568,8 +1573,10 @@
       if (!credit) {
         return `
           <div class="empty-stub">
-            <h3>Credit assessment in progress</h3>
-            <p>${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.</p>
+            <h3>${c.addedInBackoffice ? "No credit history yet" : "Credit assessment in progress"}</h3>
+            <p>${c.addedInBackoffice
+              ? `${escapeHtml(c.companyName)} has no credit history yet. A credit score and limit will appear here once the credit assessment is complete.`
+              : `${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.`}</p>
           </div>
         `;
       }
@@ -1672,8 +1679,7 @@
       const c = customers.find((x) => x.id === id);
 
       if (!c) {
-        setBreadcrumb([{ label: "Customers", href: "#/customers" }, { label: "Not found" }]);
-        $("#view").innerHTML = `
+          $("#view").innerHTML = `
           <a class="text-link back-link" href="#/customers">← Back to all customers</a>
           <div class="not-found">
             <h2>Customer not found</h2>
@@ -1685,13 +1691,6 @@
 
       const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
       const base = `#/customers/${encodeURIComponent(c.id)}`;
-
-      setBreadcrumb([
-        { label: "Customers", href: "#/customers" },
-        { label: "All customers", href: "#/customers" },
-        { label: c.companyName, href: base },
-        { label: tab.label }
-      ]);
 
       const body = tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
 
@@ -1757,7 +1756,7 @@
              <option value="">${escapeHtml(f.placeholderOption || `Select ${f.label.toLowerCase()}`)}</option>
              ${f.options.map((o) => `<option value="${escapeHtml(o)}" ${o === f.value ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}
            </select>`
-        : `<input id="f-${f.id}" name="${f.id}" type="${f.type || "text"}" ${f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""} placeholder="${escapeHtml(f.placeholder || "")}" ${aria} />`;
+        : `<input id="f-${f.id}" name="${f.id}" type="${f.type || "text"}" ${f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""} placeholder="${escapeHtml(f.placeholder || "")}" value="${escapeHtml(f.value || "")}" ${aria} />`;
       return `
         <div class="field ${f.span ? "span-2" : ""}">
           <label class="op-input-wrap" id="wrap-${f.id}">${notch}${control}</label>
@@ -1766,18 +1765,19 @@
       `;
     }
 
-    function validateCustomer(values) {
+    function validateCustomer(values, fields, self = null) {
       const errors = {};
-      ADD_FIELDS.forEach((f) => {
+      const others = customers.filter((c) => c !== self);
+      fields.forEach((f) => {
         if (f.required && !values[f.id]) errors[f.id] = f.message || `${f.options ? "Select" : "Enter"} the ${f.label.toLowerCase()}.`;
       });
 
-      if (values.companyName && customers.some((c) => c.companyName.toLowerCase() === values.companyName.toLowerCase())) {
+      if (values.companyName && others.some((c) => c.companyName.toLowerCase() === values.companyName.toLowerCase())) {
         errors.companyName = "A customer with this company name already exists.";
       }
       if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
         errors.email = "Enter a valid email address, like name@company.com.";
-      } else if (values.email && customers.some((c) => c.email.toLowerCase() === values.email.toLowerCase())) {
+      } else if (values.email && others.some((c) => c.email.toLowerCase() === values.email.toLowerCase())) {
         errors.email = "Another customer already uses this email.";
       }
       if (values.phone && !/^\+?[0-9][0-9\s()-]{6,19}$/.test(values.phone)) {
@@ -1791,40 +1791,49 @@
       return `CUS-${max + 1}`;
     }
 
-    function renderAddCustomer() {
-      setBreadcrumb([
-        { label: "Customers", href: "#/customers" },
-        { label: "All customers", href: "#/customers" },
-        { label: "Add customer" }
-      ]);
+    // Sample customers only have a full contact name; split it for the edit form.
+    function contactNameParts(c) {
+      if (c.firstName || c.lastName) return { firstName: c.firstName || "", lastName: c.lastName || "" };
+      const [first, ...rest] = c.contactName.split(/\s+/);
+      return { firstName: first || "", lastName: rest.join(" ") };
+    }
 
-      const groups = [...new Set(ADD_FIELDS.map((f) => f.group))];
+    // Shared by Add customer and Edit customer. `existing` is the customer being edited, if any.
+    function renderCustomerForm(existing = null) {
+      const editing = Boolean(existing);
+      // Account manager has its own Change flow on the details page, so it is only asked for on Add.
+      const fields = (editing ? ADD_FIELDS.filter((f) => f.id !== "accountManager") : ADD_FIELDS).map((f) => {
+        if (!editing) return f;
+        const initial = { ...existing, ...contactNameParts(existing) }[f.id];
+        return { ...f, value: f.id === "industry" && !INDUSTRIES.includes(initial) ? "" : initial };
+      });
+      const groups = [...new Set(fields.map((f) => f.group))];
+      const backHref = editing ? `#/customers/${encodeURIComponent(existing.id)}` : "#/customers";
 
       $("#view").innerHTML = `
-        <a class="text-link back-link" href="#/customers">← Back to all customers</a>
+        <a class="text-link back-link" href="${backHref}">← ${editing ? `Back to ${escapeHtml(existing.companyName)}` : "Back to all customers"}</a>
         <div class="page-header">
-          <h1>Add customer</h1>
-          <p class="muted">Fields marked <span class="req">*</span> are required.</p>
+          <h1>${editing ? "Edit customer" : "Add customer"}</h1>
+          <p class="muted">${editing ? `Update the basic information for ${escapeHtml(existing.companyName)}. ` : ""}Fields marked <span class="req">*</span> are required.</p>
         </div>
 
-        <form class="panel form-panel" id="add-customer-form" novalidate>
+        <form class="panel form-panel" id="customer-form" novalidate>
+          ${editing ? "" : `
           <div class="form-note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-            <span>New customers start as <strong>Pending</strong> until onboarding and the credit assessment are complete.</span>
-          </div>
+            <span>Customers added here are created as <strong>Active</strong>.</span>
+          </div>`}
           ${groups.map((g) => `
             <div class="field-group">
               <div class="group-title">${escapeHtml(g)}</div>
-              <div class="form-grid">${ADD_FIELDS.filter((f) => f.group === g).map(formField).join("")}</div>
+              <div class="form-grid">${fields.filter((f) => f.group === g).map(formField).join("")}</div>
             </div>`).join("")}
           <div class="form-actions">
-            <a class="btn btn-outline" href="#/customers">Cancel</a>
-            <button class="btn btn-primary" type="submit">Add customer</button>
+            <a class="btn btn-outline" href="${backHref}">Cancel</a>
+            <button class="btn btn-primary" type="submit">${editing ? "Save changes" : "Add customer"}</button>
           </div>
         </form>
       `;
-
-      const form = $("#add-customer-form");
 
       function setError(id, message) {
         const wrap = $("#wrap-" + id);
@@ -1836,43 +1845,55 @@
         if (message) control.setAttribute("aria-invalid", "true"); else control.removeAttribute("aria-invalid");
       }
 
-      const readValues = () => Object.fromEntries(ADD_FIELDS.map((f) => [f.id, $("#f-" + f.id).value.trim()]));
+      const readValues = () => Object.fromEntries(fields.map((f) => [f.id, $("#f-" + f.id).value.trim()]));
 
       // Clear a field's error as soon as it is corrected.
-      ADD_FIELDS.forEach((f) => {
+      fields.forEach((f) => {
         $("#f-" + f.id).addEventListener(f.options ? "change" : "input", () => {
           if (!$("#wrap-" + f.id).classList.contains("has-error")) return;
-          setError(f.id, validateCustomer(readValues())[f.id]);
+          setError(f.id, validateCustomer(readValues(), fields, existing)[f.id]);
         });
       });
 
-      form.addEventListener("submit", (e) => {
+      $("#customer-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const values = readValues();
-        const errors = validateCustomer(values);
-        ADD_FIELDS.forEach((f) => setError(f.id, errors[f.id]));
+        const errors = validateCustomer(values, fields, existing);
+        fields.forEach((f) => setError(f.id, errors[f.id]));
 
-        const firstInvalid = ADD_FIELDS.find((f) => errors[f.id]);
+        const firstInvalid = fields.find((f) => errors[f.id]);
         if (firstInvalid) {
           $("#f-" + firstInvalid.id).focus();
           return;
         }
 
-        const customer = {
-          id: nextCustomerId(),
+        const basics = {
           companyName: values.companyName,
-          contactName: `${values.firstName} ${values.lastName}`,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phone: values.phone,
-          customerClass: values.customerClass,
-          channel: "Internal", // set by the system for customers added in the backoffice
-          status: "pending",
-          address: values.address,
-          industry: values.industry || "Not provided",
           rcNumber: values.rcNumber,
           taxId: values.taxId,
+          industry: values.industry || "Not provided",
+          customerClass: values.customerClass,
+          address: values.address,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          contactName: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          phone: values.phone
+        };
+
+        if (editing) {
+          Object.assign(existing, basics);
+          saveCustomerEdit(existing);
+          location.hash = backHref;
+          showToast(`${existing.companyName} was updated`);
+          return;
+        }
+
+        const customer = {
+          id: nextCustomerId(),
+          ...basics,
+          channel: "Internal", // set by the system for customers added in the backoffice
+          status: "active", // customers created internally are active straight away
           accountManager: values.accountManager,
           createdAt: isoDate(new Date()),
           addedInBackoffice: true
@@ -1904,8 +1925,12 @@
       if (customerId !== lastCustomerId) window.scrollTo(0, 0);
       lastCustomerId = customerId;
 
+      const editTarget = parts[2] === "edit" ? customers.find((c) => c.id === customerId) : null;
+
       if (customerId === "new") {
-        renderAddCustomer();
+        renderCustomerForm();
+      } else if (editTarget) {
+        renderCustomerForm(editTarget);
       } else if (customerId) {
         renderDetails(customerId, parts[2]);
       } else {
