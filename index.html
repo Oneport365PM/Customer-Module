@@ -167,22 +167,26 @@
     .topbar {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: var(--op-space-3);
+      min-height: 52px;
       margin-bottom: 18px;
     }
 
-    .brand {
+    .page-title {
+      margin: 0;
       font-family: var(--op-font-display);
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -.015em;
       color: var(--op-dark-green);
-      font-size: 15px;
-      white-space: nowrap;
+      line-height: 1.15;
     }
-    .brand span { color: var(--op-accent-lime); -webkit-text-stroke: 0.4px var(--op-dark-green); }
+
+    /* The logo file has a white background; multiply blends it into the cream page. */
+    .brand-logo { display: block; height: 52px; width: auto; margin-left: auto; mix-blend-mode: multiply; }
 
     .page-header { margin-bottom: var(--op-space-6); }
-    .page-header.split { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--op-space-4); flex-wrap: wrap; }
     .page-header h1 {
       margin: 0 0 4px;
       font-family: var(--op-font-display);
@@ -240,6 +244,7 @@
     .spread-legend .pct { color: var(--op-silver-light); font-size: 12px; min-width: 38px; text-align: right; }
 
     /* ---------- Toolbar ---------- */
+    .toolbar .btn { margin-left: auto; white-space: nowrap; }
     .toolbar {
       display: flex;
       align-items: center;
@@ -249,7 +254,7 @@
     }
 
     .search-input {
-      flex: 1;
+      flex: 0 1 460px;
       min-width: 220px;
       padding: 9px 12px;
       border-radius: var(--op-radius-md);
@@ -804,7 +809,10 @@
       }
       .rail-avatar { margin-top: 0; }
       .main { padding: var(--op-space-4) 16px 40px; }
-      .page-header h1, .hero h1 { font-size: 24px; }
+      .page-header h1, .hero h1, .page-title { font-size: 24px; }
+      .brand-logo { height: 40px; }
+      .search-input { flex: 1 1 100%; }
+      .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
       .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
@@ -838,7 +846,8 @@
 
     <main class="main">
       <header class="topbar">
-        <div class="brand">OnePort<span>365</span></div>
+        <div id="topbar-title"></div>
+        <img class="brand-logo" alt="OnePort 365" src="data:image/png;base64,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" />
       </header>
       <div class="content" id="view"></div>
     </main>
@@ -1048,20 +1057,13 @@
     // ---------------------------------------------------------------
     function renderList() {
       $("#view").innerHTML = `
-        <div class="page-header split">
-          <div>
-            <h1>All customers</h1>
-            <p class="muted">Basic information for every OnePort365 customer.</p>
-          </div>
-          <a class="btn btn-primary" href="#/customers/new">+ Add customer</a>
-        </div>
-
         <div class="spread-cards">
           ${SPREADS.map(spreadCard).join("")}
         </div>
 
         <div class="toolbar">
           <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
+          <a class="btn btn-primary" href="#/customers/new">+ Add customer</a>
         </div>
 
         <div class="table-wrap">
@@ -1914,6 +1916,8 @@
 
     function router() {
       const parts = parseRoute();
+      // Only the list page shows its title in the top bar; other pages have their own headings.
+      $("#topbar-title").innerHTML = parts[0] === "customers" && !parts[1] ? '<h1 class="page-title">Customers</h1>' : "";
 
       if (parts[0] !== "customers") {
         location.hash = "#/customers";
