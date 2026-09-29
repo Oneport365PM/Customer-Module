@@ -567,6 +567,23 @@
     }
 
     .panel .spread-bar { margin-bottom: 14px; }
+
+    .detail-section + .detail-section {
+      border-top: 1px solid var(--op-border-divider);
+      margin-top: var(--op-space-6);
+      padding-top: var(--op-space-6);
+    }
+
+    .deal-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-3); }
+    .deal-stat {
+      background: #F4F6EF;
+      border: 1px solid rgba(2, 56, 25, .1);
+      border-radius: var(--op-radius-lg);
+      padding: 14px;
+    }
+    .deal-stat.highlight { background: var(--op-light-green); border-color: transparent; }
+    .deal-stat.highlight .kpi-label { color: var(--op-dark-green); }
+    .deal-stat .kpi-value { font-size: 26px; }
     .panel-note { font-size: 13.5px; color: var(--op-silver-dark); margin: 0; }
     .panel-note + .panel-note { margin-top: 10px; }
 
@@ -592,19 +609,6 @@
     }
 
     .money { font-weight: 700; color: var(--op-dark-green); }
-    .deal-lane { font-weight: 700; color: var(--op-dark-green); }
-
-    .mode-chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 11px;
-      border-radius: var(--op-radius-sm);
-      background: var(--op-light-green);
-      color: var(--op-dark-green);
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
 
     /* Stage / invoice chips reuse .status-badge with these semantic pairs */
     .chip-neutral { background: var(--op-chip-neutral-bg); color: var(--op-chip-neutral-text); }
@@ -711,18 +715,18 @@
     // Sample data. Replace with an API call when the backend is ready.
     // ---------------------------------------------------------------
     const customers = [
-      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Lagos", address: "12 Marina Road, Lagos Island", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
-      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", country: "Nigeria", city: "Kano", address: "45 Zaria Road, Kano", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
-      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", country: "Ghana", city: "Accra", address: "8 Independence Ave, Accra", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
-      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Port Harcourt", address: "3 Trans-Amadi Industrial Layout", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
-      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", country: "Kenya", city: "Nairobi", address: "Industrial Area, Enterprise Rd", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
-      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Nigeria", city: "Abuja", address: "Plot 22, Wuse Zone 4", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
-      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", country: "Nigeria", city: "Ibadan", address: "17 Ring Road, Ibadan", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
-      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", country: "Senegal", city: "Dakar", address: "Zone Portuaire, Dakar", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
-      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Enugu", address: "5 Ogui Road, Enugu", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
-      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", country: "Togo", city: "Lomé", address: "Boulevard du 13 Janvier, Lomé", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
-      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", country: "Nigeria", city: "Kaduna", address: "22 Ahmadu Bello Way, Kaduna", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
-      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", country: "South Africa", city: "Cape Town", address: "10 Paarden Eiland Rd, Cape Town", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
+      { id: "CUS-1001", companyName: "Adeola Foods Ltd", contactName: "Adeola Bankole", email: "adeola@adeolafoods.com", phone: "+234 803 123 4567", customerClass: "SME", channel: "Website", status: "active", address: "12 Marina Road, Lagos Island, Nigeria", industry: "Food & Beverage", rcNumber: "RC 1234567", taxId: "TIN 20394857-0001", accountManager: "Kayode Akintade", createdAt: "2025-01-14" },
+      { id: "CUS-1002", companyName: "Kano Agro Exports", contactName: "Ibrahim Musa", email: "ibrahim@kanoagro.ng", phone: "+234 806 555 0192", customerClass: "Growth", channel: "Internal", status: "active", address: "45 Zaria Road, Kano, Nigeria", industry: "Agriculture", rcNumber: "RC 2345678", taxId: "TIN 30495867-0001", accountManager: "Deborah Oje", createdAt: "2025-02-03" },
+      { id: "CUS-1003", companyName: "Gold Coast Traders", contactName: "Kwame Mensah", email: "kwame@goldcoasttraders.com", phone: "+233 24 111 2233", customerClass: "Growth", channel: "Website", status: "pending", address: "8 Independence Ave, Accra, Ghana", industry: "General Trading", rcNumber: "CS 998877", taxId: "GH-TIN C0012345678", accountManager: "Kayode Akintade", createdAt: "2025-03-21" },
+      { id: "CUS-1004", companyName: "Port Harcourt Energy Supplies", contactName: "Blessing Okoro", email: "blessing@phes.com", phone: "+234 809 222 3344", customerClass: "Enterprise", channel: "Internal", status: "active", address: "3 Trans-Amadi Industrial Layout, Port Harcourt, Nigeria", industry: "Oil & Gas", rcNumber: "RC 3456789", taxId: "TIN 40596978-0001", accountManager: "Babatope Ayeni", createdAt: "2025-04-09" },
+      { id: "CUS-1005", companyName: "Nairobi Textiles Co.", contactName: "Wanjiru Kamau", email: "wanjiru@nairobitextiles.co.ke", phone: "+254 712 345 678", customerClass: "SME", channel: "Website", status: "inactive", address: "Industrial Area, Enterprise Rd, Nairobi, Kenya", industry: "Textiles", rcNumber: "PVT-7XY12AB", taxId: "KRA P051234567Z", accountManager: "Deborah Oje", createdAt: "2024-11-28" },
+      { id: "CUS-1006", companyName: "Abuja Pharma Distributors", contactName: "Ngozi Umeh", email: "ngozi@abujapharma.com", phone: "+234 802 987 6543", customerClass: "Enterprise", channel: "Internal", status: "active", address: "Plot 22, Wuse Zone 4, Abuja, Nigeria", industry: "Pharmaceuticals", rcNumber: "RC 4567890", taxId: "TIN 50607089-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-05-17" },
+      { id: "CUS-1007", companyName: "Cocoa Coast Exporters", contactName: "Samuel Adeyemi", email: "samuel@cocoacoast.com", phone: "+234 805 444 7788", customerClass: "Growth", channel: "Website", status: "pending", address: "17 Ring Road, Ibadan, Nigeria", industry: "Agriculture", rcNumber: "RC 5678901", taxId: "TIN 60718190-0001", accountManager: "Babatope Ayeni", createdAt: "2025-06-02" },
+      { id: "CUS-1008", companyName: "Dakar Logistics Hub", contactName: "Aminata Diallo", email: "aminata@dakarhub.sn", phone: "+221 77 123 4567", customerClass: "Enterprise", channel: "Internal", status: "active", address: "Zone Portuaire, Dakar, Senegal", industry: "Logistics", rcNumber: "SN-DKR-2019-B-1234", taxId: "NINEA 005678901", accountManager: "Deborah Oje", createdAt: "2025-06-25" },
+      { id: "CUS-1009", companyName: "Enugu Auto Parts", contactName: "Chinedu Obi", email: "chinedu@enuguauto.com", phone: "+234 807 333 1122", customerClass: "SME", channel: "Website", status: "active", address: "5 Ogui Road, Enugu, Nigeria", industry: "Automotive", rcNumber: "RC 6789012", taxId: "TIN 70829201-0001", accountManager: "Kayode Akintade", createdAt: "2025-07-11" },
+      { id: "CUS-1010", companyName: "Lome Beverages SA", contactName: "Koffi Agbeko", email: "koffi@lomebev.tg", phone: "+228 90 12 34 56", customerClass: "SME", channel: "Internal", status: "inactive", address: "Boulevard du 13 Janvier, Lomé, Togo", industry: "Food & Beverage", rcNumber: "TG-LOM-2018-B-5678", taxId: "NIF 1000123456", accountManager: "Babatope Ayeni", createdAt: "2024-09-30" },
+      { id: "CUS-1011", companyName: "Sahara Sesame Ltd", contactName: "Fatima Bello", email: "fatima@saharasesame.com", phone: "+234 810 666 9900", customerClass: "SME", channel: "Website", status: "active", address: "22 Ahmadu Bello Way, Kaduna, Nigeria", industry: "Agriculture", rcNumber: "RC 7890123", taxId: "TIN 80930312-0001", accountManager: "Adeshewa Adelowo", createdAt: "2025-08-04" },
+      { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", address: "10 Paarden Eiland Rd, Cape Town, South Africa", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
     const PAGE_SIZE = 8;
@@ -897,7 +901,7 @@
       const term = state.search.trim().toLowerCase();
       const filtered = customers.filter((c) => {
         if (!term) return true;
-        return [c.companyName, c.contactName, c.email, c.phone, c.id].some((v) => v.toLowerCase().includes(term));
+        return [c.companyName, c.contactName, c.email, c.phone].some((v) => v.toLowerCase().includes(term));
       });
 
       const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -977,20 +981,6 @@
     const between = (rand, min, max) => min + Math.floor(rand() * (max - min + 1));
     const isoDate = (d) => d.toISOString().slice(0, 10);
 
-    const LANES = [
-      "Shanghai → Lagos (Apapa)", "Ningbo → Tin Can Island", "Rotterdam → Lagos (Apapa)", "Antwerp → Onne",
-      "Lagos (Apapa) → Rotterdam", "Tema → Hamburg", "Mombasa → Jebel Ali", "Dubai → Lagos (MMIA)",
-      "Guangzhou → Lagos (MMIA)", "Durban → Lagos (Apapa)", "Lagos (MMIA) → London Heathrow", "Dakar → Valencia"
-    ];
-
-    const DEAL_STAGES = [
-      { key: "Prospect", chip: "chip-neutral", color: "#D1DBBD" },
-      { key: "Contacted", chip: "chip-neutral", color: "#BFFB4F" },
-      { key: "Qualified", chip: "chip-warning", color: "#7FAE2E" },
-      { key: "Quote issued", chip: "chip-primary", color: "#2F7A3F" },
-      { key: "Won", chip: "chip-success", color: "#023819" },
-      { key: "Lost", chip: "chip-neutral", color: "#808080" }
-    ];
     const OPEN_STAGES = ["Prospect", "Contacted", "Qualified", "Quote issued"];
 
     const DEAL_VALUE_RANGE = { Enterprise: [18000, 120000], SME: [3000, 24000], Growth: [800, 9000] };
@@ -1016,8 +1006,6 @@
         else stage = pick(rand, OPEN_STAGES);
         deals.push({
           id: `DL-${c.id.slice(4)}${String(i + 1).padStart(2, "0")}`,
-          lane: pick(rand, LANES),
-          mode: rand() < 0.72 ? "Ocean Freight" : "Air Freight",
           value: Math.round((minV + rand() * (maxV - minV)) / 10) * 10,
           stage,
           createdAt: isoDate(created)
@@ -1143,7 +1131,6 @@
     // ---------------------------------------------------------------
     const DETAIL_TABS = [
       { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
-      { key: "deals", label: "Deal history", icon: '<path d="M4 19V9M12 19V5M20 19v-6"/>' },
       { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
     ];
 
@@ -1164,13 +1151,60 @@
       `;
     }
 
+    function detailSection(num, title, body, single = false) {
+      return `
+        <div class="detail-section">
+          ${panelHead(num, title)}
+          <div class="fields ${single ? "single" : ""}">${body}</div>
+        </div>
+      `;
+    }
+
+    function dealHistoryCard(c) {
+      const deals = dealsFor(c);
+      const won = deals.filter((d) => d.stage === "Won");
+      const lost = deals.filter((d) => d.stage === "Lost");
+      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
+      const sum = (list) => list.reduce((total, d) => total + d.value, 0);
+      const closed = won.length + lost.length;
+      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
+
+      return `
+        <section class="panel">
+          <div class="panel-head"><span class="panel-title">Deal history</span></div>
+          <div class="deal-stats">
+            <div class="deal-stat highlight">
+              <div class="kpi-label">Total deals created</div>
+              <div class="kpi-value">${deals.length}</div>
+              <div class="kpi-sub">${compactMoney(sum(deals))} total value</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Deals won</div>
+              <div class="kpi-value">${won.length}</div>
+              <div class="kpi-sub">${compactMoney(sum(won))} won value</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Win rate</div>
+              <div class="kpi-value">${winRate === null ? "–" : `${winRate}<small>%</small>`}</div>
+              <div class="kpi-sub">${closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet"}</div>
+            </div>
+            <div class="deal-stat">
+              <div class="kpi-label">Open pipeline</div>
+              <div class="kpi-value gold">${compactMoney(sum(open))}</div>
+              <div class="kpi-sub">${open.length} ${open.length === 1 ? "deal" : "deals"} in progress</div>
+            </div>
+          </div>
+          ${deals.length ? `<p class="muted" style="margin-top: 14px">Last deal created ${formatDate(deals[0].createdAt)}</p>` : ""}
+        </section>
+      `;
+    }
+
     function renderBasicTab(c) {
       return `
         <div class="detail-grid" style="margin-top: 0">
-          <div class="detail-col">
-            ${panel("01", "Basic details", `
+          <section class="panel">
+            ${detailSection("01", "Basic details", `
               ${field("Company name", escapeHtml(c.companyName))}
-              ${field("Customer ID", escapeHtml(c.id))}
               ${field("Class", classChip(c.customerClass))}
               ${field("Registration channel", escapeHtml(c.channel))}
               ${field("Industry", escapeHtml(c.industry))}
@@ -1179,21 +1213,14 @@
               ${field("Status", statusBadge(c.status))}
               ${field("Date added", formatDate(c.createdAt))}
             `)}
-            ${panel("02", "Address", `
-              ${field("Street address", escapeHtml(c.address))}
-              ${field("City", escapeHtml(c.city))}
-              ${field("Country", escapeHtml(c.country))}
-            `)}
-          </div>
-
-          <div class="detail-col">
-            ${panel("03", "Primary contact", `
+            ${detailSection("02", "Address", field("Address", escapeHtml(c.address)), true)}
+            ${detailSection("03", "Primary contact", `
               ${field("Name", escapeHtml(c.contactName))}
               ${field("Email", `<a class="text-link" href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>`)}
               ${field("Phone", `<a class="text-link" href="tel:${escapeHtml(c.phone.replace(/\s+/g, ""))}">${escapeHtml(c.phone)}</a>`)}
-            `, true)}
-            ${panel("04", "Account manager", `
-              <div class="owner-chip">
+            `)}
+            ${detailSection("04", "Account manager", `
+              <div class="owner-chip" style="max-width: 360px">
                 ${avatar(c.accountManager, "sm")}
                 <div>
                   <div class="name">${escapeHtml(c.accountManager)}</div>
@@ -1201,104 +1228,9 @@
                 </div>
               </div>
             `, true)}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderDealsTab(c) {
-      const deals = dealsFor(c);
-      if (!deals.length) {
-        return `<div class="empty-stub"><h3>No deals yet</h3><p>Deals created for ${escapeHtml(c.companyName)} will appear here.</p></div>`;
-      }
-
-      const won = deals.filter((d) => d.stage === "Won");
-      const lost = deals.filter((d) => d.stage === "Lost");
-      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
-      const sum = (list) => list.reduce((s, d) => s + d.value, 0);
-      const closed = won.length + lost.length;
-      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
-      const avgDeal = sum(deals) / deals.length;
-
-      const stageRows = DEAL_STAGES.map((s) => {
-        const list = deals.filter((d) => d.stage === s.key);
-        return { label: s.key, color: s.color, count: list.length, extra: list.length ? compactMoney(sum(list)) : "" };
-      });
-
-      const ocean = deals.filter((d) => d.mode === "Ocean Freight");
-      const air = deals.filter((d) => d.mode === "Air Freight");
-      const modeRows = [
-        { label: "Ocean Freight", color: "#023819", count: ocean.length, extra: ocean.length ? compactMoney(sum(ocean)) : "" },
-        { label: "Air Freight", color: "#7FAE2E", count: air.length, extra: air.length ? compactMoney(sum(air)) : "" }
-      ];
-
-      const laneCounts = {};
-      deals.forEach((d) => { laneCounts[d.lane] = (laneCounts[d.lane] || 0) + 1; });
-      const [topLane, topLaneCount] = Object.entries(laneCounts).sort((a, b) => b[1] - a[1])[0];
-      const biggest = deals.reduce((a, b) => (b.value > a.value ? b : a));
-      const lastDeal = deals[0];
-      const daysSinceLast = Math.round((TODAY - new Date(lastDeal.createdAt + "T00:00:00")) / DAY);
-
-      const insights = [
-        winRate === null
-          ? `No deals have closed yet; <strong>${open.length}</strong> ${open.length === 1 ? "is" : "are"} still in progress.`
-          : `Won <strong>${won.length} of ${closed}</strong> closed deals (${winRate}% win rate), worth <strong>${money(sum(won))}</strong>.`,
-        `Most-used lane is <strong>${escapeHtml(topLane)}</strong> (${topLaneCount} ${topLaneCount === 1 ? "deal" : "deals"}).`,
-        `Largest deal: <strong>${money(biggest.value)}</strong> on ${escapeHtml(biggest.lane)} (${escapeHtml(biggest.stage.toLowerCase())}).`,
-        `Last deal created <strong>${formatDate(lastDeal.createdAt)}</strong>, ${daysSinceLast} days ago${daysSinceLast > 90 ? ", so a re-engagement check-in is due" : ""}.`
-      ];
-
-      return `
-        <section class="kpi-cards">
-          ${kpi("Total deals created", deals.length, `Since ${formatDate(c.createdAt)}`, "highlight")}
-          ${kpi("Deals won", won.length, `${money(sum(won))} won value`)}
-          ${kpi("Win rate", winRate === null ? "–" : `${winRate}<small>%</small>`, closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet")}
-          ${kpi("Open pipeline", compactMoney(sum(open)), `${open.length} ${open.length === 1 ? "deal" : "deals"} in progress`, "gold")}
-        </section>
-
-        <div class="tab-grid">
-          <section class="panel">
-            ${panelHead("01", "Deals by stage")}
-            ${segmentBar(stageRows, "Deals by stage")}
           </section>
-          <div class="detail-col">
-            <section class="panel">
-              ${panelHead("02", "Freight mode")}
-              ${segmentBar(modeRows, "Deals by freight mode")}
-            </section>
-            <section class="panel">
-              ${panelHead("03", "Overview")}
-              <ul class="insights">${insights.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
-              <p class="muted" style="margin-top: 14px">Average deal size ${money(avgDeal)}.</p>
-            </section>
-          </div>
-        </div>
 
-        <h2 class="section-title">All deals</h2>
-        <div class="table-wrap">
-          <table class="data-table" style="min-width: 720px">
-            <thead>
-              <tr>
-                <th>Deal</th>
-                <th>Lane</th>
-                <th>Mode</th>
-                <th>Value (USD)</th>
-                <th>Stage</th>
-                <th>Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${deals.map((d) => `
-                <tr style="cursor: default">
-                  <td>${escapeHtml(d.id)}</td>
-                  <td><span class="deal-lane">${escapeHtml(d.lane)}</span></td>
-                  <td><span class="mode-chip">${escapeHtml(d.mode)}</span></td>
-                  <td><span class="money">${money(d.value)}</span></td>
-                  <td>${chip(d.stage, DEAL_STAGES.find((s) => s.key === d.stage).chip)}</td>
-                  <td>${formatDate(d.createdAt)}</td>
-                </tr>`).join("")}
-            </tbody>
-          </table>
+          ${dealHistoryCard(c)}
         </div>
       `;
     }
@@ -1448,7 +1380,7 @@
         { label: tab.label }
       ]);
 
-      const body = tab.key === "deals" ? renderDealsTab(c) : tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
+      const body = tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
 
       $("#view").innerHTML = `
         <a class="text-link back-link" href="#/customers">← Back to all customers</a>
@@ -1458,7 +1390,6 @@
           <div>
             <h1>${escapeHtml(c.companyName)}</h1>
             <div class="hero-meta">
-              <span>${escapeHtml(c.id)}</span>
               ${statusBadge(c.status)}
               ${classChip(c.customerClass)}
               <span>Customer since ${formatDate(c.createdAt)}</span>
