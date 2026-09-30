@@ -199,32 +199,7 @@
 
     .muted { color: var(--op-silver-light); margin: 0; font-size: 12.5px; }
 
-    /* ---------- Spread cards (mini analytics) ---------- */
-    .spread-cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--op-space-4);
-      margin-bottom: var(--op-space-6);
-    }
-    .spread-card {
-      background: var(--op-white);
-      border: 1px solid var(--op-border-card);
-      border-radius: var(--op-radius-xl);
-      padding: var(--op-space-4) 18px 18px;
-      box-shadow: var(--op-elevation-2);
-    }
-    .spread-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--op-silver-light);
-      margin-bottom: var(--op-space-3);
-    }
-    .spread-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
-    .spread-total .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
-    .spread-total .unit { font-size: 12.5px; color: var(--op-silver-light); }
-
+    /* ---------- Segmented bar + legend (Credit performance tab) ---------- */
     .spread-bar {
       display: flex;
       gap: 2px;
@@ -824,7 +799,6 @@
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
-      .spread-cards { grid-template-columns: 1fr; }
       .detail-grid { grid-template-columns: 1fr; }
       .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab-grid { grid-template-columns: 1fr; }
@@ -845,7 +819,6 @@
       .brand-logo { height: 40px; }
       .search-input { flex: 1 1 100%; }
       .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
-      .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       .form-actions .btn { flex: 1; }
@@ -1021,78 +994,10 @@
     }
 
     // ---------------------------------------------------------------
-    // Mini analytics: three spread cards
-    // ---------------------------------------------------------------
-    const SPREADS = [
-      {
-        title: "Customer spread",
-        key: "status",
-        segments: [
-          { value: "active", label: "Active", color: "#1F8A5B" },
-          { value: "pending", label: "Pending", color: "#FFCC1A" },
-          { value: "inactive", label: "Inactive", color: "#808080" }
-        ]
-      },
-      {
-        title: "Customer class spread",
-        key: "customerClass",
-        segments: [
-          { value: "Enterprise", label: "Enterprise", color: "#023819" },
-          { value: "SME", label: "SME", color: "#7FAE2E" },
-          { value: "Growth", label: "Growth", color: "#BFFB4F" }
-        ]
-      },
-      {
-        title: "Customer registration spread",
-        key: "channel",
-        segments: [
-          { value: "Website", label: "Website", color: "#2F7A3F" },
-          { value: "Internal", label: "Internal", color: "#D1DBBD" }
-        ]
-      }
-    ];
-
-    function spreadCard(spread) {
-      const total = customers.length;
-      const rows = spread.segments.map((seg) => {
-        const count = customers.filter((c) => c[spread.key] === seg.value).length;
-        return { ...seg, count, pct: total ? Math.round((count / total) * 100) : 0 };
-      });
-      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
-
-      return `
-        <section class="spread-card">
-          <div class="spread-title">${spread.title}</div>
-          <div class="spread-total">
-            <span class="stat-value">${total}</span>
-            <span class="unit">total customers</span>
-          </div>
-          <div class="spread-bar" role="img" aria-label="${escapeHtml(spread.title)}: ${escapeHtml(summary)}">
-            ${rows.filter((r) => r.count).map((r) =>
-              `<span style="flex: ${r.count}; background: ${r.color}" title="${r.label}: ${r.count}"></span>`).join("")}
-          </div>
-          <ul class="spread-legend">
-            ${rows.map((r) => `
-              <li>
-                <span class="swatch" style="background: ${r.color}"></span>
-                <span class="name">${r.label}</span>
-                <span class="num">${r.count}</span>
-                <span class="pct">${r.pct}%</span>
-              </li>`).join("")}
-          </ul>
-        </section>
-      `;
-    }
-
-    // ---------------------------------------------------------------
     // All customers view
     // ---------------------------------------------------------------
     function renderList() {
       $("#view").innerHTML = `
-        <div class="spread-cards">
-          ${SPREADS.map(spreadCard).join("")}
-        </div>
-
         <div class="toolbar">
           <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
           <button class="btn btn-primary" id="add-customer" type="button">+ Add customer</button>
