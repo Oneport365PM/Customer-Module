@@ -279,7 +279,8 @@
 
     .data-table { width: 100%; min-width: 900px; border-collapse: collapse; }
     .data-table th {
-      text-align: left;
+      text-align: center;
+      line-height: 1.35;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: .09em;
@@ -291,6 +292,7 @@
       white-space: nowrap;
     }
     .data-table td {
+      text-align: center;
       padding: 12px 16px;
       border-bottom: 1px solid var(--op-border-divider);
       font-size: 13.5px;
@@ -301,7 +303,7 @@
     .data-table tbody tr:last-child td { border-bottom: none; }
     .data-table tbody tr:hover { background: #F4F6EF; }
 
-    .customer-cell { display: flex; align-items: center; gap: 10px; }
+    .customer-cell { display: flex; align-items: center; justify-content: center; gap: 10px; }
     .customer-name { font-weight: 700; color: var(--op-dark-green); }
 
     .table-empty { padding: 40px 16px; text-align: center; color: var(--op-silver-light); font-size: 13.5px; }
@@ -340,7 +342,7 @@
     .avatar.fill-3 { background: var(--op-avatar-3-bg); color: var(--op-avatar-3-text); }
     .avatar.fill-4 { background: var(--op-avatar-4-bg); color: var(--op-avatar-4-text); }
 
-    .owner-cell { display: flex; align-items: center; gap: 8px; }
+    .owner-cell { display: flex; align-items: center; justify-content: center; gap: 8px; }
 
     /* ---------- Chips ---------- */
     .status-badge {
@@ -807,7 +809,18 @@
       color: var(--op-silver-light);
     }
     .empty-stub h3 { margin: 0 0 6px; color: var(--op-dark-green); font-family: var(--op-font-display); font-weight: 600; }
-    .empty-stub p { margin: 0; }
+    .empty-stub p { margin: 0 auto; max-width: 460px; }
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 14px;
+      border-radius: var(--op-radius-lg);
+      background: var(--op-light-green);
+      color: var(--op-dark-green);
+      display: grid;
+      place-items: center;
+    }
+    .empty-icon svg { width: 22px; height: 22px; }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
@@ -1090,12 +1103,12 @@
             <thead>
               <tr>
                 <th>Customer</th>
-                <th>Primary contact</th>
+                <th>Primary<br />contact</th>
                 <th>Class</th>
-                <th>Registration channel</th>
-                <th>Account manager</th>
+                <th>Registration<br />channel</th>
+                <th>Account<br />manager</th>
                 <th>Status</th>
-                <th>Date added</th>
+                <th>Date<br />added</th>
               </tr>
             </thead>
             <tbody id="customer-rows"></tbody>
@@ -1238,10 +1251,13 @@
 
     const CREDIT_LIMITS = { Enterprise: [150000, 400000], SME: [20000, 80000], Growth: [5000, 20000] };
 
+    // Sample customers with credit history: one each for an Excellent, Fair and Poor rating.
+    const CREDIT_HISTORY_SAMPLES = ["CUS-1004", "CUS-1002", "CUS-1010"];
+
     function creditFor(c) {
       if (cache.has("credit:" + c.id)) return cache.get("credit:" + c.id);
-      // No credit history yet: still onboarding, or just added in the backoffice.
-      if (c.status === "pending" || c.addedInBackoffice) { cache.set("credit:" + c.id, null); return null; }
+      // Most customers have no credit history yet; a few sample customers show a populated tab.
+      if (!CREDIT_HISTORY_SAMPLES.includes(c.id)) { cache.set("credit:" + c.id, null); return null; }
 
       const rand = seededRandom(c.id + ":credit");
       // Chance an invoice is paid on time; inactive accounts skew towards weaker payment histories.
@@ -1617,10 +1633,13 @@
       if (!credit) {
         return `
           <div class="empty-stub">
-            <h3>${c.addedInBackoffice ? "No credit history yet" : "Credit assessment in progress"}</h3>
-            <p>${c.addedInBackoffice
-              ? `${escapeHtml(c.companyName)} has no credit history yet. A credit score and limit will appear here once the credit assessment is complete.`
-              : `${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.`}</p>
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v10H3zM3 11h18M7 15h3"/></svg>
+            </div>
+            <h3>${c.status === "pending" ? "Credit assessment in progress" : "No credit history yet"}</h3>
+            <p>${c.status === "pending"
+              ? `${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.`
+              : `${escapeHtml(c.companyName)} has no credit activity on record. A credit score, limit and invoice history will appear here once they start trading on credit terms.`}</p>
           </div>
         `;
       }
@@ -1696,7 +1715,7 @@
             <thead>
               <tr>
                 <th>Invoice</th>
-                <th>Amount (USD)</th>
+                <th>Amount<br />(USD)</th>
                 <th>Issued</th>
                 <th>Due</th>
                 <th>Paid</th>
