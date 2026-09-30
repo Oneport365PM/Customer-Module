@@ -199,32 +199,7 @@
 
     .muted { color: var(--op-silver-light); margin: 0; font-size: 12.5px; }
 
-    /* ---------- Spread cards (mini analytics) ---------- */
-    .spread-cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--op-space-4);
-      margin-bottom: var(--op-space-6);
-    }
-    .spread-card {
-      background: var(--op-white);
-      border: 1px solid var(--op-border-card);
-      border-radius: var(--op-radius-xl);
-      padding: var(--op-space-4) 18px 18px;
-      box-shadow: var(--op-elevation-2);
-    }
-    .spread-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--op-silver-light);
-      margin-bottom: var(--op-space-3);
-    }
-    .spread-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
-    .spread-total .stat-value { font-family: var(--op-font-display); font-size: 38px; font-weight: 600; line-height: 1; color: var(--op-dark-green); }
-    .spread-total .unit { font-size: 12.5px; color: var(--op-silver-light); }
-
+    /* ---------- Segmented bar + legend (Credit performance tab) ---------- */
     .spread-bar {
       display: flex;
       gap: 2px;
@@ -312,6 +287,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: var(--op-space-3);
       padding: 12px 16px;
       border-top: 1px solid var(--op-border-card);
@@ -401,6 +377,40 @@
     .view-btn:disabled { background: #8FA08C; border-color: #8FA08C; color: var(--op-cream); cursor: not-allowed; }
 
     .btn-group { display: flex; gap: var(--op-space-2); }
+
+    .page-info { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; }
+    .page-info strong { color: var(--op-dark-green); font-weight: 700; }
+    .page-size { display: flex; align-items: center; gap: 8px; }
+    .page-size select {
+      padding: 5px 8px;
+      border-radius: var(--op-radius-md);
+      border: 1.5px solid var(--op-border-input);
+      background: var(--op-white);
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--op-dark-green);
+      cursor: pointer;
+    }
+    .page-size select:hover { border-color: var(--op-dark-green); }
+
+    .pager { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .page-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1.5px solid var(--op-border-input);
+      border-radius: var(--op-radius-md);
+      background: var(--op-white);
+      font-family: var(--op-font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+      transition: background-color .16s, color .16s, border-color .16s;
+    }
+    .page-btn:hover:not(:disabled):not(.active) { border-color: var(--op-dark-green); }
+    .page-btn.active { background: var(--op-dark-green); border-color: var(--op-dark-green); color: var(--op-accent-lime); cursor: default; }
+    .page-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .page-gap { color: var(--op-silver-light); padding: 0 2px; }
 
     .text-link {
       font-weight: 700;
@@ -824,7 +834,6 @@
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
-      .spread-cards { grid-template-columns: 1fr; }
       .detail-grid { grid-template-columns: 1fr; }
       .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab-grid { grid-template-columns: 1fr; }
@@ -845,9 +854,11 @@
       .brand-logo { height: 40px; }
       .search-input { flex: 1 1 100%; }
       .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
-      .spread-total .stat-value { font-size: 30px; }
       .fields { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
+      .nav-label { display: none; }
+      .pager { gap: 4px; }
+      .page-btn { min-width: 30px; height: 32px; padding: 0 6px; }
       .form-actions .btn { flex: 1; }
       .panel, .hero { padding: var(--op-space-4); }
     }
@@ -904,10 +915,10 @@
       { id: "CUS-1012", companyName: "Cape Machinery Imports", contactName: "Johan van der Merwe", email: "johan@capemachinery.co.za", phone: "+27 21 555 0101", customerClass: "Enterprise", channel: "Website", status: "pending", address: "10 Paarden Eiland Rd, Cape Town, South Africa", industry: "Heavy Machinery", rcNumber: "2016/123456/07", taxId: "VAT 4123456789", accountManager: "Kayode Akintade", createdAt: "2025-09-12" }
     ];
 
-    const PAGE_SIZE = 8;
+    const PAGE_SIZES = [10, 20, 50];
     const STATUS_LABELS = { active: "Active", pending: "Pending", inactive: "Inactive" };
 
-    const state = { search: "", page: 1 };
+    const state = { search: "", page: 1, pageSize: PAGE_SIZES[0] };
 
     const ACCOUNT_MANAGERS = ["Adeshewa Adelowo", "Babatope Ayeni", "Deborah Oje", "Kayode Akintade"];
 
@@ -1021,78 +1032,10 @@
     }
 
     // ---------------------------------------------------------------
-    // Mini analytics: three spread cards
-    // ---------------------------------------------------------------
-    const SPREADS = [
-      {
-        title: "Customer spread",
-        key: "status",
-        segments: [
-          { value: "active", label: "Active", color: "#1F8A5B" },
-          { value: "pending", label: "Pending", color: "#FFCC1A" },
-          { value: "inactive", label: "Inactive", color: "#808080" }
-        ]
-      },
-      {
-        title: "Customer class spread",
-        key: "customerClass",
-        segments: [
-          { value: "Enterprise", label: "Enterprise", color: "#023819" },
-          { value: "SME", label: "SME", color: "#7FAE2E" },
-          { value: "Growth", label: "Growth", color: "#BFFB4F" }
-        ]
-      },
-      {
-        title: "Customer registration spread",
-        key: "channel",
-        segments: [
-          { value: "Website", label: "Website", color: "#2F7A3F" },
-          { value: "Internal", label: "Internal", color: "#D1DBBD" }
-        ]
-      }
-    ];
-
-    function spreadCard(spread) {
-      const total = customers.length;
-      const rows = spread.segments.map((seg) => {
-        const count = customers.filter((c) => c[spread.key] === seg.value).length;
-        return { ...seg, count, pct: total ? Math.round((count / total) * 100) : 0 };
-      });
-      const summary = rows.map((r) => `${r.label} ${r.count}`).join(", ");
-
-      return `
-        <section class="spread-card">
-          <div class="spread-title">${spread.title}</div>
-          <div class="spread-total">
-            <span class="stat-value">${total}</span>
-            <span class="unit">total customers</span>
-          </div>
-          <div class="spread-bar" role="img" aria-label="${escapeHtml(spread.title)}: ${escapeHtml(summary)}">
-            ${rows.filter((r) => r.count).map((r) =>
-              `<span style="flex: ${r.count}; background: ${r.color}" title="${r.label}: ${r.count}"></span>`).join("")}
-          </div>
-          <ul class="spread-legend">
-            ${rows.map((r) => `
-              <li>
-                <span class="swatch" style="background: ${r.color}"></span>
-                <span class="name">${r.label}</span>
-                <span class="num">${r.count}</span>
-                <span class="pct">${r.pct}%</span>
-              </li>`).join("")}
-          </ul>
-        </section>
-      `;
-    }
-
-    // ---------------------------------------------------------------
     // All customers view
     // ---------------------------------------------------------------
     function renderList() {
       $("#view").innerHTML = `
-        <div class="spread-cards">
-          ${SPREADS.map(spreadCard).join("")}
-        </div>
-
         <div class="toolbar">
           <input class="search-input" id="search" type="search" placeholder="Search by company, contact, email or phone…" value="${escapeHtml(state.search)}" aria-label="Search customers" />
           <button class="btn btn-primary" id="add-customer" type="button">+ Add customer</button>
@@ -1129,6 +1072,16 @@
       renderRows();
     }
 
+    // Page numbers to show, always 7 slots for long ranges:
+    // 1 2 3 4 5 … 12  ·  1 … 5 6 7 … 12  ·  1 … 8 9 10 11 12
+    function pageNumbers(current, total) {
+      const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+      if (total <= 7) return range(1, total);
+      if (current <= 4) return [...range(1, 5), "…", total];
+      if (current >= total - 3) return [1, "…", ...range(total - 4, total)];
+      return [1, "…", current - 1, current, current + 1, "…", total];
+    }
+
     function renderRows() {
       const term = state.search.trim().toLowerCase();
       const filtered = customers.filter((c) => {
@@ -1136,10 +1089,10 @@
         return [c.companyName, c.contactName, c.email, c.phone].some((v) => v.toLowerCase().includes(term));
       });
 
-      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      const totalPages = Math.max(1, Math.ceil(filtered.length / state.pageSize));
       state.page = Math.min(state.page, totalPages);
-      const start = (state.page - 1) * PAGE_SIZE;
-      const pageItems = filtered.slice(start, start + PAGE_SIZE);
+      const start = (state.page - 1) * state.pageSize;
+      const pageItems = filtered.slice(start, start + state.pageSize);
 
       const tbody = $("#customer-rows");
       if (!pageItems.length) {
@@ -1179,15 +1132,42 @@
 
       const from = filtered.length ? start + 1 : 0;
       const to = start + pageItems.length;
+      const pageButton = (n) => n === state.page
+        ? `<button class="page-btn active" type="button" aria-current="page" aria-label="Page ${n}, current page">${n}</button>`
+        : `<button class="page-btn" type="button" data-page="${n}" aria-label="Page ${n}">${n}</button>`;
+
       $("#pagination").innerHTML = `
-        <span>Showing ${from}–${to} of ${filtered.length}</span>
-        <div class="btn-group">
-          <button class="view-btn" id="prev" ${state.page <= 1 ? "disabled" : ""}>Previous</button>
-          <button class="view-btn" id="next" ${state.page >= totalPages ? "disabled" : ""}>Next</button>
+        <div class="page-info">
+          <span>${filtered.length
+            ? `Showing <strong>${from}–${to}</strong> of <strong>${filtered.length}</strong> ${filtered.length === 1 ? "customer" : "customers"}`
+            : "No customers to show"}</span>
+          <label class="page-size">Rows per page
+            <select id="page-size">
+              ${PAGE_SIZES.map((n) => `<option value="${n}" ${n === state.pageSize ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </label>
         </div>
+        <nav class="pager" aria-label="Customer table pages">
+          <button class="page-btn nav" type="button" data-page="${state.page - 1}" ${state.page <= 1 ? "disabled" : ""} aria-label="Previous page">‹<span class="nav-label"> Prev</span></button>
+          ${pageNumbers(state.page, totalPages).map((n) => n === "…" ? '<span class="page-gap" aria-hidden="true">…</span>' : pageButton(n)).join("")}
+          <button class="page-btn nav" type="button" data-page="${state.page + 1}" ${state.page >= totalPages ? "disabled" : ""} aria-label="Next page"><span class="nav-label">Next </span>›</button>
+        </nav>
       `;
-      $("#prev").addEventListener("click", () => { state.page--; renderRows(); });
-      $("#next").addEventListener("click", () => { state.page++; renderRows(); });
+
+      $("#pagination .pager").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-page]");
+        if (!btn || btn.disabled) return;
+        state.page = Number(btn.dataset.page);
+        renderRows();
+        // Keep keyboard users on the pager after it re-renders.
+        $("#pagination .page-btn.active")?.focus();
+      });
+
+      $("#page-size").addEventListener("change", (e) => {
+        state.pageSize = Number(e.target.value);
+        state.page = 1;
+        renderRows();
+      });
     }
 
     // ---------------------------------------------------------------
