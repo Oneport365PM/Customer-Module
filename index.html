@@ -743,7 +743,6 @@
 
     .panel .spread-bar { margin-bottom: 14px; }
 
-    .deal-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-3); }
     .deal-stat {
       background: #F4F6EF;
       border: 1px solid rgba(2, 56, 25, .1);
@@ -832,11 +831,129 @@
     }
     .empty-icon svg { width: 22px; height: 22px; }
 
+    /* ---------- Activities tab ---------- */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .activities { display: flex; flex-direction: column; gap: var(--op-space-4); }
+
+    .act-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .act-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1.5px solid var(--op-border-input);
+      border-radius: var(--op-radius-md);
+      background: var(--op-white);
+      font-family: var(--op-font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--op-dark-green);
+    }
+    .act-nav-btn strong {
+      min-width: 22px;
+      padding: 1px 7px;
+      border-radius: var(--op-radius-full);
+      background: var(--op-light-green);
+      font-size: 11.5px;
+      text-align: center;
+    }
+    .act-nav-btn:hover { border-color: var(--op-dark-green); }
+    .act-last { margin-left: auto; font-size: 12.5px; color: var(--op-silver-light); }
+
+    .activity-section { scroll-margin-top: 16px; }
+    .act-title { display: flex; align-items: baseline; gap: 10px; }
+    .count-pill {
+      align-self: center;
+      padding: 1px 8px;
+      border-radius: var(--op-radius-full);
+      background: var(--op-chip-neutral-bg);
+      color: var(--op-chip-neutral-text);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .act-module-link { font-size: 12.5px; }
+
+    .act-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--op-space-3); margin-bottom: var(--op-space-4); }
+
+    /* position: relative keeps the visually-hidden labels inside the scroll area on small screens */
+    .act-table-wrap { box-shadow: none; position: relative; }
+    .act-table { min-width: 760px; }
+    .act-id { font-weight: 700; color: var(--op-dark-green); }
+    .act-row:focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: -2px; }
+    .act-row[aria-expanded="true"] { background: #F4F6EF; }
+    .act-row[aria-expanded="true"] td { border-bottom-color: transparent; }
+    .act-chevron-cell { width: 40px; text-align: center; }
+    .act-chevron {
+      display: inline-block;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--op-silver-light);
+      transition: transform .16s;
+    }
+    .act-row[aria-expanded="true"] .act-chevron { transform: rotate(90deg); color: var(--op-dark-green); }
+    .act-row.flash { animation: act-flash 1.6s ease-out; }
+    @keyframes act-flash { from { background: rgba(191, 251, 79, .45); } to { background: #F4F6EF; } }
+
+    .activity-section:not(.show-all) .extra { display: none; }
+
+    .act-detail td { background: #F4F6EF; padding: 4px 16px 18px; white-space: normal; }
+    .act-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 24px; }
+    .act-detail-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--op-border-divider);
+    }
+    .act-detail-foot .view-btn { text-decoration: none; }
+    .related { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .related .field-label { margin: 0 4px 0 0; }
+    .related-chip {
+      padding: 4px 10px;
+      border: 1.5px solid var(--op-border-input);
+      border-radius: var(--op-radius-sm);
+      background: var(--op-white);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--op-dark-green);
+    }
+    .related-chip:hover { border-color: var(--op-dark-green); }
+
+    .act-more {
+      margin-top: 12px;
+      background: none;
+      border: none;
+      padding: 4px 0;
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--op-dark-green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .act-more:hover { color: var(--op-success); }
+    .act-empty { margin: 0; color: var(--op-silver-light); font-size: 13.5px; }
+
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
       .detail-grid { grid-template-columns: 1fr; }
       .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab-grid { grid-template-columns: 1fr; }
+      .act-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .act-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 760px) {
@@ -857,6 +974,13 @@
       .fields { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       .nav-label { display: none; }
+      /* Three tabs: drop icons and tighten spacing; swipe as a fallback, without visible scrollbar arrows. */
+      .tabs { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; gap: 0; }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab-btn { padding: 10px 10px; font-size: 13.5px; }
+      .tab-btn svg { display: none; }
+      .act-last { margin-left: 0; width: 100%; }
+      .act-detail-grid { grid-template-columns: 1fr; }
       .pager { gap: 4px; }
       .page-btn { min-width: 30px; height: 32px; padding: 0 6px; }
       .form-actions .btn { flex: 1; }
@@ -1199,34 +1323,186 @@
 
     const cache = new Map();
 
-    function dealsFor(c) {
-      if (c.addedInBackoffice) return [];
-      if (cache.has("deals:" + c.id)) return cache.get("deals:" + c.id);
-      const rand = seededRandom(c.id + ":deals");
-      const count = c.status === "active" ? between(rand, 6, 10) : c.status === "pending" ? between(rand, 1, 3) : between(rand, 3, 5);
+    // ---------------------------------------------------------------
+    // Customer activities: deals, requests for quotes, quotes and shipments.
+    // Sample data, generated per customer as a linked chain
+    // (RFQ → Quote → Deal → Shipment) so items can point at each other.
+    // Replace with API calls to each module when the backend is ready.
+    // ---------------------------------------------------------------
+
+    // Where "Open" links go. Placeholder routes until the other backoffice modules
+    // are wired up; point these at the real Deals, RFQs, Quotes and Shipments pages.
+    const MODULE_LINKS = {
+      deal: { item: (id) => `/deals/${encodeURIComponent(id)}`, list: (customerId) => `/deals?customer=${encodeURIComponent(customerId)}` },
+      rfq: { item: (id) => `/rfqs/${encodeURIComponent(id)}`, list: (customerId) => `/rfqs?customer=${encodeURIComponent(customerId)}` },
+      quote: { item: (id) => `/quotes/${encodeURIComponent(id)}`, list: (customerId) => `/quotes?customer=${encodeURIComponent(customerId)}` },
+      shipment: { item: (id) => `/shipments/${encodeURIComponent(id)}`, list: (customerId) => `/shipments?customer=${encodeURIComponent(customerId)}` }
+    };
+
+    const ACTIVITY_TYPES = {
+      deal: { label: "Deal", title: "Deals", module: "Deals" },
+      rfq: { label: "RFQ", title: "Requests for quotes", module: "RFQs" },
+      quote: { label: "Quote", title: "Quotes", module: "Quotes" },
+      shipment: { label: "Shipment", title: "Shipments", module: "Shipments" }
+    };
+
+    const LANES = [
+      "Shanghai → Lagos (Apapa)", "Ningbo → Tin Can Island", "Rotterdam → Lagos (Apapa)", "Antwerp → Onne",
+      "Lagos (Apapa) → Rotterdam", "Tema → Hamburg", "Mombasa → Jebel Ali", "Dubai → Lagos (MMIA)",
+      "Guangzhou → Lagos (MMIA)", "Durban → Lagos (Apapa)", "Lagos (MMIA) → London Heathrow", "Dakar → Valencia"
+    ];
+
+    const COMMODITIES = {
+      "Food & Beverage": ["Canned tomatoes", "Bottled beverages", "Frozen poultry", "Rice"],
+      "Agriculture": ["Cocoa beans", "Sesame seeds", "Cashew nuts", "Fertiliser"],
+      "General Trading": ["Household goods", "Electronics", "Apparel"],
+      "Oil & Gas": ["Drilling equipment", "Pipe fittings", "Lubricants"],
+      "Textiles": ["Cotton fabric", "Ready-made garments", "Yarn"],
+      "Pharmaceuticals": ["Medical supplies", "Packaged medicines"],
+      "Logistics": ["Mixed consolidated cargo", "Pallets"],
+      "Automotive": ["Spare parts", "Tyres", "Used vehicles"],
+      "Heavy Machinery": ["Excavator parts", "Generators", "Industrial pumps"]
+    };
+
+    const INCOTERMS = ["FOB", "CIF", "EXW", "DAP", "CFR"];
+
+    const ACTIVITY_CHIPS = {
+      // Deals (pipeline stages)
+      "Prospect": "chip-neutral", "Contacted": "chip-neutral", "Qualified": "chip-warning",
+      "Quote issued": "chip-primary", "Won": "chip-success", "Lost": "chip-neutral",
+      // RFQs
+      "New": "chip-neutral", "In review": "chip-warning", "Quoted": "chip-success", "Declined": "chip-neutral",
+      // Quotes
+      "Awaiting response": "chip-warning", "Accepted": "chip-success", "Rejected": "chip-neutral", "Expired": "chip-neutral",
+      // Shipments
+      "Booked": "chip-neutral", "In transit": "chip-primary", "Delayed": "chip-error", "Delivered": "chip-success"
+    };
+
+    const LOSS_REASONS = ["Lost on price", "Chose another forwarder", "Transit time too long", "Shipment cancelled by customer"];
+
+    function addDays(iso, days) {
+      return isoDate(new Date(new Date(iso + "T00:00:00").getTime() + days * DAY));
+    }
+
+    function daysBetween(fromIso, toIso) {
+      return Math.round((new Date(toIso + "T00:00:00") - new Date(fromIso + "T00:00:00")) / DAY);
+    }
+
+    function laneEnds(lane) {
+      const [origin, destination] = lane.split(" → ");
+      return { origin, destination };
+    }
+
+    function activitiesFor(c) {
+      const key = "activities:" + c.id;
+      if (cache.has(key)) return cache.get(key);
+      const result = { deals: [], rfqs: [], quotes: [], shipments: [] };
+      // Customers just added in the backoffice have no activity yet.
+      if (c.addedInBackoffice) { cache.set(key, result); return result; }
+
+      const rand = seededRandom(c.id + ":activities");
+      // Outcomes (accepted, lost, delayed…) use their own stream so they don't hinge on detail draws.
+      const odds = seededRandom(c.id + ":outcomes");
+      const num = c.id.replace(/\D/g, "");
+      const todayIso = isoDate(TODAY);
+      const capToday = (iso) => (iso > todayIso ? todayIso : iso);
       const start = new Date(c.createdAt + "T00:00:00").getTime();
       // Inactive customers stopped trading a while ago.
-      const end = c.status === "inactive" ? start + 300 * DAY : TODAY.getTime() - 3 * DAY;
+      const end = c.status === "inactive" ? start + 300 * DAY : TODAY.getTime() - 2 * DAY;
       const [minV, maxV] = DEAL_VALUE_RANGE[c.customerClass];
+      const value = () => Math.round((minV + rand() * (maxV - minV)) / 10) * 10;
+      const rfqCount = c.status === "active" ? between(rand, 6, 10) : c.status === "pending" ? between(rand, 1, 3) : between(rand, 4, 6);
+      const commodities = COMMODITIES[c.industry] || ["General cargo"];
 
-      const deals = [];
-      for (let i = 0; i < count; i++) {
-        const created = new Date(start + rand() * (end - start));
-        const ageDays = (TODAY - created) / DAY;
-        let stage;
-        if (c.status === "pending") stage = pick(rand, ["Prospect", "Contacted", "Qualified"]);
-        else if (ageDays > 90 || c.status === "inactive") stage = rand() < 0.68 ? "Won" : "Lost";
-        else stage = pick(rand, OPEN_STAGES);
-        deals.push({
-          id: `DL-${c.id.slice(4)}${String(i + 1).padStart(2, "0")}`,
-          value: Math.round((minV + rand() * (maxV - minV)) / 10) * 10,
-          stage,
-          createdAt: isoDate(created)
-        });
+      for (let i = 0; i < rfqCount; i++) {
+        const seq = String(i + 1).padStart(2, "0");
+        // Weighted towards recent months, like a live account.
+        const date = isoDate(new Date(end - Math.pow(rand(), 1.8) * (end - start)));
+        const age = daysBetween(date, todayIso);
+        const modeRoll = rand();
+        const mode = modeRoll < 0.55 ? "Ocean · FCL" : modeRoll < 0.78 ? "Ocean · LCL" : "Air";
+        const cargo = mode === "Ocean · FCL"
+          ? `${between(rand, 1, 4)} × ${pick(rand, ["20ft", "40ft", "40ft HC"])}`
+          : mode === "Ocean · LCL" ? `${between(rand, 3, 18)} CBM` : `${between(rand, 120, 2400).toLocaleString("en-US")} kg`;
+        const lane = pick(rand, LANES);
+        const common = { lane, mode, cargo, commodity: pick(rand, commodities), incoterm: pick(rand, INCOTERMS) };
+
+        const rfq = { type: "rfq", id: `RFQ-${num}${seq}`, date, ...common };
+        const deal = { type: "deal", id: `DL-${num}${seq}`, date, ...common, value: value(), rfq: rfq.id };
+        result.rfqs.push(rfq);
+        result.deals.push(deal);
+
+        if (c.status === "pending" || age < 3) {
+          rfq.status = c.status === "pending" && age > 7 ? "In review" : pick(rand, ["New", "In review"]);
+          deal.stage = c.status === "pending" ? pick(rand, ["Contacted", "Qualified"]) : "Qualified";
+          continue;
+        }
+        if (odds() > 0.88) {
+          rfq.status = odds() < 0.5 ? "Declined" : "Expired";
+          deal.stage = "Lost";
+          deal.lossReason = "RFQ not quoted";
+          continue;
+        }
+
+        const quoteDate = capToday(addDays(date, between(rand, 1, 3)));
+        rfq.status = "Quoted";
+        rfq.respondedInDays = daysBetween(date, quoteDate);
+        const quote = {
+          type: "quote", id: `QT-${num}${seq}`, date: quoteDate, ...common,
+          amount: deal.value, validUntil: addDays(quoteDate, 14), rfq: rfq.id, deal: deal.id
+        };
+        rfq.quote = quote.id;
+        rfq.deal = deal.id;
+        deal.quote = quote.id;
+        result.quotes.push(quote);
+
+        const quoteAge = daysBetween(quoteDate, todayIso);
+        if (quoteAge < 10 && odds() < 0.7) {
+          quote.status = "Awaiting response";
+          deal.stage = "Quote issued";
+        } else if (odds() < (c.status === "active" ? 0.75 : 0.55)) {
+          quote.status = "Accepted";
+          quote.decidedAt = capToday(addDays(quoteDate, between(rand, 1, 6)));
+          deal.stage = "Won";
+          deal.closedAt = quote.decidedAt;
+
+          const etd = addDays(quote.decidedAt, between(rand, 5, 14));
+          const eta = addDays(etd, mode === "Air" ? between(rand, 2, 6) : between(rand, 24, 42));
+          let status;
+          if (etd > todayIso) status = "Booked";
+          else if (eta > todayIso) status = odds() < 0.2 ? "Delayed" : "In transit";
+          else status = "Delivered";
+          const shipment = {
+            type: "shipment", id: `SHP-${num}${seq}`, date: quote.decidedAt, ...common,
+            etd, eta, status, bookingRef: `OPB${num}${seq}${between(rand, 100, 999)}`,
+            rfq: rfq.id, quote: quote.id, deal: deal.id
+          };
+          deal.shipment = quote.shipment = rfq.shipment = shipment.id;
+          result.shipments.push(shipment);
+        } else {
+          quote.status = quoteAge > 14 && odds() < 0.5 ? "Expired" : "Rejected";
+          quote.decidedAt = quote.status === "Expired" ? quote.validUntil : capToday(addDays(quoteDate, between(rand, 2, 8)));
+          deal.stage = "Lost";
+          deal.closedAt = quote.decidedAt;
+          deal.lossReason = pick(rand, LOSS_REASONS);
+        }
       }
-      deals.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-      cache.set("deals:" + c.id, deals);
-      return deals;
+
+      // Early-stage deals that haven't produced an RFQ yet.
+      if (c.status === "active") {
+        for (let i = 0, extra = between(rand, 0, 2); i < extra; i++) {
+          const date = capToday(addDays(todayIso, -between(rand, 2, 30)));
+          result.deals.push({
+            type: "deal", id: `DL-${num}9${i + 1}`, date, lane: pick(rand, LANES), mode: "To be confirmed",
+            cargo: "To be confirmed", commodity: pick(rand, commodities), value: value(), stage: pick(rand, ["Prospect", "Contacted"])
+          });
+        }
+      }
+
+      const newestFirst = (a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
+      Object.values(result).forEach((list) => list.sort(newestFirst));
+      cache.set(key, result);
+      return result;
     }
 
     const CREDIT_LIMITS = { Enterprise: [150000, 400000], SME: [20000, 80000], Growth: [5000, 20000] };
@@ -1344,10 +1620,308 @@
     }
 
     // ---------------------------------------------------------------
+    // Activities tab
+    // ---------------------------------------------------------------
+    const ACTIVITY_PREVIEW_ROWS = 5;
+    const ACTIVITY_ORDER = ["deal", "rfq", "quote", "shipment"];
+    const LIST_KEYS = { deal: "deals", rfq: "rfqs", quote: "quotes", shipment: "shipments" };
+
+    const activityStatus = (item) => item.stage || item.status;
+    const sumBy = (list, keyName) => list.reduce((total, item) => total + (item[keyName] || 0), 0);
+    const pct = (part, whole) => (whole ? Math.round((part / whole) * 100) : null);
+    const pctValue = (n) => (n === null ? "–" : `${n}<small>%</small>`);
+    const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+    function activityStats(type, list) {
+      if (type === "deal") {
+        const won = list.filter((d) => d.stage === "Won");
+        const lost = list.filter((d) => d.stage === "Lost");
+        const open = list.filter((d) => OPEN_STAGES.includes(d.stage));
+        const closed = won.length + lost.length;
+        return [
+          { label: "Total deals created", value: list.length, sub: `${compactMoney(sumBy(list, "value"))} total value`, highlight: true },
+          { label: "Deals won", value: won.length, sub: `${compactMoney(sumBy(won, "value"))} won value` },
+          { label: "Win rate", value: pctValue(pct(won.length, closed)), sub: closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet" },
+          { label: "Open pipeline", value: compactMoney(sumBy(open, "value")), sub: `${plural(open.length, "deal")} in progress`, cls: "gold" }
+        ];
+      }
+      if (type === "rfq") {
+        const open = list.filter((r) => r.status === "New" || r.status === "In review");
+        const quoted = list.filter((r) => r.status === "Quoted");
+        const decided = list.length - open.length;
+        const avgResponse = quoted.length ? (sumBy(quoted, "respondedInDays") / quoted.length).toFixed(1).replace(/\.0$/, "") : null;
+        return [
+          { label: "Total RFQs", value: list.length, sub: list.length ? `Latest ${formatDate(list[0].date)}` : "None received yet", highlight: true },
+          { label: "Open RFQs", value: open.length, sub: open.length ? "New or in review" : "Nothing waiting" },
+          { label: "Quote rate", value: pctValue(pct(quoted.length, decided)), sub: `${quoted.length} of ${decided} answered` },
+          { label: "Avg. response", value: avgResponse === null ? "–" : `${avgResponse}<small> days</small>`, sub: "From RFQ to quote" }
+        ];
+      }
+      if (type === "quote") {
+        const accepted = list.filter((q) => q.status === "Accepted");
+        const awaiting = list.filter((q) => q.status === "Awaiting response");
+        const decided = list.length - awaiting.length;
+        return [
+          { label: "Total quotes", value: list.length, sub: `${compactMoney(sumBy(list, "amount"))} quoted`, highlight: true },
+          { label: "Accepted", value: accepted.length, sub: `${compactMoney(sumBy(accepted, "amount"))} accepted value` },
+          { label: "Acceptance rate", value: pctValue(pct(accepted.length, decided)), sub: decided ? `${accepted.length} of ${decided} decided` : "No decisions yet" },
+          { label: "Awaiting response", value: compactMoney(sumBy(awaiting, "amount")), sub: plural(awaiting.length, "quote"), cls: "gold" }
+        ];
+      }
+      const active = list.filter((s) => ["Booked", "In transit", "Delayed"].includes(s.status));
+      const delivered = list.filter((s) => s.status === "Delivered");
+      const delayed = list.filter((s) => s.status === "Delayed");
+      return [
+        { label: "Total shipments", value: list.length, sub: list.length ? `Latest booked ${formatDate(list[0].date)}` : "None booked yet", highlight: true },
+        { label: "Active", value: active.length, sub: "Booked or in transit" },
+        { label: "Delivered", value: delivered.length, sub: list.length ? `${pct(delivered.length, list.length)}% of shipments` : "–" },
+        { label: "Delayed", value: delayed.length, sub: delayed.length ? "Needs follow-up" : "None delayed", cls: delayed.length ? "error" : "" }
+      ];
+    }
+
+    const ACTIVITY_COLUMNS = {
+      deal: [
+        ["Deal", (d) => `<span class="act-id">${escapeHtml(d.id)}</span>`],
+        ["Lane", (d) => escapeHtml(d.lane)],
+        ["Value<br />(USD)", (d) => `<span class="money">${money(d.value)}</span>`],
+        ["Stage", (d) => chip(d.stage, ACTIVITY_CHIPS[d.stage])],
+        ["Created", (d) => formatDate(d.date)]
+      ],
+      rfq: [
+        ["RFQ", (r) => `<span class="act-id">${escapeHtml(r.id)}</span>`],
+        ["Lane", (r) => escapeHtml(r.lane)],
+        ["Mode", (r) => escapeHtml(r.mode)],
+        ["Cargo", (r) => escapeHtml(r.cargo)],
+        ["Status", (r) => chip(r.status, ACTIVITY_CHIPS[r.status])],
+        ["Requested", (r) => formatDate(r.date)]
+      ],
+      quote: [
+        ["Quote", (q) => `<span class="act-id">${escapeHtml(q.id)}</span>`],
+        ["Lane", (q) => escapeHtml(q.lane)],
+        ["Amount<br />(USD)", (q) => `<span class="money">${money(q.amount)}</span>`],
+        ["Status", (q) => chip(q.status, ACTIVITY_CHIPS[q.status])],
+        ["Sent", (q) => formatDate(q.date)],
+        ["Valid<br />until", (q) => formatDate(q.validUntil)]
+      ],
+      shipment: [
+        ["Shipment", (s) => `<span class="act-id">${escapeHtml(s.id)}</span>`],
+        ["Lane", (s) => escapeHtml(s.lane)],
+        ["Mode", (s) => escapeHtml(s.mode)],
+        ["ETD", (s) => formatDate(s.etd)],
+        ["ETA", (s) => formatDate(s.eta)],
+        ["Status", (s) => chip(s.status, ACTIVITY_CHIPS[s.status])]
+      ]
+    };
+
+    function dealNextStep(d) {
+      switch (d.stage) {
+        case "Prospect": return "Initial outreach planned";
+        case "Contacted": return "Discovery call to confirm volumes and lanes";
+        case "Qualified": return "Waiting on pricing to issue a quote";
+        case "Quote issued": return `Follow up on quote ${d.quote}`;
+        case "Won": return d.shipment ? `Delivered through shipment ${d.shipment}` : "Won";
+        default: return d.lossReason || "Closed";
+      }
+    }
+
+    function shipmentUpdate(s) {
+      const { origin, destination } = laneEnds(s.lane);
+      switch (s.status) {
+        case "Booked": return `Booking confirmed; departs ${origin} on ${formatDate(s.etd)}`;
+        case "In transit": return `Departed ${origin}; en route to ${destination}`;
+        case "Delayed": return `Held at transhipment; ETA to ${destination} under review`;
+        default: return `Delivered to consignee at ${destination}`;
+      }
+    }
+
+    function activityDetailFields(c, item) {
+      const owner = escapeHtml(c.accountManager);
+      if (item.type === "deal") {
+        return [
+          ["Owner", owner], ["Commodity", escapeHtml(item.commodity)], ["Mode", escapeHtml(item.mode)], ["Cargo", escapeHtml(item.cargo)],
+          ["Value", money(item.value)], ["Created", formatDate(item.date)],
+          [item.closedAt ? "Closed" : "Stage", item.closedAt ? formatDate(item.closedAt) : escapeHtml(item.stage)],
+          [item.stage === "Lost" ? "Reason" : "Next step", escapeHtml(dealNextStep(item))]
+        ];
+      }
+      if (item.type === "rfq") {
+        return [
+          ["Owner", owner], ["Commodity", escapeHtml(item.commodity)], ["Cargo", escapeHtml(item.cargo)], ["Incoterm", escapeHtml(item.incoterm)],
+          ["Requested", formatDate(item.date)],
+          ["Response", item.respondedInDays !== undefined ? `Quoted in ${plural(item.respondedInDays, "day")}` : item.status === "Quoted" ? "Quoted" : escapeHtml(item.status)]
+        ];
+      }
+      if (item.type === "quote") {
+        return [
+          ["Owner", owner], ["Commodity", escapeHtml(item.commodity)], ["Cargo", escapeHtml(item.cargo)], ["Incoterm", escapeHtml(item.incoterm)],
+          ["Amount", money(item.amount)], ["Sent", formatDate(item.date)], ["Valid until", formatDate(item.validUntil)],
+          ["Decision", item.decidedAt ? `${escapeHtml(item.status)} on ${formatDate(item.decidedAt)}` : "Awaiting customer"]
+        ];
+      }
+      return [
+        ["Owner", owner], ["Commodity", escapeHtml(item.commodity)], ["Cargo", escapeHtml(item.cargo)], ["Booking ref", escapeHtml(item.bookingRef)],
+        ["ETD", formatDate(item.etd)], ["ETA", formatDate(item.eta)], ["Latest update", escapeHtml(shipmentUpdate(item))]
+      ];
+    }
+
+    function activitySection(c, type, list, index) {
+      const meta = ACTIVITY_TYPES[type];
+      const columns = ACTIVITY_COLUMNS[type];
+      const stats = activityStats(type, list);
+      const colCount = columns.length + 1;
+
+      const rows = list.map((item, i) => {
+        const extra = i >= ACTIVITY_PREVIEW_ROWS ? "extra" : "";
+        const detailId = `act-detail-${item.id}`;
+        const related = ["rfq", "quote", "deal", "shipment"].filter((t) => t !== type && item[t]);
+        return `
+          <tr class="act-row ${extra}" data-key="${type}:${escapeHtml(item.id)}" tabindex="0" aria-expanded="false" aria-controls="${detailId}">
+            ${columns.map(([, cell]) => `<td>${cell(item)}</td>`).join("")}
+            <td class="act-chevron-cell"><span class="act-chevron" aria-hidden="true">›</span><span class="sr-only">Show details</span></td>
+          </tr>
+          <tr class="act-detail ${extra}" id="${detailId}" hidden>
+            <td colspan="${colCount}">
+              <div class="act-detail-grid">
+                ${activityDetailFields(c, item).map(([label, value]) => `<div><div class="field-label">${label}</div><div class="field-value">${value}</div></div>`).join("")}
+              </div>
+              <div class="act-detail-foot">
+                <div class="related">
+                  ${related.length ? `<span class="field-label">Linked</span>` : ""}
+                  ${related.map((t) => `<button class="related-chip" type="button" data-jump="${t}:${escapeHtml(item[t])}" title="Show ${ACTIVITY_TYPES[t].label.toLowerCase()} ${escapeHtml(item[t])}">${ACTIVITY_TYPES[t].label} · ${escapeHtml(item[t])}</button>`).join("")}
+                </div>
+                <a class="view-btn" href="${MODULE_LINKS[type].item(item.id)}" target="_blank" rel="noopener noreferrer">Open in ${meta.module} ↗</a>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      return `
+        <section class="panel activity-section" id="act-${type}" data-type="${type}">
+          <div class="panel-head split">
+            <div class="act-title">
+              <span class="panel-num">${String(index + 1).padStart(2, "0")}</span>
+              <span class="panel-title">${meta.title}</span>
+              <span class="count-pill">${list.length}</span>
+            </div>
+            <a class="text-link act-module-link" href="${MODULE_LINKS[type].list(c.id)}" target="_blank" rel="noopener noreferrer">Open ${meta.module} module ↗</a>
+          </div>
+          <div class="act-stats">
+            ${stats.map((s) => `
+              <div class="deal-stat ${s.highlight ? "highlight" : ""}">
+                <div class="kpi-label">${s.label}</div>
+                <div class="kpi-value ${s.cls || ""}">${s.value}</div>
+                <div class="kpi-sub">${s.sub}</div>
+              </div>`).join("")}
+          </div>
+          ${list.length ? `
+            <div class="table-wrap act-table-wrap">
+              <table class="data-table act-table">
+                <thead><tr>${columns.map(([h]) => `<th>${h}</th>`).join("")}<th class="act-chevron-cell"><span class="sr-only">Details</span></th></tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+            ${list.length > ACTIVITY_PREVIEW_ROWS ? `
+              <button class="btn-ghost act-more" type="button" data-show-all="${type}" aria-expanded="false">Show all ${list.length} ${meta.title.toLowerCase()}</button>` : ""}
+          ` : `<p class="act-empty">No ${meta.title.toLowerCase()} for ${escapeHtml(c.companyName)} yet.</p>`}
+        </section>
+      `;
+    }
+
+    function renderActivitiesTab(c) {
+      const acts = activitiesFor(c);
+      const total = ACTIVITY_ORDER.reduce((n, t) => n + acts[LIST_KEYS[t]].length, 0);
+      if (!total) {
+        return `
+          <div class="empty-stub">
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>
+            </div>
+            <h3>No activity yet</h3>
+            <p>Deals, requests for quotes, quotes and shipments for ${escapeHtml(c.companyName)} will appear here as they come in.</p>
+          </div>
+        `;
+      }
+      const lastActivity = ACTIVITY_ORDER.flatMap((t) => acts[LIST_KEYS[t]].map((i) => i.date)).sort().pop();
+
+      return `
+        <div class="activities" id="activities">
+          <nav class="act-nav" aria-label="Jump to activity type">
+            ${ACTIVITY_ORDER.map((t) => `
+              <button class="act-nav-btn" type="button" data-scroll="act-${t}">
+                <span>${ACTIVITY_TYPES[t].title}</span><strong>${acts[LIST_KEYS[t]].length}</strong>
+              </button>`).join("")}
+            <span class="act-last">Last activity ${formatDate(lastActivity)}</span>
+          </nav>
+          ${ACTIVITY_ORDER.map((t, i) => activitySection(c, t, acts[LIST_KEYS[t]], i)).join("")}
+        </div>
+      `;
+    }
+
+    function wireActivities() {
+      const root = $("#activities");
+      if (!root) return;
+
+      const toggleRow = (row, open = row.getAttribute("aria-expanded") !== "true") => {
+        row.setAttribute("aria-expanded", String(open));
+        document.getElementById(row.getAttribute("aria-controls")).hidden = !open;
+      };
+
+      const setShowAll = (section, on) => {
+        section.classList.toggle("show-all", on);
+        const btn = section.querySelector("[data-show-all]");
+        if (!btn) return;
+        const title = ACTIVITY_TYPES[section.dataset.type].title.toLowerCase();
+        const count = section.querySelectorAll(".act-row").length;
+        btn.textContent = on ? `Show fewer ${title}` : `Show all ${count} ${title}`;
+        btn.setAttribute("aria-expanded", String(on));
+      };
+
+      root.addEventListener("click", (e) => {
+        const jump = e.target.closest("[data-jump]");
+        if (jump) {
+          const row = root.querySelector(`.act-row[data-key="${CSS.escape(jump.dataset.jump)}"]`);
+          if (!row) return;
+          const section = row.closest(".activity-section");
+          if (row.classList.contains("extra")) setShowAll(section, true);
+          toggleRow(row, true);
+          row.scrollIntoView({ behavior: "smooth", block: "center" });
+          row.focus({ preventScroll: true });
+          row.classList.remove("flash");
+          void row.offsetWidth; // restart the highlight animation
+          row.classList.add("flash");
+          return;
+        }
+        const more = e.target.closest("[data-show-all]");
+        if (more) {
+          const section = more.closest(".activity-section");
+          setShowAll(section, !section.classList.contains("show-all"));
+          return;
+        }
+        const nav = e.target.closest("[data-scroll]");
+        if (nav) {
+          document.getElementById(nav.dataset.scroll)?.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+        const row = e.target.closest(".act-row");
+        if (row && !e.target.closest("a, button")) toggleRow(row);
+      });
+
+      root.addEventListener("keydown", (e) => {
+        const row = e.target.closest(".act-row");
+        if (row && e.target === row && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          toggleRow(row);
+        }
+      });
+    }
+
+    // ---------------------------------------------------------------
     // Customer details view
     // ---------------------------------------------------------------
     const DETAIL_TABS = [
       { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
+      { key: "activities", label: "Activities", icon: '<path d="M4 12h4l2-7 4 14 2-7h4"/>' },
       { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
     ];
 
@@ -1374,45 +1948,6 @@
           <div class="group-title">${title}</div>
           <div class="fields">${body}</div>
         </div>
-      `;
-    }
-
-    function dealHistoryCard(c) {
-      const deals = dealsFor(c);
-      const won = deals.filter((d) => d.stage === "Won");
-      const lost = deals.filter((d) => d.stage === "Lost");
-      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
-      const sum = (list) => list.reduce((total, d) => total + d.value, 0);
-      const closed = won.length + lost.length;
-      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
-
-      return `
-        <section class="panel">
-          <div class="panel-head"><span class="panel-title">Deal history</span></div>
-          <div class="deal-stats">
-            <div class="deal-stat highlight">
-              <div class="kpi-label">Total deals created</div>
-              <div class="kpi-value">${deals.length}</div>
-              <div class="kpi-sub">${compactMoney(sum(deals))} total value</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Deals won</div>
-              <div class="kpi-value">${won.length}</div>
-              <div class="kpi-sub">${compactMoney(sum(won))} won value</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Win rate</div>
-              <div class="kpi-value">${winRate === null ? "–" : `${winRate}<small>%</small>`}</div>
-              <div class="kpi-sub">${closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet"}</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Open pipeline</div>
-              <div class="kpi-value gold">${compactMoney(sum(open))}</div>
-              <div class="kpi-sub">${open.length} ${open.length === 1 ? "deal" : "deals"} in progress</div>
-            </div>
-          </div>
-          ${deals.length ? `<p class="muted" style="margin-top: 14px">Last deal created ${formatDate(deals[0].createdAt)}</p>` : ""}
-        </section>
       `;
     }
 
@@ -1463,7 +1998,6 @@
           </section>
 
           <div class="side-col">
-            ${dealHistoryCard(c)}
             ${accountManagerCard(c)}
           </div>
         </div>
@@ -1735,7 +2269,7 @@
       const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
       const base = `#/customers/${encodeURIComponent(c.id)}`;
 
-      const body = tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
+      const body = tab.key === "credit" ? renderCreditTab(c) : tab.key === "activities" ? renderActivitiesTab(c) : renderBasicTab(c);
 
       $("#view").innerHTML = `
         <a class="text-link back-link" href="#/customers">← Back to all customers</a>
@@ -1767,6 +2301,7 @@
       if (changeBtn) changeBtn.addEventListener("click", () => openManagerDialog(c, changeBtn));
       const editBtn = $("#edit-customer");
       if (editBtn) editBtn.addEventListener("click", () => openCustomerForm(c, editBtn));
+      if (tab.key === "activities") wireActivities();
     }
 
     // ---------------------------------------------------------------
