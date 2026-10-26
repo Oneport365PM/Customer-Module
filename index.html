@@ -1347,8 +1347,7 @@
     // Customer details view
     // ---------------------------------------------------------------
     const DETAIL_TABS = [
-      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
-      { key: "credit", label: "Credit performance", icon: '<path d="M3 7h18v10H3zM3 11h18M7 15h3"/>' }
+      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' }
     ];
 
     function field(label, value) {
@@ -1374,45 +1373,6 @@
           <div class="group-title">${title}</div>
           <div class="fields">${body}</div>
         </div>
-      `;
-    }
-
-    function dealHistoryCard(c) {
-      const deals = dealsFor(c);
-      const won = deals.filter((d) => d.stage === "Won");
-      const lost = deals.filter((d) => d.stage === "Lost");
-      const open = deals.filter((d) => OPEN_STAGES.includes(d.stage));
-      const sum = (list) => list.reduce((total, d) => total + d.value, 0);
-      const closed = won.length + lost.length;
-      const winRate = closed ? Math.round((won.length / closed) * 100) : null;
-
-      return `
-        <section class="panel">
-          <div class="panel-head"><span class="panel-title">Deal history</span></div>
-          <div class="deal-stats">
-            <div class="deal-stat highlight">
-              <div class="kpi-label">Total deals created</div>
-              <div class="kpi-value">${deals.length}</div>
-              <div class="kpi-sub">${compactMoney(sum(deals))} total value</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Deals won</div>
-              <div class="kpi-value">${won.length}</div>
-              <div class="kpi-sub">${compactMoney(sum(won))} won value</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Win rate</div>
-              <div class="kpi-value">${winRate === null ? "–" : `${winRate}<small>%</small>`}</div>
-              <div class="kpi-sub">${closed ? `${won.length} won · ${lost.length} lost` : "No closed deals yet"}</div>
-            </div>
-            <div class="deal-stat">
-              <div class="kpi-label">Open pipeline</div>
-              <div class="kpi-value gold">${compactMoney(sum(open))}</div>
-              <div class="kpi-sub">${open.length} ${open.length === 1 ? "deal" : "deals"} in progress</div>
-            </div>
-          </div>
-          ${deals.length ? `<p class="muted" style="margin-top: 14px">Last deal created ${formatDate(deals[0].createdAt)}</p>` : ""}
-        </section>
       `;
     }
 
@@ -1463,7 +1423,6 @@
           </section>
 
           <div class="side-col">
-            ${dealHistoryCard(c)}
             ${accountManagerCard(c)}
           </div>
         </div>
@@ -1593,129 +1552,12 @@
       select.focus();
     }
 
-    const INVOICE_CHIPS = {
-      "Paid on time": "chip-success",
-      "Paid late": "chip-warning",
-      "Overdue": "chip-error",
-      "Outstanding": "chip-neutral"
-    };
-
     function creditRating(score) {
       // Readiness-style scale from the design system: low → error, building → warning, ready → success.
       if (score >= 80) return { label: "Excellent", chip: "chip-success", advice: "Low risk. Eligible for a limit increase on request." };
       if (score >= 65) return { label: "Good", chip: "chip-success", advice: "Low risk. Maintain the current limit and terms." };
       if (score >= 45) return { label: "Fair", chip: "chip-warning", advice: "Moderate risk. Keep the limit under review and follow up on late payments." };
       return { label: "Poor", chip: "chip-error", advice: "High risk. Hold new credit until overdue invoices are cleared." };
-    }
-
-    function renderCreditTab(c) {
-      const credit = creditFor(c);
-      if (!credit) {
-        return `
-          <div class="empty-stub">
-            <div class="empty-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v10H3zM3 11h18M7 15h3"/></svg>
-            </div>
-            <h3>${c.status === "pending" ? "Credit assessment in progress" : "No credit history yet"}</h3>
-            <p>${c.status === "pending"
-              ? `${escapeHtml(c.companyName)} is still being onboarded. A credit score and limit will appear here once the assessment is complete.`
-              : `${escapeHtml(c.companyName)} has no credit activity on record. A credit score, limit and invoice history will appear here once they start trading on credit terms.`}</p>
-          </div>
-        `;
-      }
-
-      const rating = creditRating(credit.score);
-      const utilisation = Math.round((credit.used / credit.limit) * 100);
-      const utilColor = utilisation > 80 ? "#FF1A1A" : utilisation > 60 ? "#FFCC1A" : "#1F8A5B";
-      const onTimePct = Math.round(credit.onTimeRate * 100);
-      const judged = credit.onTime + credit.late + credit.overdue.length;
-
-      const paymentRows = [
-        { label: "Paid on time", color: "#1F8A5B", count: credit.onTime },
-        { label: "Paid late", color: "#FFCC1A", count: credit.late },
-        { label: "Overdue", color: "#FF1A1A", count: credit.overdue.length },
-        { label: "Not yet due", color: "#D1DBBD", count: credit.outstanding.length }
-      ];
-
-      const overview = [
-        `Pays <strong>${onTimePct}%</strong> of invoices on time (${credit.onTime} of ${judged}), taking <strong>${credit.avgDaysToPay} days</strong> on average against Net ${credit.terms} terms.`,
-        credit.overdue.length
-          ? `<strong>${credit.overdue.length} overdue ${credit.overdue.length === 1 ? "invoice" : "invoices"}</strong> totalling ${money(credit.overdueAmount)}.`
-          : `No overdue invoices.`,
-        `Using <strong>${utilisation}%</strong> of the ${money(credit.limit)} credit limit.`,
-        `<strong>Recommendation:</strong> ${rating.advice}`
-      ];
-
-      return `
-        <section class="kpi-cards">
-          ${kpi("Credit limit", compactMoney(credit.limit), `Net ${credit.terms} payment terms`, "highlight")}
-          ${kpi("Available credit", compactMoney(credit.limit - credit.used), `${compactMoney(credit.used)} in use`)}
-          ${kpi("On-time payments", `${onTimePct}<small>%</small>`, `Avg. ${credit.avgDaysToPay} days to pay`)}
-          ${kpi("Overdue", compactMoney(credit.overdueAmount), credit.overdue.length ? `${credit.overdue.length} ${credit.overdue.length === 1 ? "invoice" : "invoices"} past due` : "Nothing past due", credit.overdueAmount ? "error" : "")}
-        </section>
-
-        <div class="tab-grid">
-          <section class="panel">
-            ${panelHead("01", "Creditworthiness")}
-            <div class="score-wrap">
-              <div class="score-value">${credit.score}<small>/100</small></div>
-              <div style="padding-bottom: 8px">${chip(rating.label, rating.chip)}</div>
-            </div>
-            <div class="score-scale" aria-hidden="true">
-              <span style="flex: 45; background: #FDE0E0"></span>
-              <span style="flex: 20; background: #FFF3CC"></span>
-              <span style="flex: 15; background: #E1F1E8"></span>
-              <span style="flex: 20; background: #B9DEC9"></span>
-            </div>
-            <div class="score-marker-track" aria-hidden="true"><span class="score-marker" style="left: ${credit.score}%"></span></div>
-            <div class="score-labels"><span style="flex: 45">Poor</span><span style="flex: 20">Fair</span><span style="flex: 15">Good</span><span style="flex: 20; text-align: right">Excellent</span></div>
-
-            <div style="margin-top: 22px">
-              <div class="field-label">Credit utilisation</div>
-              <div class="meter" role="img" aria-label="Credit utilisation ${utilisation}%"><span style="width: ${utilisation}%; background: ${utilColor}"></span></div>
-              <div class="meter-legend"><span>${money(credit.used)} used · ${utilisation}%</span><span>${money(credit.limit)} limit</span></div>
-            </div>
-          </section>
-
-          <div class="detail-col">
-            <section class="panel">
-              ${panelHead("02", "Payment behaviour")}
-              ${segmentBar(paymentRows, "Invoices by payment status")}
-            </section>
-            <section class="panel">
-              ${panelHead("03", "Overview")}
-              <ul class="insights">${overview.map((i) => `<li><span>${i}</span></li>`).join("")}</ul>
-            </section>
-          </div>
-        </div>
-
-        <h2 class="section-title">Recent invoices</h2>
-        <div class="table-wrap">
-          <table class="data-table" style="min-width: 720px">
-            <thead>
-              <tr>
-                <th>Invoice</th>
-                <th>Amount<br />(USD)</th>
-                <th>Issued</th>
-                <th>Due</th>
-                <th>Paid</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${credit.invoices.map((inv) => `
-                <tr style="cursor: default">
-                  <td>${escapeHtml(inv.id)}</td>
-                  <td><span class="money">${money(inv.amount)}</span></td>
-                  <td>${formatDate(inv.issued)}</td>
-                  <td>${formatDate(inv.due)}</td>
-                  <td>${inv.paid ? formatDate(inv.paid) : "–"}</td>
-                  <td>${chip(inv.status, INVOICE_CHIPS[inv.status])}</td>
-                </tr>`).join("")}
-            </tbody>
-          </table>
-        </div>
-      `;
     }
 
     function renderDetails(id, tabKey) {
@@ -1735,7 +1577,7 @@
       const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
       const base = `#/customers/${encodeURIComponent(c.id)}`;
 
-      const body = tab.key === "credit" ? renderCreditTab(c) : renderBasicTab(c);
+      const body = renderBasicTab(c);
 
       $("#view").innerHTML = `
         <a class="text-link back-link" href="#/customers">← Back to all customers</a>
