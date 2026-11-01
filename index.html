@@ -1347,7 +1347,8 @@
     // Customer details view
     // ---------------------------------------------------------------
     const DETAIL_TABS = [
-      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' }
+      { key: "basic", label: "Basic details", icon: '<path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0"/>' },
+      { key: "activities", label: "Activities", icon: '<path d="M4 12h4l2-7 4 14 2-7h4"/>' }
     ];
 
     function field(label, value) {
@@ -1425,6 +1426,19 @@
           <div class="side-col">
             ${accountManagerCard(c)}
           </div>
+        </div>
+      `;
+    }
+
+    // Activities: placeholder until deals, RFQs, quotes and shipments are connected.
+    function renderActivitiesTab(c) {
+      return `
+        <div class="empty-stub">
+          <div class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>
+          </div>
+          <h3>No activity yet</h3>
+          <p>Deals, requests for quotes, quotes and shipments for ${escapeHtml(c.companyName)} will appear here in one place.</p>
         </div>
       `;
     }
@@ -1577,7 +1591,7 @@
       const tab = DETAIL_TABS.find((t) => t.key === tabKey) || DETAIL_TABS[0];
       const base = `#/customers/${encodeURIComponent(c.id)}`;
 
-      const body = renderBasicTab(c);
+      const body = tab.key === "activities" ? renderActivitiesTab(c) : renderBasicTab(c);
 
       $("#view").innerHTML = `
         <a class="text-link back-link" href="#/customers">← Back to all customers</a>
