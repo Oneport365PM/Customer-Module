@@ -881,7 +881,6 @@
     .module-panel { padding: 18px; box-shadow: inset 0 4px 0 var(--mod-accent), var(--op-elevation-2); }
     .module-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     .module-head h3 { margin: 0; font-family: var(--op-font-display); font-size: 17px; font-weight: 600; color: var(--op-dark-green); }
-    .module-head .count-pill { margin-left: auto; background: var(--mod-tint); color: var(--op-dark-green); font-size: 12px; padding: 2px 10px; }
 
     .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .metric-card {
@@ -927,51 +926,6 @@
 
     .rate-bar { width: 100%; height: 6px; margin: 4px 0 2px; border-radius: var(--op-radius-full); background: rgba(2, 56, 25, .1); overflow: hidden; }
     .rate-bar span { display: block; height: 100%; border-radius: var(--op-radius-full); }
-
-    /* Journey strip */
-    .journey { padding: 18px; }
-    .journey-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-    .journey-head h3 { margin: 0; font-family: var(--op-font-display); font-size: 17px; font-weight: 600; color: var(--op-dark-green); }
-    .journey-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-    .journey-step {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-      min-width: 0;
-      padding: 12px 14px;
-      border: none;
-      border-radius: var(--op-radius-lg);
-      text-align: left;
-      color: var(--step-ink);
-      background: var(--step-bg);
-      transition: transform .16s, box-shadow .16s;
-    }
-    .journey-step:hover { transform: translateY(-2px); box-shadow: var(--op-elevation-3); }
-    .journey-step:focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: 2px; }
-    .journey-step .step-value { font-family: var(--op-font-display); font-size: 26px; font-weight: 600; line-height: 1.1; }
-    .journey-step .step-label { font-size: 12px; font-weight: 600; opacity: .9; }
-    .journey-step .step-rate {
-      margin-top: 6px;
-      padding: 1px 8px;
-      border-radius: var(--op-radius-full);
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, .22);
-    }
-    .journey-step.light .step-rate { background: rgba(2, 56, 25, .12); }
-    .journey-step:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      right: -9px;
-      top: 50%;
-      width: 8px;
-      height: 8px;
-      border-top: 2px solid var(--op-silver-light);
-      border-right: 2px solid var(--op-silver-light);
-      transform: translateY(-50%) rotate(45deg);
-    }
 
     /* Logs */
     .log-panel { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px; }
@@ -1049,8 +1003,6 @@
       .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab-grid { grid-template-columns: 1fr; }
       .activity-layout { grid-template-columns: 1fr; }
-      .journey-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .journey-step:nth-child(3)::after { display: none; }
       .log-panel { position: static; max-height: none; }
     }
 
@@ -1071,8 +1023,6 @@
       .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
       .fields { grid-template-columns: 1fr; }
       .module-grid { grid-template-columns: 1fr; }
-      .journey-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .journey-step::after { display: none; }
       .metric-value { font-size: 24px; }
       .form-grid { grid-template-columns: 1fr; }
       .nav-label { display: none; }
@@ -1526,7 +1476,9 @@
         const lane = pick(rand, LANES);
         const common = { lane, mode, cargo, commodity: pick(rand, commodities), incoterm: pick(rand, INCOTERMS) };
 
-        const rfq = { type: "rfq", id: `RFQ-${num}${seq}`, date, ...common };
+        // Module ID formats: RFQ-X-XX-XXX, QT-X-XX-XXX and ZELOSxxxxx.
+        const idCore = `${num.slice(0, 1)}-${num.slice(-2)}-${String(i + 1).padStart(3, "0")}`;
+        const rfq = { type: "rfq", id: `RFQ-${idCore}`, date, ...common };
         const deal = { type: "deal", id: `DL-${num}${seq}`, date, ...common, value: value(), rfq: rfq.id };
         result.rfqs.push(rfq);
         result.deals.push(deal);
@@ -1547,7 +1499,7 @@
         rfq.status = "Quoted";
         rfq.respondedInDays = daysBetween(date, quoteDate);
         const quote = {
-          type: "quote", id: `QT-${num}${seq}`, date: quoteDate, ...common,
+          type: "quote", id: `QT-${idCore}`, date: quoteDate, ...common,
           amount: deal.value, validUntil: addDays(quoteDate, 14), rfq: rfq.id, deal: deal.id
         };
         rfq.quote = quote.id;
@@ -1572,7 +1524,7 @@
           else if (eta > todayIso) status = odds() < 0.2 ? "Delayed" : "In transit";
           else status = "Delivered";
           const shipment = {
-            type: "shipment", id: `SHP-${num}${seq}`, date: quote.decidedAt, ...common,
+            type: "shipment", id: `ZELOS${num.slice(-3)}${seq}`, date: quote.decidedAt, ...common,
             etd, eta, status, bookingRef: `OPB${num}${seq}${between(rand, 100, 999)}`,
             // Delayed shipments have already slipped past their SLA date.
             slaDue: status === "Delayed" ? addDays(eta, -between(slaOdds, 1, 5)) : addDays(eta, between(slaOdds, -2, 8)),
@@ -1820,7 +1772,11 @@
     const pctValue = (n) => (n === null ? "–" : `${n}<small>%</small>`);
     const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
     const actToday = () => isoDate(TODAY);
-    const daysValue = (n) => (n === null ? "–" : `${n.toFixed(1).replace(/\.0$/, "")}<small> days</small>`);
+    const daysValue = (n) => {
+      if (n === null) return "–";
+      const shown = n.toFixed(1).replace(/\.0$/, "");
+      return `${shown}<small> ${shown === "1" ? "day" : "days"}</small>`;
+    };
 
     // SLA: met if delivered on or before the SLA date; open shipments are on track, at risk or breached.
     function slaStatus(s) {
@@ -1918,17 +1874,6 @@
     };
     const rateColor = (r) => (r >= 75 ? "#1F8A5B" : r >= 50 ? "#FFCC1A" : "#FF1A1A");
 
-    // RFQ -> quote -> acceptance -> shipment -> delivery, with step-to-step conversion.
-    function journeySteps(acts) {
-      return [
-        { label: "RFQs received", n: acts.rfqs.length, metric: "rfq:all", bg: "#023819", ink: "#FDFBF1" },
-        { label: "Quoted", n: acts.rfqs.filter((r) => r.status === "Quoted").length, metric: "rfq:quoted", bg: "#2F7A3F", ink: "#FFFFFF" },
-        { label: "Quotes accepted", n: acts.quotes.filter((q) => q.status === "Accepted").length, metric: "quote:accepted", bg: "#7FAE2E", ink: "#023819", light: true },
-        { label: "Shipments", n: acts.shipments.length, metric: "shipment:all", bg: "#BFFB4F", ink: "#023819", light: true },
-        { label: "Delivered", n: acts.shipments.filter((s) => s.status === "Delivered").length, metric: "shipment:delivered", bg: "#FFCC1A", ink: "#023819", light: true }
-      ];
-    }
-
     function renderActivitiesTab(c) {
       const acts = activitiesFor(c);
       const total = ACTIVITY_ORDER.reduce((n, t) => n + acts[LIST_KEYS[t]].length, 0);
@@ -1942,26 +1887,6 @@
         `;
       }
 
-      const steps = journeySteps(acts);
-      const journey = `
-        <section class="panel journey" aria-labelledby="journey-title">
-          <div class="journey-head">
-            <h3 id="journey-title">Customer journey</h3>
-            <span class="muted">From request to delivery</span>
-          </div>
-          <div class="journey-steps">
-            ${steps.map((st, i) => {
-              const rate = i ? pct(st.n, steps[i - 1].n) : null;
-              return `
-                <button class="journey-step ${st.light ? "light" : ""}" type="button" data-metric="${st.metric}" style="--step-bg: ${st.bg}; --step-ink: ${st.ink}" aria-label="${st.label}: ${st.n}. Show items">
-                  <span class="step-value">${st.n}</span>
-                  <span class="step-label">${st.label}</span>
-                  <span class="step-rate">${i ? `${rate ?? 0}% of previous` : "Start"}</span>
-                </button>`;
-            }).join("")}
-          </div>
-        </section>`;
-
       const modules = ACTIVITY_ORDER.map((type) => {
         const list = acts[LIST_KEYS[type]];
         const meta = ACTIVITY_TYPES[type];
@@ -1970,7 +1895,6 @@
             <div class="module-head">
               <span class="mod-icon">${modIcon(type)}</span>
               <h3 id="mod-${type}">${meta.module}</h3>
-              <span class="count-pill">${plural(list.length, meta.label === "RFQ" ? "RFQ" : meta.label.toLowerCase())}</span>
             </div>
             <div class="metric-grid">
               ${ACTIVITY_METRICS[type].map((m, i) => {
@@ -2005,7 +1929,7 @@
             <span class="tl-icon" data-type="${e.type}">${modIcon(e.type)}${tone}</span>
             <div class="tl-body">
               <div class="tl-text">${escapeHtml(e.text)}</div>
-              <div class="tl-meta"><a class="tl-ref" href="${MODULE_LINKS[e.type].item(e.id)}" target="_blank" rel="noopener noreferrer">${ACTIVITY_TYPES[e.type].label} ${escapeHtml(e.id)}</a></div>
+              <div class="tl-meta"><a class="tl-ref" href="${MODULE_LINKS[e.type].item(e.id)}" target="_blank" rel="noopener noreferrer" aria-label="${ACTIVITY_TYPES[e.type].label} ${escapeHtml(e.id)}">${escapeHtml(e.id)}</a></div>
             </div>
           </li>`;
       }).join("");
@@ -2013,7 +1937,6 @@
       return `
         <div class="activity-layout" id="activities">
           <div class="activity-main">
-            ${journey}
             <div class="module-grid">${modules}</div>
           </div>
           <aside class="panel log-panel" aria-labelledby="log-title">
