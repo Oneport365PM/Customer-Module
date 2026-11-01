@@ -856,45 +856,176 @@
       font-weight: 700;
     }
 
-    .activity-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--op-space-4); align-items: start; }
+    .activity-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: var(--op-space-4); align-items: start; }
+    .activity-main { display: flex; flex-direction: column; gap: var(--op-space-4); min-width: 0; }
     .module-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-4); }
-    .module-panel { padding: 18px; }
-    .module-panel .panel-head { margin-bottom: 14px; }
-    .module-link { font-size: 12.5px; }
+
+    /* Module identity colours, drawn from the brand avatar fills and categorical series */
+    [data-type="deal"] { --mod-bg: #023819; --mod-fg: #BFFB4F; --mod-ink: #FDFBF1; --mod-tint: rgba(2, 56, 25, .06); --mod-accent: #023819; }
+    [data-type="rfq"] { --mod-bg: #BFFB4F; --mod-fg: #023819; --mod-ink: #023819; --mod-tint: rgba(127, 174, 46, .12); --mod-accent: #7FAE2E; }
+    [data-type="quote"] { --mod-bg: #FFCC1A; --mod-fg: #023819; --mod-ink: #023819; --mod-tint: rgba(255, 204, 26, .14); --mod-accent: #E0A800; }
+    [data-type="shipment"] { --mod-bg: #2F7A3F; --mod-fg: #FFFFFF; --mod-ink: #FFFFFF; --mod-tint: rgba(47, 122, 63, .09); --mod-accent: #2F7A3F; }
+
+    .mod-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: var(--mod-bg);
+      color: var(--mod-fg);
+    }
+    .mod-icon svg { width: 18px; height: 18px; }
+
+    .module-panel { padding: 18px; box-shadow: inset 0 4px 0 var(--mod-accent), var(--op-elevation-2); }
+    .module-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .module-head h3 { margin: 0; font-family: var(--op-font-display); font-size: 17px; font-weight: 600; color: var(--op-dark-green); }
+    .module-head .count-pill { margin-left: auto; background: var(--mod-tint); color: var(--op-dark-green); font-size: 12px; padding: 2px 10px; }
 
     .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .metric-card {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 4px;
       min-width: 0;
-      padding: 12px;
+      padding: 14px 14px 13px;
       text-align: left;
-      background: #F4F6EF;
-      border: 1px solid rgba(2, 56, 25, .1);
+      background: var(--mod-tint);
+      border: 1px solid transparent;
       border-radius: var(--op-radius-lg);
-      transition: border-color .16s, background-color .16s, box-shadow .16s;
+      transition: transform .16s, box-shadow .16s, border-color .16s, background-color .16s;
     }
-    .metric-card:hover { border-color: var(--op-dark-green); background: var(--op-white); box-shadow: var(--op-elevation-2); }
+    .metric-card:hover { transform: translateY(-2px); background: var(--op-white); border-color: var(--mod-accent); box-shadow: var(--op-elevation-3); }
     .metric-card:focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: 2px; }
-    .metric-label { font-size: 11.5px; font-weight: 600; color: var(--op-silver-light); line-height: 1.3; }
-    .metric-value { font-family: var(--op-font-display); font-size: 24px; font-weight: 600; line-height: 1.1; color: var(--op-dark-green); }
-    .metric-value small { font-size: 13px; color: var(--op-silver-light); font-weight: 600; }
-    .metric-value.gold { color: #b38a00; }
+    .metric-card::after {
+      content: "›";
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--op-silver-light);
+      transition: transform .16s, color .16s;
+    }
+    .metric-card:hover::after { transform: translateX(3px); color: var(--op-dark-green); }
+    .metric-label { font-size: 12px; font-weight: 600; color: var(--op-silver-dark); line-height: 1.3; padding-right: 14px; }
+    .metric-value { font-family: var(--op-font-display); font-size: 28px; font-weight: 600; line-height: 1.05; color: var(--op-dark-green); }
+    .metric-value small { font-size: 14px; color: var(--op-silver-light); font-weight: 600; }
+    .metric-value.gold { color: #9a7700; }
     .metric-value.error { color: var(--op-chip-error-text); }
     .metric-sub { font-size: 11.5px; color: var(--op-silver-light); line-height: 1.35; }
 
+    /* Headline card: filled with the module colour */
+    .metric-card.hero { background: var(--mod-bg); }
+    .metric-card.hero .metric-label, .metric-card.hero .metric-sub, .metric-card.hero::after { color: var(--mod-ink); opacity: .85; }
+    .metric-card.hero .metric-value { color: var(--mod-fg); }
+    [data-type="deal"] .metric-card.hero .metric-value { color: var(--op-accent-lime); }
+    .metric-card.hero:hover { background: var(--mod-bg); border-color: var(--op-dark-green); }
+
+    .rate-bar { width: 100%; height: 6px; margin: 4px 0 2px; border-radius: var(--op-radius-full); background: rgba(2, 56, 25, .1); overflow: hidden; }
+    .rate-bar span { display: block; height: 100%; border-radius: var(--op-radius-full); }
+
+    /* Journey strip */
+    .journey { padding: 18px; }
+    .journey-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .journey-head h3 { margin: 0; font-family: var(--op-font-display); font-size: 17px; font-weight: 600; color: var(--op-dark-green); }
+    .journey-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .journey-step {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      min-width: 0;
+      padding: 12px 14px;
+      border: none;
+      border-radius: var(--op-radius-lg);
+      text-align: left;
+      color: var(--step-ink);
+      background: var(--step-bg);
+      transition: transform .16s, box-shadow .16s;
+    }
+    .journey-step:hover { transform: translateY(-2px); box-shadow: var(--op-elevation-3); }
+    .journey-step:focus-visible { outline: 2px solid var(--op-dark-green); outline-offset: 2px; }
+    .journey-step .step-value { font-family: var(--op-font-display); font-size: 26px; font-weight: 600; line-height: 1.1; }
+    .journey-step .step-label { font-size: 12px; font-weight: 600; opacity: .9; }
+    .journey-step .step-rate {
+      margin-top: 6px;
+      padding: 1px 8px;
+      border-radius: var(--op-radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, .22);
+    }
+    .journey-step.light .step-rate { background: rgba(2, 56, 25, .12); }
+    .journey-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -9px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid var(--op-silver-light);
+      border-right: 2px solid var(--op-silver-light);
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    /* Logs */
     .log-panel { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px; }
-    .log-panel .panel-head { margin-bottom: 14px; }
+    .log-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .log-head h3 { margin: 0; font-family: var(--op-font-display); font-size: 17px; font-weight: 600; color: var(--op-dark-green); }
+    .log-head .muted { margin-left: auto; font-size: 12px; }
+    .log-head .mod-icon { background: var(--op-dark-green); color: var(--op-accent-lime); }
+    .log-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 14px; font-size: 11.5px; color: var(--op-silver-dark); }
+    .log-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .log-legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--mod-bg); box-shadow: inset 0 0 0 1px rgba(2, 56, 25, .15); }
     .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
-    .timeline::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--op-border-divider); }
-    .timeline li { position: relative; display: flex; gap: 12px; padding: 0 0 16px; }
+    .timeline::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 2px; background: var(--op-border-divider); }
+    .timeline li { position: relative; display: flex; gap: 12px; padding: 0 0 14px; }
     .timeline li.extra { display: none; }
-    .tl-dot { position: relative; z-index: 1; width: 12px; height: 12px; margin-top: 3px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--op-white); background: var(--op-silver-light); box-shadow: 0 0 0 1px var(--op-border-card); }
-    .tl-dot.success { background: var(--op-success); }
-    .tl-dot.error { background: var(--op-error); }
-    .tl-text { font-size: 13.5px; color: var(--op-dark-green); font-weight: 500; line-height: 1.4; }
+    .timeline li.tl-date {
+      padding: 2px 0 10px 40px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--op-silver-light);
+    }
+    .tl-icon {
+      position: relative;
+      z-index: 1;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--mod-bg);
+      color: var(--mod-fg);
+      box-shadow: 0 0 0 3px var(--op-white);
+    }
+    .tl-icon svg { width: 14px; height: 14px; }
+    .tl-icon .tone {
+      position: absolute;
+      right: -4px;
+      bottom: -3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 0 0 2px var(--op-white);
+    }
+    .tl-icon .tone.success { background: var(--op-success); }
+    .tl-icon .tone.error { background: var(--op-error); }
+    .tl-body { min-width: 0; padding-top: 3px; }
+    .tl-text { font-size: 13.5px; color: var(--op-dark-green); font-weight: 600; line-height: 1.35; }
     .tl-meta { display: flex; flex-wrap: wrap; gap: 4px; font-size: 12px; color: var(--op-silver-light); margin-top: 2px; }
     .tl-ref { color: var(--op-silver-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
     .tl-ref:hover { color: var(--op-dark-green); }
@@ -910,6 +1041,7 @@
     }
     .metric-table { box-shadow: none; }
     .modal.table-modal { max-width: 1100px; }
+    .modal-title-row { display: flex; align-items: center; gap: 12px; }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
@@ -917,6 +1049,8 @@
       .kpi-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab-grid { grid-template-columns: 1fr; }
       .activity-layout { grid-template-columns: 1fr; }
+      .journey-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .journey-step:nth-child(3)::after { display: none; }
       .log-panel { position: static; max-height: none; }
     }
 
@@ -937,6 +1071,9 @@
       .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
       .fields { grid-template-columns: 1fr; }
       .module-grid { grid-template-columns: 1fr; }
+      .journey-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .journey-step::after { display: none; }
+      .metric-value { font-size: 24px; }
       .form-grid { grid-template-columns: 1fr; }
       .nav-label { display: none; }
       .pager { gap: 4px; }
@@ -1763,39 +1900,89 @@
 
     const LOG_PAGE = 12;
 
+    const MODULE_ICONS = {
+      deal: '<path d="M4 19V9M12 19V5M20 19v-6"/>',
+      rfq: '<path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6M9 13h6M9 17h4"/>',
+      quote: '<path d="M7 3h10a2 2 0 012 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/><path d="M9 8h6M9 12h6"/>',
+      shipment: '<path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/>',
+      log: '<path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/>'
+    };
+    const modIcon = (key) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${MODULE_ICONS[key]}</svg>`;
+
+    // Rate cards get a progress bar; colour follows the readiness scale (low / building / good).
+    const METRIC_RATES = {
+      "deal:winrate": (l) => pct(l.filter((d) => d.stage === "Won").length, l.length),
+      "rfq:conversion": (l) => pct(l.filter((r) => r.status === "Quoted").length, l.length),
+      "quote:conversion": (l) => pct(l.filter((q) => q.shipment).length, l.length),
+      "shipment:sla": (l) => pct(l.filter((s) => slaStatus(s) === "Met").length, l.length)
+    };
+    const rateColor = (r) => (r >= 75 ? "#1F8A5B" : r >= 50 ? "#FFCC1A" : "#FF1A1A");
+
+    // RFQ -> quote -> acceptance -> shipment -> delivery, with step-to-step conversion.
+    function journeySteps(acts) {
+      return [
+        { label: "RFQs received", n: acts.rfqs.length, metric: "rfq:all", bg: "#023819", ink: "#FDFBF1" },
+        { label: "Quoted", n: acts.rfqs.filter((r) => r.status === "Quoted").length, metric: "rfq:quoted", bg: "#2F7A3F", ink: "#FFFFFF" },
+        { label: "Quotes accepted", n: acts.quotes.filter((q) => q.status === "Accepted").length, metric: "quote:accepted", bg: "#7FAE2E", ink: "#023819", light: true },
+        { label: "Shipments", n: acts.shipments.length, metric: "shipment:all", bg: "#BFFB4F", ink: "#023819", light: true },
+        { label: "Delivered", n: acts.shipments.filter((s) => s.status === "Delivered").length, metric: "shipment:delivered", bg: "#FFCC1A", ink: "#023819", light: true }
+      ];
+    }
+
     function renderActivitiesTab(c) {
       const acts = activitiesFor(c);
       const total = ACTIVITY_ORDER.reduce((n, t) => n + acts[LIST_KEYS[t]].length, 0);
       if (!total) {
         return `
           <div class="empty-stub">
-            <div class="empty-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>
-            </div>
+            <div class="empty-icon" aria-hidden="true">${modIcon("log")}</div>
             <h3>No activity yet</h3>
             <p>Deals, requests for quotes, quotes and shipments for ${escapeHtml(c.companyName)} will appear here in one place.</p>
           </div>
         `;
       }
 
-      const log = activityLog(acts);
+      const steps = journeySteps(acts);
+      const journey = `
+        <section class="panel journey" aria-labelledby="journey-title">
+          <div class="journey-head">
+            <h3 id="journey-title">Customer journey</h3>
+            <span class="muted">From request to delivery</span>
+          </div>
+          <div class="journey-steps">
+            ${steps.map((st, i) => {
+              const rate = i ? pct(st.n, steps[i - 1].n) : null;
+              return `
+                <button class="journey-step ${st.light ? "light" : ""}" type="button" data-metric="${st.metric}" style="--step-bg: ${st.bg}; --step-ink: ${st.ink}" aria-label="${st.label}: ${st.n}. Show items">
+                  <span class="step-value">${st.n}</span>
+                  <span class="step-label">${st.label}</span>
+                  <span class="step-rate">${i ? `${rate ?? 0}% of previous` : "Start"}</span>
+                </button>`;
+            }).join("")}
+          </div>
+        </section>`;
+
       const modules = ACTIVITY_ORDER.map((type) => {
         const list = acts[LIST_KEYS[type]];
         const meta = ACTIVITY_TYPES[type];
         return `
-          <section class="panel module-panel" aria-labelledby="mod-${type}">
-            <div class="panel-head split">
-              <div class="head-title"><span class="panel-title" id="mod-${type}">${meta.module}</span><span class="count-pill">${list.length}</span></div>
-              <a class="text-link module-link" href="${MODULE_LINKS[type].list(c.id)}" target="_blank" rel="noopener noreferrer">Open ${meta.module} ↗</a>
+          <section class="panel module-panel" data-type="${type}" aria-labelledby="mod-${type}">
+            <div class="module-head">
+              <span class="mod-icon">${modIcon(type)}</span>
+              <h3 id="mod-${type}">${meta.module}</h3>
+              <span class="count-pill">${plural(list.length, meta.label === "RFQ" ? "RFQ" : meta.label.toLowerCase())}</span>
             </div>
             <div class="metric-grid">
-              ${ACTIVITY_METRICS[type].map((m) => {
+              ${ACTIVITY_METRICS[type].map((m, i) => {
                 const items = list.filter(m.filter);
                 const cls = typeof m.cls === "function" ? m.cls(items) : (m.cls || "");
+                const rateFn = METRIC_RATES[`${type}:${m.key}`];
+                const rate = rateFn ? rateFn(items) : null;
                 return `
-                  <button class="metric-card" type="button" data-metric="${type}:${m.key}" aria-label="${escapeHtml(m.label)}: show ${plural(items.length, "item")}">
+                  <button class="metric-card ${i === 0 ? "hero" : ""}" type="button" data-metric="${type}:${m.key}" aria-label="${escapeHtml(m.label)}: show ${plural(items.length, "item")}">
                     <span class="metric-label">${m.label}</span>
-                    <span class="metric-value ${cls}">${m.value(items, list)}</span>
+                    <span class="metric-value ${i === 0 ? "" : cls}">${m.value(items, list)}</span>
+                    ${rateFn ? `<span class="rate-bar" aria-hidden="true"><span style="width: ${rate ?? 0}%; background: ${rateColor(rate ?? 0)}"></span></span>` : ""}
                     <span class="metric-sub">${m.sub(items, list)}</span>
                   </button>`;
               }).join("")}
@@ -1803,27 +1990,40 @@
           </section>`;
       }).join("");
 
+      // Log entries grouped under date headings.
+      const log = activityLog(acts);
+      let lastDate = null;
+      let shown = 0;
+      const logItems = log.map((e) => {
+        const extra = shown >= LOG_PAGE ? "extra" : "";
+        shown++;
+        const heading = e.date !== lastDate ? `<li class="tl-date ${extra}">${formatDate(e.date)}</li>` : "";
+        lastDate = e.date;
+        const tone = e.tone === "success" ? `<span class="tone success">✓</span>` : e.tone === "error" ? `<span class="tone error">!</span>` : "";
+        return `${heading}
+          <li class="${extra}">
+            <span class="tl-icon" data-type="${e.type}">${modIcon(e.type)}${tone}</span>
+            <div class="tl-body">
+              <div class="tl-text">${escapeHtml(e.text)}</div>
+              <div class="tl-meta"><a class="tl-ref" href="${MODULE_LINKS[e.type].item(e.id)}" target="_blank" rel="noopener noreferrer">${ACTIVITY_TYPES[e.type].label} ${escapeHtml(e.id)}</a></div>
+            </div>
+          </li>`;
+      }).join("");
+
       return `
         <div class="activity-layout" id="activities">
-          <div class="module-grid">${modules}</div>
+          <div class="activity-main">
+            ${journey}
+            <div class="module-grid">${modules}</div>
+          </div>
           <aside class="panel log-panel" aria-labelledby="log-title">
-            <div class="panel-head split">
-              <span class="panel-title" id="log-title">Logs</span>
+            <div class="log-head">
+              <span class="mod-icon">${modIcon("log")}</span>
+              <h3 id="log-title">Logs</h3>
               <span class="muted">${log.length ? `Last activity ${formatDate(log[0].date)}` : ""}</span>
             </div>
-            <ol class="timeline">
-              ${log.map((e, i) => `
-                <li class="${i >= LOG_PAGE ? "extra" : ""}">
-                  <span class="tl-dot ${e.tone}" aria-hidden="true"></span>
-                  <div class="tl-body">
-                    <div class="tl-text">${escapeHtml(e.text)}</div>
-                    <div class="tl-meta">
-                      <a class="tl-ref" href="${MODULE_LINKS[e.type].item(e.id)}" target="_blank" rel="noopener noreferrer">${ACTIVITY_TYPES[e.type].label} ${escapeHtml(e.id)}</a>
-                      <span>· ${formatDate(e.date)}</span>
-                    </div>
-                  </div>
-                </li>`).join("")}
-            </ol>
+            <div class="log-legend">${ACTIVITY_ORDER.filter((t) => t !== "deal").map((t) => `<span data-type="${t}"><i></i>${ACTIVITY_TYPES[t].module}</span>`).join("")}</div>
+            <ol class="timeline">${logItems}</ol>
             ${log.length > LOG_PAGE ? `<button class="act-more" type="button" data-log-more>Show more</button>` : ""}
           </aside>
         </div>
@@ -1839,7 +2039,7 @@
       const columns = ACTIVITY_COLUMNS[type];
       const { overlay } = openModal({
         titleId: "metric-title", wide: true, trigger,
-        title: `${meta.module} · ${metric.label}`,
+        title: `<span class="modal-title-row" data-type="${type}"><span class="mod-icon">${modIcon(type)}</span>${meta.module} · ${metric.label}</span>`,
         subtitle: `${escapeHtml(c.companyName)} · ${plural(items.length, meta.label === "RFQ" ? "RFQ" : meta.label.toLowerCase())}`,
         body: items.length ? `
           <div class="table-wrap metric-table">
@@ -1853,9 +2053,6 @@
                   </tr>`).join("")}
               </tbody>
             </table>
-          </div>
-          <div class="modal-actions">
-            <a class="text-link" href="${MODULE_LINKS[type].list(c.id)}" target="_blank" rel="noopener noreferrer">View all in ${meta.module} ↗</a>
           </div>`
           : `<p class="note-empty">No ${meta.title.toLowerCase()} match this filter.</p>`
       });
@@ -1874,8 +2071,14 @@
         }
         const more = e.target.closest("[data-log-more]");
         if (more) {
-          const hidden = [...root.querySelectorAll(".timeline li.extra")];
-          hidden.slice(0, LOG_PAGE).forEach((li) => li.classList.remove("extra"));
+          const hidden = [...root.querySelectorAll(".timeline li.extra:not(.tl-date)")];
+          const reveal = hidden.slice(0, LOG_PAGE);
+          reveal.forEach((li) => {
+            li.classList.remove("extra");
+            // Show its date heading too, if that heading was hidden.
+            const prev = li.previousElementSibling;
+            if (prev && prev.classList.contains("tl-date")) prev.classList.remove("extra");
+          });
           if (hidden.length <= LOG_PAGE) more.remove();
         }
       });
