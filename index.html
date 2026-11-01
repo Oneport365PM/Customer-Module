@@ -862,7 +862,7 @@
     .module-panel .panel-head { margin-bottom: 14px; }
     .module-link { font-size: 12.5px; }
 
-    .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .metric-card {
       display: flex;
       flex-direction: column;
@@ -909,7 +909,7 @@
       text-underline-offset: 3px;
     }
     .metric-table { box-shadow: none; }
-    .modal.table-modal { max-width: 980px; }
+    .modal.table-modal { max-width: 1100px; }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 1100px) {
@@ -937,7 +937,6 @@
       .toolbar .btn { margin-left: 0; flex: 1; text-align: center; }
       .fields { grid-template-columns: 1fr; }
       .module-grid { grid-template-columns: 1fr; }
-      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .form-grid { grid-template-columns: 1fr; }
       .nav-label { display: none; }
       .pager { gap: 4px; }
@@ -1334,7 +1333,9 @@
       // Quotes
       "Awaiting response": "chip-warning", "Accepted": "chip-success", "Rejected": "chip-neutral", "Expired": "chip-neutral",
       // Shipments
-      "Booked": "chip-neutral", "In transit": "chip-primary", "Delayed": "chip-error", "Delivered": "chip-success"
+      "Booked": "chip-neutral", "In transit": "chip-primary", "Delayed": "chip-error", "Delivered": "chip-success",
+      // Shipment SLA
+      "Met": "chip-success", "On track": "chip-neutral", "At risk": "chip-warning", "Breached": "chip-error"
     };
 
     const LOSS_REASONS = ["Lost on price", "Chose another forwarder", "Transit time too long", "Shipment cancelled by customer"];
@@ -1362,6 +1363,8 @@
       const rand = seededRandom(c.id + ":activities");
       // Outcomes (accepted, lost, delayed…) use their own stream so they don't hinge on detail draws.
       const odds = seededRandom(c.id + ":outcomes");
+      // SLA deadlines: committed delivery date per shipment, drawn separately as well.
+      const slaOdds = seededRandom(c.id + ":sla");
       const num = c.id.replace(/\D/g, "");
       const todayIso = isoDate(TODAY);
       const capToday = (iso) => (iso > todayIso ? todayIso : iso);
@@ -1434,6 +1437,8 @@
           const shipment = {
             type: "shipment", id: `SHP-${num}${seq}`, date: quote.decidedAt, ...common,
             etd, eta, status, bookingRef: `OPB${num}${seq}${between(rand, 100, 999)}`,
+            // Delayed shipments have already slipped past their SLA date.
+            slaDue: status === "Delayed" ? addDays(eta, -between(slaOdds, 1, 5)) : addDays(eta, between(slaOdds, -2, 8)),
             rfq: rfq.id, quote: quote.id, deal: deal.id
           };
           deal.shipment = quote.shipment = rfq.shipment = shipment.id;
@@ -1678,43 +1683,49 @@
     const pctValue = (n) => (n === null ? "–" : `${n}<small>%</small>`);
     const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
     const actToday = () => isoDate(TODAY);
-    const withinDays = (iso, days) => daysBetween(iso, actToday()) <= days;
-    const avgDays = (list, from, to) => list.length ? (list.reduce((t, x) => t + daysBetween(x[from], x[to]), 0) / list.length) : null;
     const daysValue = (n) => (n === null ? "–" : `${n.toFixed(1).replace(/\.0$/, "")}<small> days</small>`);
 
-    // Six cards per module. `filter` picks the items the card opens; `value`/`sub` summarise them.
+    // SLA: met if delivered on or before the SLA date; open shipments are on track, at risk or breached.
+    function slaStatus(s) {
+      if (s.status === "Delivered") return s.eta <= s.slaDue ? "Met" : "Breached";
+      if (actToday() > s.slaDue) return "Breached";
+      return s.eta > s.slaDue ? "At risk" : "On track";
+    }
+
+    const isActiveShipment = (s) => ["Booked", "In transit", "Delayed"].includes(s.status);
+    const isDecidedQuote = (q) => ["Accepted", "Rejected", "Expired"].includes(q.status);
+    const isOpenRfq = (r) => r.status === "New" || r.status === "In review";
+
+    // Four cards per module. `filter` picks the items the card opens; `value`/`sub` summarise them.
     const ACTIVITY_METRICS = {
       deal: [
         { key: "all", label: "Total deals", filter: () => true, value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "value"))} total value` },
+        { key: "won", label: "Deals won", filter: (d) => d.stage === "Won", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "value"))} won` },
         { key: "open", label: "Open pipeline", filter: (d) => OPEN_STAGES.includes(d.stage), value: (l) => compactMoney(sumBy(l, "value")), sub: (l) => `${plural(l.length, "deal")} in progress`, cls: "gold" },
-        { key: "won", label: "Won", filter: (d) => d.stage === "Won", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "value"))} won` },
-        { key: "lost", label: "Lost", filter: (d) => d.stage === "Lost", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "value"))} lost` },
-        { key: "winrate", label: "Win rate", filter: (d) => d.stage === "Won" || d.stage === "Lost", value: (l) => pctValue(pct(l.filter((d) => d.stage === "Won").length, l.length)), sub: (l) => `${l.filter((d) => d.stage === "Won").length} of ${l.length} closed` },
-        { key: "recent", label: "Last 30 days", filter: (d) => withinDays(d.date, 30), value: (l) => l.length, sub: () => "Deals created" }
+        { key: "winrate", label: "Win rate", filter: (d) => d.stage === "Won" || d.stage === "Lost", value: (l) => pctValue(pct(l.filter((d) => d.stage === "Won").length, l.length)), sub: (l) => `${l.filter((d) => d.stage === "Won").length} of ${l.length} closed deals won` }
       ],
       rfq: [
         { key: "all", label: "Total RFQs", filter: () => true, value: (l) => l.length, sub: (l) => l.length ? `Latest ${formatDate(l[0].date)}` : "None received" },
-        { key: "open", label: "Open RFQs", filter: (r) => r.status === "New" || r.status === "In review", value: (l) => l.length, sub: () => "Waiting for a quote" },
-        { key: "quoted", label: "Quoted", filter: (r) => r.status === "Quoted", value: (l) => l.length, sub: (l, all) => `${pct(l.length, all.length) ?? 0}% of RFQs` },
-        { key: "unquoted", label: "Declined or expired", filter: (r) => r.status === "Declined" || r.status === "Expired", value: (l) => l.length, sub: () => "Not quoted" },
-        { key: "response", label: "Avg. response time", filter: (r) => r.status === "Quoted", value: (l) => daysValue(l.length ? sumBy(l, "respondedInDays") / l.length : null), sub: () => "From RFQ to quote" },
-        { key: "recent", label: "Last 30 days", filter: (r) => withinDays(r.date, 30), value: (l) => l.length, sub: () => "RFQs received" }
+        { key: "quoted", label: "Quoted RFQs", filter: (r) => r.status === "Quoted", value: (l) => l.length, sub: (l) => `Quoted in ${daysValue(l.length ? sumBy(l, "respondedInDays") / l.length : null).replace(/<[^>]+>/g, "")} on average` },
+        { key: "open", label: "Open RFQs", filter: isOpenRfq, value: (l) => l.length, sub: () => "Waiting for a quote" },
+        { key: "conversion", label: "Conversion rate", filter: (r) => !isOpenRfq(r), value: (l) => pctValue(pct(l.filter((r) => r.status === "Quoted").length, l.length)), sub: (l) => `${l.filter((r) => r.status === "Quoted").length} of ${l.length} RFQs turned into quotes` }
       ],
       quote: [
         { key: "all", label: "Total quotes", filter: () => true, value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} quoted` },
-        { key: "awaiting", label: "Awaiting response", filter: (q) => q.status === "Awaiting response", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} pending` },
-        { key: "expiring", label: "Expiring in 7 days", filter: (q) => q.status === "Awaiting response" && daysBetween(actToday(), q.validUntil) <= 7, value: (l) => l.length, sub: (l) => l.length ? "Follow up before expiry" : "Nothing expiring" },
-        { key: "accepted", label: "Accepted", filter: (q) => q.status === "Accepted", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} accepted` },
-        { key: "rejected", label: "Rejected or expired", filter: (q) => q.status === "Rejected" || q.status === "Expired", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} not won` },
-        { key: "rate", label: "Acceptance rate", filter: (q) => ["Accepted", "Rejected", "Expired"].includes(q.status), value: (l) => pctValue(pct(l.filter((q) => q.status === "Accepted").length, l.length)), sub: (l) => `${l.filter((q) => q.status === "Accepted").length} of ${l.length} decided` }
+        { key: "accepted", label: "Accepted quotes", filter: (q) => q.status === "Accepted", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} accepted` },
+        { key: "open", label: "Open quotes", filter: (q) => q.status === "Awaiting response", value: (l) => l.length, sub: (l) => `${compactMoney(sumBy(l, "amount"))} awaiting response` },
+        { key: "conversion", label: "Conversion rate", filter: isDecidedQuote, value: (l) => pctValue(pct(l.filter((q) => q.shipment).length, l.length)), sub: (l) => `${l.filter((q) => q.shipment).length} of ${l.length} quotes became shipments` }
       ],
       shipment: [
-        { key: "all", label: "Total shipments", filter: () => true, value: (l) => l.length, sub: (l) => l.length ? `Latest booked ${formatDate(l[0].date)}` : "None booked" },
-        { key: "booked", label: "Booked", filter: (s) => s.status === "Booked", value: (l) => l.length, sub: () => "Awaiting departure" },
-        { key: "transit", label: "In transit", filter: (s) => s.status === "In transit", value: (l) => l.length, sub: () => "On the way" },
-        { key: "delayed", label: "Delayed", filter: (s) => s.status === "Delayed", value: (l) => l.length, sub: (l) => l.length ? "Needs follow-up" : "None delayed", cls: (l) => (l.length ? "error" : "") },
-        { key: "delivered", label: "Delivered", filter: (s) => s.status === "Delivered", value: (l) => l.length, sub: (l, all) => `${pct(l.length, all.length) ?? 0}% of shipments` },
-        { key: "transitTime", label: "Avg. transit time", filter: (s) => s.status === "Delivered", value: (l) => daysValue(avgDays(l, "etd", "eta")), sub: () => "Departure to delivery" }
+        { key: "all", label: "Total shipments", filter: () => true, value: (l) => l.length, sub: (l) => l.length ? `Latest created ${formatDate(l[0].date)}` : "None created" },
+        { key: "delivered", label: "Delivered shipments", filter: (s) => s.status === "Delivered", value: (l) => l.length, sub: (l, all) => `${pct(l.length, all.length) ?? 0}% of shipments` },
+        { key: "active", label: "Active shipments", filter: isActiveShipment, value: (l) => l.length, sub: (l) => l.length ? `${l.filter((s) => slaStatus(s) !== "On track").length} at risk or breached` : "None in progress" },
+        {
+          key: "sla", label: "SLA adherence rate", filter: (s) => s.status === "Delivered",
+          value: (l) => pctValue(pct(l.filter((s) => slaStatus(s) === "Met").length, l.length)),
+          sub: (l) => `${l.filter((s) => slaStatus(s) === "Met").length} of ${l.length} delivered before SLA breach`,
+          cls: (l) => { const r = pct(l.filter((s) => slaStatus(s) === "Met").length, l.length); return r !== null && r < 80 ? "error" : ""; }
+        }
       ]
     };
 
@@ -1722,36 +1733,32 @@
       deal: [["Deal", (d) => `<strong class="strong-id">${escapeHtml(d.id)}</strong>`], ["Lane", (d) => escapeHtml(d.lane)], ["Value<br />(USD)", (d) => `<span class="money">${money(d.value)}</span>`], ["Stage", (d) => chip(d.stage, ACTIVITY_CHIPS[d.stage])], ["Created", (d) => formatDate(d.date)]],
       rfq: [["RFQ", (r) => `<strong class="strong-id">${escapeHtml(r.id)}</strong>`], ["Lane", (r) => escapeHtml(r.lane)], ["Mode", (r) => escapeHtml(r.mode)], ["Cargo", (r) => escapeHtml(r.cargo)], ["Status", (r) => chip(r.status, ACTIVITY_CHIPS[r.status])], ["Requested", (r) => formatDate(r.date)]],
       quote: [["Quote", (q) => `<strong class="strong-id">${escapeHtml(q.id)}</strong>`], ["Lane", (q) => escapeHtml(q.lane)], ["Amount<br />(USD)", (q) => `<span class="money">${money(q.amount)}</span>`], ["Status", (q) => chip(q.status, ACTIVITY_CHIPS[q.status])], ["Sent", (q) => formatDate(q.date)], ["Valid<br />until", (q) => formatDate(q.validUntil)]],
-      shipment: [["Shipment", (s) => `<strong class="strong-id">${escapeHtml(s.id)}</strong>`], ["Lane", (s) => escapeHtml(s.lane)], ["Mode", (s) => escapeHtml(s.mode)], ["ETD", (s) => formatDate(s.etd)], ["ETA", (s) => formatDate(s.eta)], ["Status", (s) => chip(s.status, ACTIVITY_CHIPS[s.status])]]
+      shipment: [["Shipment", (s) => `<strong class="strong-id">${escapeHtml(s.id)}</strong>`], ["Lane", (s) => escapeHtml(s.lane)], ["ETD", (s) => formatDate(s.etd)], ["ETA", (s) => formatDate(s.eta)], ["SLA<br />due", (s) => formatDate(s.slaDue)], ["SLA", (s) => chip(slaStatus(s), ACTIVITY_CHIPS[slaStatus(s)])], ["Status", (s) => chip(s.status, ACTIVITY_CHIPS[s.status])]]
     };
 
-    // Timeline of what happened, newest first. Only events on or before today.
+    // Timeline of major actions, newest first. Only events on or before today.
     function activityLog(acts) {
       const today = actToday();
       const events = [];
       const add = (date, type, id, text, tone = "neutral") => { if (date && date <= today) events.push({ date, type, id, text, tone }); };
       acts.rfqs.forEach((r) => {
         add(r.date, "rfq", r.id, `RFQ received for ${r.lane}`);
-        if (r.status === "Declined" || r.status === "Expired") add(addDays(r.date, 3), "rfq", r.id, `RFQ ${r.status.toLowerCase()} without a quote`);
+        if (r.status === "Quoted") add(addDays(r.date, r.respondedInDays), "rfq", r.id, `RFQ quoted in ${plural(r.respondedInDays, "day")}`);
       });
       acts.quotes.forEach((q) => {
         add(q.date, "quote", q.id, `Quote sent for ${money(q.amount)}`);
-        // Some quotes are revised before the customer decides.
-        if (parseInt(q.id.slice(-2), 10) % 3 === 0) add(addDays(q.date, 1), "quote", q.id, "Quote edited: rate and validity updated");
         if (q.decidedAt) add(q.decidedAt, "quote", q.id, `Quote ${q.status.toLowerCase()}`, q.status === "Accepted" ? "success" : "neutral");
-      });
-      acts.deals.forEach((d) => {
-        if (!d.rfq) add(d.date, "deal", d.id, `Deal opened (${d.stage.toLowerCase()})`);
-        if (d.closedAt) add(d.closedAt, "deal", d.id, d.stage === "Won" ? `Deal won for ${money(d.value)}` : `Deal lost: ${(d.lossReason || "closed").toLowerCase()}`, d.stage === "Won" ? "success" : "neutral");
       });
       acts.shipments.forEach((s) => {
         const { origin, destination } = laneEnds(s.lane);
-        add(s.date, "shipment", s.id, `Shipment booked from ${origin}`);
-        add(s.etd, "shipment", s.id, `Shipment departed ${origin}`);
-        if (s.status === "Delayed") add(addDays(s.etd, 5), "shipment", s.id, "Shipment delayed at transhipment", "error");
-        if (s.status === "Delivered") add(s.eta, "shipment", s.id, `Shipment completed: delivered at ${destination}`, "success");
+        add(s.date, "shipment", s.id, `Shipment created for ${s.lane}`);
+        add(s.etd, "shipment", s.id, `Shipment activated: departed ${origin}`);
+        if (s.status === "Delivered") add(s.eta, "shipment", s.id, `Shipment delivered at ${destination}${slaStatus(s) === "Breached" ? " (SLA breached)" : ""}`, slaStatus(s) === "Breached" ? "error" : "success");
       });
-      return events.sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+      // Same-day events read in the order they happened.
+      const order = { "RFQ received": 0, "RFQ quoted": 1, "Quote sent": 2, "Quote accepted": 3, "Quote rejected": 3, "Quote expired": 3, "Shipment created": 4, "Shipment activated": 5, "Shipment delivered": 6 };
+      const rank = (e) => Object.entries(order).find(([k]) => e.text.startsWith(k))?.[1] ?? 0;
+      return events.sort((a, b) => b.date.localeCompare(a.date) || rank(b) - rank(a));
     }
 
     const LOG_PAGE = 12;
