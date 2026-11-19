@@ -245,6 +245,73 @@ td.out{min-width:170px;font-size:12.5px}
 .logo img{display:block;height:46px;width:auto}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo{background:#dfe8cf;border-radius:10px;padding:6px 10px}}
 :root[data-theme="dark"] .logo{background:#dfe8cf;border-radius:10px;padding:6px 10px}
+td.sla{min-width:150px;font-size:12.5px}
+.noset{color:var(--muted);font-style:italic;font-size:12px}
+.clock-note{font-size:12px;color:var(--muted);margin:-4px 0 6px}
+.e2e{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);margin-bottom:14px}
+.e2e-list{display:grid;gap:10px}.e2e-list .e2e{margin:0}
+.e2e-h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.e2e-h b{color:var(--ink);font-size:13.5px;min-width:150px}
+.e2e-h .big{font-family:var(--display);font-weight:700;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+.e2e-h .muted{font-size:12.5px}
+.e2e-track{position:relative;height:14px;border-radius:999px;overflow:visible;margin:4px 0 16px;background:var(--line)}
+.e2e-track .z{position:absolute;top:0;bottom:0}
+.e2e-track .ok{background:color-mix(in srgb,var(--olive) 45%,transparent);border-radius:999px 0 0 999px}
+.e2e-track .band{background:var(--olive)}
+.e2e-track .bad{background:color-mix(in srgb,var(--red) 55%,transparent);border-radius:0 999px 999px 0}
+.e2e-track .tick{position:absolute;top:17px;transform:translateX(-50%);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.e2e-key{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--muted)}
+.e2e-key .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.e2e-key .k.ok{background:color-mix(in srgb,var(--olive) 45%,transparent)}.e2e-key .k.band{background:var(--olive)}.e2e-key .k.bad{background:color-mix(in srgb,var(--red) 55%,transparent)}
+
+/* SLA section */
+.defs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.def{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel);display:grid;gap:6px;align-content:start}
+.def .dk{font-family:var(--display);font-weight:600;color:var(--ink);font-size:14px}
+.def p{font-size:12.5px}
+.subh{margin:20px 0 10px;font-size:14px}
+.anchors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.anchors div{border-left:3px solid var(--olive);padding:4px 12px}
+.anchors b{color:var(--ink);font-size:13px}.anchors p{font-size:12.5px;color:var(--muted)}
+.small{font-size:12.5px}
+.declog{margin:0;padding-left:20px;display:grid;gap:8px;font-size:13px;max-width:95ch}
+.declog li::marker{color:var(--mustard);font-weight:700}
+.declog b{color:var(--ink)}
+/* end-to-end cards */
+.e2c-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.e2c{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.e2c.compact{background:var(--panel);margin-bottom:0}
+.sla-pick{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.e2c-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.e2c-lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.e2c-num{font-family:var(--display);font-size:30px;font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.e2c-num small{font-size:12px;font-weight:500;color:var(--muted);margin-left:6px;font-family:var(--body)}
+.days{display:flex;gap:3px}
+.days i{flex:1;height:22px;border-radius:4px}
+.days i.ahead,.e2c-key i.ahead{background:color-mix(in srgb,var(--olive) 35%,transparent)}
+.days i.ok,.e2c-key i.ok{background:var(--olive)}
+.days i.bad,.e2c-key i.bad{background:color-mix(in srgb,var(--red) 50%,transparent)}
+.days-lbl{position:relative;height:14px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.days-lbl span{position:absolute;top:0}
+.days-lbl span:first-child{left:0}
+.e2c-key{display:flex;gap:14px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.e2c-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.trigs{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.trow{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;font-size:12.5px;align-items:start}
+.trow b{color:var(--ink);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+.tv{display:flex;gap:8px;align-items:flex-start}
+.tn{flex:none;font-weight:700;font-size:11.5px;padding:1px 7px;border-radius:6px;background:var(--deep);color:var(--on-deep);font-variant-numeric:tabular-nums}
+.tn.ev{background:var(--mustard-soft);color:var(--mustard);border:1px dashed var(--mustard)}
+.tn.off{background:var(--line);color:var(--muted)}
+.ev-note{display:block;font-style:normal;color:var(--mustard);font-size:11.5px;margin-top:2px}
+.e2c-ref{font-size:11.5px;color:var(--muted)}
+.e2c-off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.e2c.off{padding:12px 14px;background:var(--panel)}
+.e2c.off .noset{font-size:12px}
+.compact .trigs{grid-template-columns:1fr 1fr;display:grid}
+@media (max-width:980px){.e2c-grid{grid-template-columns:1fr}.defs{grid-template-columns:repeat(2,minmax(0,1fr))}.e2c-off{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.anchors,.compact .trigs{grid-template-columns:1fr}}
+@media (max-width:440px){.defs,.e2c-off{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -357,6 +424,7 @@ td.out{min-width:170px;font-size:12.5px}
       </div>
       <div id="pb-note"></div>
       <div class="pb-sum" id="pb-sum"></div>
+      <p class="clock-note">Hours and days are clock hours and calendar days unless marked "working". See the SLAs section for how time is counted.</p>
       <div id="pb-stages"></div>
 
     </div>
@@ -368,6 +436,35 @@ td.out{min-width:170px;font-size:12.5px}
       <table class="tm" id="tm"></table>
       <div class="stkey"><span class="st"><i class="on"></i><i></i><i></i><i></i></span><span>Each square is a stage, in order: Prospecting, Pre-Booking, Execution, Post Shipment. Filled means the team owns or supports a task in that stage.</span></div>
     </div>
+  </section>
+
+  <section id="slas">
+    <div class="sec-head"><h2>SLAs</h2><span class="tag">How time is counted</span></div>
+    <div class="box">
+      <div class="defs">
+        <div class="def"><span class="dk">Hours</span><p>An SLA in <b>hours (h)</b> means clock hours, 24 a day. Only where the SOP says <b>working hours</b> is time counted 8:00–17:00 WAT, Monday to Saturday.</p></div>
+        <div class="def"><span class="dk">Days</span><p>An SLA in <b>days</b> means calendar days. Only where the SOP says <b>working days</b> is time counted Monday to Saturday.</p></div>
+        <div class="def"><span class="dk">Working time</span><p>8:00–17:00 WAT, <b>Monday to Saturday</b>. Public holidays count as working days; the clock does not pause.</p></div>
+        <div class="def"><span class="dk">End-to-end</span><p>Every end-to-end SLA is measured in <b>calendar days</b>.</p></div>
+        <div class="def"><span class="dk">Range</span><p>A range such as 24–48 h or 10–14 days is <b>on track up to its upper figure</b> and breached after it.</p></div>
+      </div>
+      <div class="sla-pick">
+        <div class="pb-ctrl">
+          <div class="opts" role="radiogroup" aria-label="Product" id="sla-prod"></div>
+          <div class="pb-row">
+            <label class="sel">Tier 2 service<select id="sla-svc"></select></label>
+            <label class="sel" id="sla-dir-wrap">Direction<select id="sla-dir"><option value="import">Air import</option><option value="export">Air export</option></select></label>
+          </div>
+        </div>
+        <div class="pb-sum" id="sla-sum"></div>
+        <div id="sla-e2e"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>End-to-end SLA by product</h2><span class="tag">Calendar days</span></div>
+    <div id="e2e-all"></div>
   </section>
 
   <section>
@@ -605,6 +702,141 @@ function freightOnly(auto){
 }
 const FS=freightOnly(false), AUTO=freightOnly(true);
 
+
+/* ---------- SLAs (Phase 3) ----------
+   All hours and days are working hours and days, Monday to Saturday. Public holidays do not pause the clock.
+   A range means on track up to the upper figure; breached after it. */
+const SLA={
+ EO:{
+  "Send loading schedule (forecast)":"Monthly and weekly",
+  "Receive order from client; confirm scope":"Weekly or daily",
+  "Accept or reject quote; move accepted job to Ops stage":"≤5 h after the order is received",
+  "File entry and activation":"≥2 working days before loading",
+  "Share NXP / Proforma Invoice":"With file entry",
+  "Place booking; get booking confirmation and ERO":"Booking ≤2 working hours after file activation; confirmation and ERO 1–3 h after booking",
+  "Gate 1: assign file to the Clearing Officer":"≤1 h after quote acceptance",
+  "Apply to NCS and agencies for outside stuffing":"≤24 working hours after booking, NXP and PI are shared",
+  "Allocate vendor and truck":"≤2 h after booking is shared",
+  "Pick up empty container or triangulate":"24–48 working hours after the terminal confirms the ERO (Kano: 5–6 days)",
+  "Update EDI of units":"≤3 h after pick-up",
+  "Stuff container with Customs and agencies":"≤24 working hours after the container arrives",
+  "Send CI and PL to Neroli for NESS; get SI from client":"≤6 h after stuffing (Lekki: ≤1 h)",
+  "Receive CCI, upload NXP validation, get G2G":"≤24 h after NESS payment",
+  "Generate assessment":"1–3 h after the CCI is collected",
+  "Submit SI; get draft BL":"≤2 h after assessment",
+  "Get Inspection Act; submit export documents to the shipping line":"≤24 working hours after the Inspection Act (Lekki: after CCI)",
+  "Obtain shipping clearance":"≥3 working days before vessel arrival (CMA CGM: ≥7 working days)",
+  "Exit warehouse or terminal; gate in to port":"After exit is granted, before cargo cut-off",
+  "Vessel confirmation (ETA / ETD); confirm to customer":"≤1 h after documents go to the shipping line",
+  "Loading on vessel":"1–3 days after vessel arrival",
+  "Confirm final draft from client; share with Operations":"≤24 working hours after the vessel sails",
+  "Obtain freight and local invoices":"24–48 h after departure",
+  "Pay invoices, get receipt, obtain OBL":"≤48 working hours after the shipping invoice (Lekki: after departure)",
+  "Share draft post-shipment documents with client for vetting":"≤24 h after the final draft BL is confirmed",
+  "Process post-shipment documents":"≤48 h after OBL (Lekki: ≤24 h)",
+  "Send closure email with date":"End of the week the shipment completes",
+  "Approve and dispatch OBL / FECD to shipper":"≤24 working hours after OBL receipt",
+  "Reconcile costs against quote":"Before the final invoice",
+  "Final invoice":"As the business advises",
+  "File all documents; Gate 2 closure":"Ends the end-to-end clock",
+  "Monthly SLA review":"≤1 week after month-end"},
+ OI:{
+  "Receive order / PO; verify NSW and B'Odogwu logins":"≤2 working hours after the order arrives by email",
+  "Accept or reject quote on Logitude / BO 2.0; move accepted job to Ops stage":"Immediately after the order is confirmed",
+  "Customer provides pre-shipment documents":"Before the shipment is booked",
+  "Obtain and validate Form M; check permits":"Before the shipment is booked",
+  "Upload soft copies, SONCAP and Form M to Customs; generate PAAR":"On vessel departure, or once all documents are held",
+  "Pre-alert: receive soft copies and PAAR":"≥14 working days before ETA",
+  "Gate 1: open file; assign Clearing Officer; record ETA and free time":"Same day as the complete pre-alert",
+  "Generate duty assessment; send to customer for payment":"4 days before ETA",
+  "Customer pays duty, shares receipt and delivers original documents":"≥3 working days before ATA (duty receipt ≥1 working day before ATA)",
+  "Obtain shipping invoice and pay":"≤24 working hours",
+  "Get POP, official receipt and Delivery Order":"≤24 h after payment",
+  "Trigger Customs at the bonded terminal":"≤24 working hours after the duty receipt",
+  "Obtain and pay THC":"≤24 working hours after the duty receipt",
+  "Book scanning or examination":"≤6 working hours after payment",
+  "Containers scanned or dropped for examination":"From 48 working hours after booking (terminal)",
+  "Obtain agencies' report, customs release and DC stamp":"≤24 working hours after scanning",
+  "Obtain exit and gate pass":"≤24 working hours after clearance",
+  "Obtain Terminal Delivery Order":"≤24 h after release",
+  "Load containers for dispatch to the warehouse":"≤48 h after TDO",
+  "Deliver; check seal and cargo; get signed proof of delivery":"Lagos ≤1 day, Kano ≤5 days after load-out",
+  "Daily and weekly wrap-up reports to customer":"Daily and weekly",
+  "Return empty; get EIR; claim deposit refund":"Lagos ≤2 days, Kano ≤5 days after offloading",
+  "FECD closure":"≤72 h after gate-out",
+  "Prepare post-delivery documents; upload; send to Finance for invoicing":"≤2 days after empty return",
+  "Reconcile vendor costs against quote":"Before invoicing",
+  "Issue customer invoice":"On reconciliation",
+  "Release original documents after full payment or agreed terms":"≤5 h after full payment",
+  "Gate 2: close the file":"Ends the end-to-end clock",
+  "End-to-end supervision; monthly SLA review":"≤1 week after month-end"},
+ VI:{
+  "Receive order / PO; verify NSW and B'Odogwu logins":"Weekly or daily",
+  "Accept or reject quote (compliant, benchmark or compromise); move accepted job to Ops stage":"Immediately after the order is confirmed",
+  "Customer provides pre-shipment documents":"5 days before flight ETA",
+  "Obtain Form M and apply for PAAR on the customer's behalf":"5 days before flight ETA",
+  "Build shipment on Back Office":"≤10 h after quote acceptance",
+  "Open file; assign Clearing Officer":"Same day as the complete pre-alert",
+  "Pre-alert: receive soft copies and PAAR":"5 working days before flight ETA",
+  "Receive original documents including AWB":"5 working days before ATA",
+  "Draft assessment, customer approval, Final Assessment":"2 days before ATA",
+  "Customer pays duty and shares receipt":"1–2 working days after Final Assessment",
+  "Airline invoice and payment":"1–2 working days after ATA",
+  "Warehouse invoice and payment":"1–2 working days after ATA",
+  "Clear cargo: FA, IA, exit note, gate pass":"3–5 working days after ATA",
+  "Deliver cargo to customer":"3–5 working days after ATA",
+  "Customer offloads":"1 day after arrival at the warehouse",
+  "Obtain waybill from driver":"1 day after exit from the warehouse",
+  "Upload and file physical copies":"≤72 h after the waybill",
+  "FECD closure; approve delivery of documents to customer":"1 day after the FECD",
+  "Reconcile vendor costs against quote":"Before invoicing",
+  "Issue customer invoice":"On reconciliation",
+  "Close shipment (Gate 2)":"Ends the end-to-end clock"}};
+[[EXP_OCEAN,"EO"],[IMP_OCEAN,"OI"],[IMP_AIR,"VI"]].forEach(([f,k])=>f.forEach(t=>{if(SLA[k][t[2]])t.sla=SLA[k][t[2]]}));
+const slaCell=t=>t.sla?esc(t.sla):`<span class="noset">Not set · ${t[8]==="Draft"?"draft task, no SOP yet":"no figure in the SOPs"}</span>`;
+
+/* end-to-end SLA ranges (working days) with their trigger tasks */
+const E2E={
+ OE:{label:"OneExport",svc:["OE-FULL",""],min:10,max:14,
+   start:{task:"Place booking; get booking confirmation and ERO",what:"Booking confirmed"},
+   end:{task:"File all documents; Gate 2 closure"}},
+ OI:{label:"OneImport",svc:["OI-HCBT",""],min:7,max:10,
+   start:{event:"Vessel arrival (ATA)",after:"Customer pays duty, shares receipt and delivers original documents",before:"Obtain shipping invoice and pay"},
+   end:{task:"Gate 2: close the file"}},
+ VI:{label:"VAAS · air import",svc:["VA-FULL","import"],min:3,max:5,
+   start:{event:"Flight arrival (ATA)",after:"Customer pays duty and shares receipt",before:"Airline invoice and payment"},
+   end:{task:"Close shipment (Gate 2)"}},
+ VE:{label:"VAAS · air export",why:"No SOP for air export yet"},
+ VO:{label:"VAAS · other",why:"Scoped job by job, so there is no single figure"},
+ FS:{label:"FreightSaver",why:"No SOP for FreightSaver yet"},
+ AI:{label:"Auto Import",why:"No SOP for Auto Import yet"}};
+function e2eKey(code,dir){const p=code.split("-")[0];if(p!=="VA")return p;if(code==="VA-OTHER")return "VO";return dir==="export"?"VE":"VI"}
+const STAGE_ORDER={P:0,B:1,E:2,S:3};
+function serials(code,dir){const ts=tasksFor(code,dir).tasks.slice().sort((a,b)=>STAGE_ORDER[a[0]]-STAGE_ORDER[b[0]]);const m={};ts.forEach((t,i)=>m[t[2]]=i+1);return m}
+function trig(x,ser){
+  if(x.task){const n=ser[x.task];return n?`<span class="tn">#${n}</span><span>${esc(x.task)}</span>`:`<span class="tn off">—</span><span>${esc(x.task)} <em class="noset">(not part of this service)</em></span>`}
+  const a=ser[x.after],b=ser[x.before];
+  return `<span class="tn ev">Event</span><span>${esc(x.event)}<em class="ev-note">Not a task yet · falls between #${a} and #${b}</em></span>`;
+}
+function dayCells(e){
+  const span=e.max+3;let h="";
+  for(let i=1;i<=span;i++){const c=i<e.min?"ahead":i<=e.max?"ok":"bad";h+=`<i class="${c}" title="Day ${i}"></i>`}
+  return h;
+}
+function e2eCard(k,code,dir,compact){
+  const e=E2E[k];
+  if(!e.min)return `<div class="e2c off"><div class="e2c-top"><span class="e2c-lbl">${esc(e.label)}</span></div><p class="noset">Not set · ${esc(e.why)}</p></div>`;
+  const ser=serials(code||e.svc[0],code?dir:e.svc[1]);
+  return `<div class="e2c${compact?" compact":""}">
+   <div class="e2c-top"><span class="e2c-lbl">${esc(e.label)}</span><span class="e2c-num">${e.min}–${e.max}<small>calendar days</small></span></div>
+   <div class="days" role="img" aria-label="Calendar days: ahead before day ${e.min}, on track from day ${e.min} to ${e.max}, breached after day ${e.max}">${dayCells(e)}</div>
+   <div class="days-lbl"><span>Day 1</span><span style="left:${((e.min-1)/(e.max+3)*100).toFixed(1)}%">${e.min}</span><span style="left:${((e.max-1)/(e.max+3)*100).toFixed(1)}%">${e.max}</span></div>
+   <div class="e2c-key"><span><i class="ahead"></i>Ahead</span><span><i class="ok"></i>On track</span><span><i class="bad"></i>Breached</span></div>
+   <div class="trigs"><div class="trow"><b>Clock starts</b><div class="tv">${trig(e.start,ser)}</div></div><div class="trow"><b>Clock stops</b><div class="tv">${trig(e.end,ser)}</div></div></div>
+   ${compact?"":`<p class="e2c-ref">Task numbers follow the ${esc(P[e.svc[0].split("-")[0]])} ${esc(NAME[e.svc[0]])} milestones.</p>`}
+  </div>`;
+}
+
 const STAGES=[["P","Prospecting"],["B","Pre-Booking"],["E","Execution"],["S","Post Shipment"]];
 
 function modulesFor(code){
@@ -665,9 +897,9 @@ function renderPB(){
       const dr=src==="Draft"?`<span class="chip s-Draft">Draft</span>`:"";
       const tag=x.opt==="B"?`<span class="chip opt">Only if OnePort handles Form M / PAAR</span>`:x.opt==="Lekki"?`<span class="chip opt">Lekki only</span>`:"";
       const lk=x.lekki?`<small class="lk">Lekki: ${esc(x.lekki)}</small>`:"";
-      return `<tr class="${src==="Draft"?"draft":""}${x.opt?" optrow":""}"><td class="num">${n}</td><td class="t">${esc(t[2])}${dr?" "+dr:""}${tag?" "+tag:""}${lk}</td><td><span class="chip m-${t[1]}">${t[1]}</span></td><td class="o">${esc(rn(t[3]))}${t[4]?`<small>with ${esc(t[4].split(", ").map(rn).join(", "))}</small>`:""}</td><td class="o">${t[5]?esc(t[5].split(", ").map(rn).join(", ")):"—"}</td><td class="d">${t[6].length?`<ul class="docs">${t[6].map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:"—"}</td><td class="out">${esc(t[7])}</td></tr>`}).join("");
+      return `<tr class="${src==="Draft"?"draft":""}${x.opt?" optrow":""}"><td class="num">${n}</td><td class="t">${esc(t[2])}${dr?" "+dr:""}${tag?" "+tag:""}${lk}</td><td><span class="chip m-${t[1]}">${t[1]}</span></td><td class="o">${esc(rn(t[3]))}${t[4]?`<small>with ${esc(t[4].split(", ").map(rn).join(", "))}</small>`:""}</td><td class="o">${t[5]?esc(t[5].split(", ").map(rn).join(", ")):"—"}</td><td class="sla">${slaCell(t)}</td><td class="d">${t[6].length?`<ul class="docs">${t[6].map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:"—"}</td><td class="out">${esc(t[7])}</td></tr>`}).join("");
     return `<div class="stage"><div class="stage-h"><div class="n">${i+1}</div><h3>${label}</h3><div class="teams">${[...st].map(r=>`<span class="chip">${esc(rn(r))}</span>`).join("")}</div></div>
-      ${ts.length?`<div class="scroll"><table class="tasks"><thead><tr><th>#</th><th>Task</th><th>Module</th><th>Owner</th><th>Hands to</th><th>Documents</th><th>Expected outcome</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<p class="empty">No tasks for this service in this stage.</p>`}</div>`;
+      ${ts.length?`<div class="scroll"><table class="tasks"><thead><tr><th>#</th><th>Task</th><th>Module</th><th>Owner</th><th>Hands to</th><th>SLA</th><th>Documents</th><th>Expected outcome</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<p class="empty">No tasks for this service in this stage.</p>`}</div>`;
   }).join("");
   try{localStorage.setItem("pb",JSON.stringify(state))}catch(e){}
 }
@@ -675,6 +907,28 @@ prodBox.addEventListener("change",e=>{state.prod=e.target.value;state.code="";re
 svcSel.addEventListener("change",()=>{state.code=svcSel.value;renderPB()});
 dirSel.addEventListener("change",()=>{state.dir=dirSel.value;renderPB()});
 renderPB();
+
+/* ---------- SLA section: its own product and service picker ---------- */
+const slaState={prod:"OE",code:"OE-FULL",dir:"import"};
+const sProd=document.getElementById("sla-prod"),sSvc=document.getElementById("sla-svc"),sDir=document.getElementById("sla-dir"),sDirWrap=document.getElementById("sla-dir-wrap");
+sProd.innerHTML=Object.entries(P).map(([k,v])=>`<label><input type="radio" name="slap" id="slap-${k}" value="${k}"><span>${v}</span></label>`).join("");
+function renderSLA(){
+  document.getElementById("slap-"+slaState.prod).checked=true;
+  sSvc.innerHTML=ROWS.filter(r=>r[0]===slaState.prod).map(r=>`<option value="${r[1]}">${esc(r[2])}</option>`).join("");
+  if(!ROWS.some(r=>r[1]===slaState.code&&r[0]===slaState.prod))slaState.code=ROWS.find(r=>r[0]===slaState.prod)[1];
+  sSvc.value=slaState.code;sDir.value=slaState.dir;
+  sDirWrap.hidden=!(slaState.prod==="VA"&&slaState.code!=="VA-OTHER");
+  const dir=slaState.prod==="VA"?slaState.dir:"";
+  const {tasks}=tasksFor(slaState.code,dir);
+  const withSla=tasks.filter(t=>t.sla).length, drafts=tasks.filter(t=>t[8]==="Draft").length;
+  document.getElementById("sla-sum").innerHTML=`<div><b>${tasks.length}</b><span>tasks</span></div><div><b>${withSla}</b><span>tasks with an SLA</span></div><div><b>${tasks.length-withSla}</b><span>tasks not set</span></div><div><b>${drafts}</b><span>draft tasks to check</span></div>`;
+  document.getElementById("sla-e2e").innerHTML=e2eCard(e2eKey(slaState.code,dir),slaState.code,dir,true);
+}
+sProd.addEventListener("change",e=>{slaState.prod=e.target.value;slaState.code="";renderSLA()});
+sSvc.addEventListener("change",()=>{slaState.code=sSvc.value;renderSLA()});
+sDir.addEventListener("change",()=>{slaState.dir=sDir.value;renderSLA()});
+renderSLA();
+document.getElementById("e2e-all").innerHTML=`<div class="e2c-grid">${["OE","OI","VI"].map(k=>e2eCard(k)).join("")}</div><div class="e2c-off">${["VE","VO","FS","AI"].map(k=>e2eCard(k)).join("")}</div>`;
 
 /* ---------- team x product matrix ---------- */
 const COLS=[["OneExport","OE-FULL",""],["OneImport","OI-HCBT",""],["VAAS air import","VA-FULL","import"],["VAAS air export","VA-FULL","export"],["FreightSaver","FS-OF",""],["Auto Import","AI-OF-AUTO",""]];
