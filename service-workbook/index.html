@@ -287,7 +287,7 @@ td.sla{min-width:150px;font-size:12.5px}
 .e2c-num{font-family:var(--display);font-size:30px;font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
 .e2c-num small{font-size:12px;font-weight:500;color:var(--muted);margin-left:6px;font-family:var(--body)}
 .days{display:flex;gap:3px}
-.days i{flex:1;height:22px;border-radius:4px}
+.days i{flex:1;height:22px;border-radius:4px;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .days i.ahead,.e2c-key i.ahead{background:color-mix(in srgb,var(--olive) 35%,transparent)}
 .days i.ok,.e2c-key i.ok{background:var(--olive)}
 .days i.bad,.e2c-key i.bad{background:color-mix(in srgb,var(--red) 50%,transparent)}
@@ -312,6 +312,32 @@ td.sla{min-width:150px;font-size:12.5px}
 @media (max-width:980px){.e2c-grid{grid-template-columns:1fr}.defs{grid-template-columns:repeat(2,minmax(0,1fr))}.e2c-off{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.anchors,.compact .trigs{grid-template-columns:1fr}}
 @media (max-width:440px){.defs,.e2c-off{grid-template-columns:1fr}}
+
+/* end-to-end SLA in the tester result (dark panel) */
+.o-e2e{border-top:1px solid color-mix(in srgb,var(--on-deep) 25%,transparent);padding-top:10px;display:grid;gap:8px}
+.o-e2e .m-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.o-e2e .m-lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.o-e2e .m-num{font-family:var(--display);font-size:22px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.o-e2e .m-num small{font-size:11.5px;font-weight:500;opacity:.75;margin-left:5px;font-family:var(--body)}
+.o-e2e .m-days{display:flex;gap:2px}
+.o-e2e .m-days i{flex:1;height:20px;border-radius:3px;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700;color:var(--deep);font-variant-numeric:tabular-nums}
+.o-e2e i.ahead{background:color-mix(in srgb,var(--on-deep) 30%,transparent)}
+.o-e2e i.ok{background:var(--olive)}
+.o-e2e i.bad{background:color-mix(in srgb,#e8675f 70%,transparent)}
+.o-e2e .m-key{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;opacity:.85}
+.o-e2e .m-key i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.o-e2e .m-trig{display:grid;gap:4px;font-size:12px}
+.o-e2e .m-trig b{display:inline-block;min-width:108px;font-weight:600;opacity:.75;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.o-e2e .m-off{font-size:12.5px;opacity:.8;font-style:italic}
+
+.o-combo{border-top:1px solid color-mix(in srgb,var(--on-deep) 25%,transparent);padding-top:10px;display:grid;gap:6px}
+.o-combo label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.75;font-weight:600}
+.o-combo .o-help{font-size:12.5px;opacity:.85}
+.o-combo select{font:inherit;font-size:14px;font-weight:600;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:var(--on-deep);color:var(--deep);max-width:100%}
+.o-combo select:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.pb-showing{font-size:13px;color:var(--muted);margin:0 0 14px}
+.pb-showing b{color:var(--ink)}
+.o-combo{border-top:1px solid color-mix(in srgb,var(--on-deep) 25%,transparent)}
 </style>
 
 </head>
@@ -355,10 +381,13 @@ td.sla{min-width:150px;font-size:12.5px}
       <div class="result" aria-live="polite">
         <div class="lbl">This shipment is</div>
         <div class="prod" id="o-prod"></div>
-        <div class="svc" id="o-svc"></div>
         <div class="why" id="o-why"></div>
-        <div class="why" id="o-load"></div>
-        <button type="button" class="btn" id="o-open">Open its milestones</button>
+        <div class="o-e2e" id="o-e2e"></div>
+        <div class="o-combo">
+          <label for="o-combo">Service combination</label>
+          <p class="o-help" id="o-help">Choose which services OnePort handles on this job. We've picked the one that matches what you ticked.</p>
+          <select id="o-combo"></select>
+        </div>
       </div>
     </div>
   </section>
@@ -368,24 +397,7 @@ td.sla{min-width:150px;font-size:12.5px}
   <section id="playbook">
     <div class="sec-head"><h2>Product Milestones</h2><span class="tag">Pick a product and service</span></div>
     <div class="box">
-<div class="subsec"><h3>Tasks are built from four modules</h3><p class="muted">Every job gets the Core tasks, plus the tasks for each service it includes.</p>
-      <div class="mods">
-        <div class="mod"><span class="chip m-Core">Core</span><p>Done on every job: build the shipment, assign the file, invoicing, filing, closure and SLA review.</p></div>
-        <div class="mod"><span class="chip m-OF">OF / AF</span><p>Freight: booking with the line or airline, ERO, SI, draft BL or AWB, vessel or flight tracking, carrier invoices, OBL.</p></div>
-        <div class="mod"><span class="chip m-H">H</span><p>Haulage: vendor and truck allocation, empty pick-up, gate-in, delivery, EIR, waybill and empty return.</p></div>
-        <div class="mod"><span class="chip m-CBT">CBT</span><p>Customs clearing and documentation: NXP, NESS and CCI, Form M and PAAR, assessment, duty, release, FECD.</p></div>
-      </div>
-      <div class="formula">
-        <span><b>OneExport Haulage</b> = Core + H</span><span><b>OneImport H + CBT</b> = Core + H + CBT</span><span><b>VAAS AF + CBT</b> = Core + AF + CBT</span><span><b>FreightSaver</b> = Core + OF</span><span><b>Auto Import</b> = Core + OF + vehicle documents</span>
-      </div>
-    </div>
-      <div class="pb-ctrl">
-        <div class="opts" role="radiogroup" aria-label="Product" id="pb-prod"></div>
-        <div class="pb-row">
-          <label class="sel">Tier 2 service<select id="pb-svc"></select></label>
-          <label class="sel" id="pb-dir-wrap">Direction<select id="pb-dir"><option value="import">Air import</option><option value="export">Air export</option></select></label>
-        </div>
-      </div>
+      <p class="pb-showing" id="pb-showing"></p>
       <div id="pb-note"></div>
       <div class="pb-sum" id="pb-sum"></div>
       <p class="clock-note">Hours and days are clock hours and calendar days unless marked "working". Working time is 8:00–17:00 WAT, Monday to Saturday.</p>
@@ -396,10 +408,6 @@ td.sla{min-width:150px;font-size:12.5px}
 
 
 
-  <section>
-    <div class="sec-head"><h2>End-to-end SLA by product</h2><span class="tag">Calendar days</span></div>
-    <div id="e2e-all"></div>
-  </section>
 
 
   
@@ -741,7 +749,8 @@ const E2E={
  AI:{label:"Auto Import",why:"No SOP for Auto Import yet"}};
 function e2eKey(code,dir){const p=code.split("-")[0];if(p!=="VA")return p;if(code==="VA-OTHER")return "VO";return dir==="export"?"VE":"VI"}
 const STAGE_ORDER={P:0,B:1,E:2,S:3};
-function serials(code,dir){const ts=tasksFor(code,dir).tasks.slice().sort((a,b)=>STAGE_ORDER[a[0]]-STAGE_ORDER[b[0]]);const m={};ts.forEach((t,i)=>m[t[2]]=i+1);return m}
+const HIDDEN_STAGES=new Set(["P","B"]);
+function serials(code,dir){const ts=tasksFor(code,dir).tasks.filter(t=>!HIDDEN_STAGES.has(t[0])).sort((a,b)=>STAGE_ORDER[a[0]]-STAGE_ORDER[b[0]]);const m={};ts.forEach((t,i)=>m[t[2]]=i+1);return m}
 function trig(x,ser){
   if(x.task){const n=ser[x.task];return n?`<span class="tn">#${n}</span><span>${esc(x.task)}</span>`:`<span class="tn off">—</span><span>${esc(x.task)} <em class="noset">(not part of this service)</em></span>`}
   const a=ser[x.after],b=ser[x.before];
@@ -749,7 +758,7 @@ function trig(x,ser){
 }
 function dayCells(e){
   const span=e.max+3;let h="";
-  for(let i=1;i<=span;i++){const c=i<e.min?"ahead":i<=e.max?"ok":"bad";h+=`<i class="${c}" title="Day ${i}"></i>`}
+  for(let i=1;i<=span;i++){const c=i<e.min?"ahead":i<=e.max?"ok":"bad";h+=`<i class="${c}" title="Day ${i}">${i===1||i===e.min||i===e.max?i:""}</i>`}
   return h;
 }
 function e2eCard(k,code,dir,compact){
@@ -759,7 +768,6 @@ function e2eCard(k,code,dir,compact){
   return `<div class="e2c${compact?" compact":""}">
    <div class="e2c-top"><span class="e2c-lbl">${esc(e.label)}</span><span class="e2c-num">${e.min}–${e.max}<small>calendar days</small></span></div>
    <div class="days" role="img" aria-label="Calendar days: ahead before day ${e.min}, on track from day ${e.min} to ${e.max}, breached after day ${e.max}">${dayCells(e)}</div>
-   <div class="days-lbl"><span>Day 1</span><span style="left:${((e.min-1)/(e.max+3)*100).toFixed(1)}%">${e.min}</span><span style="left:${((e.max-1)/(e.max+3)*100).toFixed(1)}%">${e.max}</span></div>
    <div class="e2c-key"><span><i class="ahead"></i>Ahead</span><span><i class="ok"></i>On track</span><span><i class="bad"></i>Breached</span></div>
    <div class="trigs"><div class="trow"><b>Clock starts</b><div class="tv">${trig(e.start,ser)}</div></div><div class="trow"><b>Clock stops</b><div class="tv">${trig(e.end,ser)}</div></div></div>
    ${compact?"":`<p class="e2c-ref">Task numbers follow the ${esc(P[e.svc[0].split("-")[0]])} ${esc(NAME[e.svc[0]])} milestones.</p>`}
@@ -800,19 +808,10 @@ const srcClass=s=>{const f=s.split(" ")[0];return f==="Q4"?"Q4":f};
 /* ---------- playbook UI ---------- */
 const state={prod:"OE",code:"OE-FULL",dir:"import"};
 try{const s=JSON.parse(localStorage.getItem("pb")||"null");if(s&&NAME[s.code]){Object.assign(state,s)}}catch(e){}
-const prodBox=document.getElementById("pb-prod"),svcSel=document.getElementById("pb-svc"),dirSel=document.getElementById("pb-dir"),dirWrap=document.getElementById("pb-dir-wrap");
-prodBox.innerHTML=Object.entries(P).map(([k,v])=>`<label><input type="radio" name="pbp" id="pbp-${k}" value="${k}"><span>${v}</span></label>`).join("");
-function fillSvc(){
-  svcSel.innerHTML=ROWS.filter(r=>r[0]===state.prod).map(r=>`<option value="${r[1]}">${esc(r[2])}</option>`).join("");
-  if(!ROWS.some(r=>r[1]===state.code&&r[0]===state.prod)){state.code=ROWS.find(r=>r[0]===state.prod)[1]}
-  svcSel.value=state.code;
-}
 function renderPB(){
-  document.getElementById("pbp-"+state.prod).checked=true;
-  fillSvc();dirSel.value=state.dir;
-  dirWrap.hidden=!(state.prod==="VA"&&state.code!=="VA-OTHER");
   const dir=state.prod==="VA"?state.dir:"";
-  const {tasks,note}=tasksFor(state.code,dir);
+  document.getElementById("pb-showing").innerHTML=`Showing <b>${esc(P[state.prod])} · ${esc(NAME[state.code])}</b>${state.prod==="VA"&&state.code!=="VA-OTHER"?" ("+(dir==="export"?"air export":"air import")+")":""}, from Try a shipment above.`;
+  const {note}=tasksFor(state.code,dir), tasks=tasksFor(state.code,dir).tasks.filter(t=>!HIDDEN_STAGES.has(t[0]));
   document.getElementById("pb-note").innerHTML=note?`<div class="pb-note draft">${note}</div>`:"";
   const teams=new Set();tasks.forEach(t=>people(t).forEach(r=>teams.add(r)));
   const drafts=tasks.filter(t=>t[8]==="Draft").length;
@@ -820,6 +819,7 @@ function renderPB(){
   document.getElementById("pb-sum").innerHTML=`<div><b>${tasks.length}</b><span>tasks</span></div><div><b>${teams.size}</b><span>internal roles</span></div><div><b>${docs.size}</b><span>documents</span></div><div><b>${drafts}</b><span>draft tasks to check</span></div>`;
   let n=0;
   document.getElementById("pb-stages").innerHTML=STAGES.map(([s,label],i)=>{
+    if(HIDDEN_STAGES.has(s))return "";
     const ts=tasks.filter(t=>t[0]===s);
     const st=new Set();ts.forEach(t=>people(t).forEach(r=>st.add(r)));
     const rows=ts.map(t=>{n++;const src=srcClass(t[8]),x=t[9]||{};
@@ -832,9 +832,6 @@ function renderPB(){
   }).join("");
   try{localStorage.setItem("pb",JSON.stringify(state))}catch(e){}
 }
-prodBox.addEventListener("change",e=>{state.prod=e.target.value;state.code="";renderPB()});
-svcSel.addEventListener("change",()=>{state.code=svcSel.value;renderPB()});
-dirSel.addEventListener("change",()=>{state.dir=dirSel.value;renderPB()});
 renderPB();
 
 /* ---------- SLA section: its own product and service picker ---------- */
@@ -858,7 +855,7 @@ if(sProd)sProd.addEventListener("change",e=>{slaState.prod=e.target.value;slaSta
 if(sSvc)sSvc.addEventListener("change",()=>{slaState.code=sSvc.value;renderSLA()});
 if(sDir)sDir.addEventListener("change",()=>{slaState.dir=sDir.value;renderSLA()});
 renderSLA();
-document.getElementById("e2e-all").innerHTML=`<div class="e2c-grid">${["OE","OI","VI"].map(k=>e2eCard(k)).join("")}</div><div class="e2c-off">${["VE","VO","FS","AI"].map(k=>e2eCard(k)).join("")}</div>`;
+if(document.getElementById("e2e-all"))document.getElementById("e2e-all").innerHTML=`<div class="e2c-grid">${["OE","OI","VI"].map(k=>e2eCard(k)).join("")}</div><div class="e2c-off">${["VE","VO","FS","AI"].map(k=>e2eCard(k)).join("")}</div>`;
 
 /* ---------- team x product matrix ---------- */
 const COLS=[["OneExport","OE-FULL",""],["OneImport","OI-HCBT",""],["VAAS air import","VA-FULL","import"],["VAAS air export","VA-FULL","export"],["FreightSaver","FS-OF",""],["Auto Import","AI-OF-AUTO",""]];
@@ -899,25 +896,51 @@ function classify(mode,route,cargo,svc){
     return{code:land,rule:5,auto:cargo==="car",why:"An import into Nigeria with haulage or customs work."};}
   return{code:"VA-OTHER",rule:6,why:"A cross-trade job with landside work fits no other product."};
 }
+
+function e2eMini(k,code,dir){
+  const e=E2E[k];
+  if(!e.min)return `<div class="m-lbl">End-to-end SLA</div><p class="m-off">Not set · ${esc(e.why)}</p>`;
+  const ser=serials(code,dir), span=e.max+3;let cells="";
+  for(let i=1;i<=span;i++)cells+=`<i class="${i<e.min?"ahead":i<=e.max?"ok":"bad"}" title="Day ${i}">${i===1||i===e.min||i===e.max?i:""}</i>`;
+  const tr=x=>x.task?(ser[x.task]?`#${ser[x.task]} ${esc(x.task)}`:`${esc(x.task)} (not part of this service)`):`${esc(x.event)} (between #${ser[x.after]} and #${ser[x.before]})`;
+  return `<div class="m-top"><span class="m-lbl">End-to-end SLA</span><span class="m-num">${e.min}–${e.max}<small>calendar days</small></span></div>
+   <div class="m-days" role="img" aria-label="Ahead before day ${e.min}, on track from day ${e.min} to ${e.max}, breached after day ${e.max}">${cells}</div>
+   <div class="m-key"><span><i class="ahead"></i>Ahead</span><span><i class="ok"></i>On track (${e.min}–${e.max})</span><span><i class="bad"></i>Breached (over ${e.max})</span></div>
+`;
+}
 let last=null;
+const comboSel=document.getElementById("o-combo");
+function showCombo(code){
+  const d=last.dir||"import";
+  document.getElementById("o-e2e").innerHTML=e2eMini(e2eKey(code,d),code,d);
+  /* keep Product Milestones on the same product and service combination */
+  state.prod=code.split("-")[0];state.code=code;if(last.dir)state.dir=last.dir;renderPB();
+}
 function update(){
   const f=document.getElementById("f");
   const mode=f.mode.value,route=f.route.value,cargo=f.cargo.value;
   const svc=new Set([...f.querySelectorAll('input[name=svc]:checked')].map(i=>i.value));
   const r=classify(mode,route,cargo,svc);last=r;
-  const nm=c=>P[c.split("-")[0]]+" · "+NAME[c];
-  document.getElementById("o-prod").textContent=r.split?P[r.split.split("-")[0]]+" + "+P[r.code.split("-")[0]]:P[r.code.split("-")[0]];
-  document.getElementById("o-svc").textContent=NAME[r.code]+(r.auto?" · Tier 3: Automobiles":"");
+  const prod=r.code.split("-")[0];
+  document.getElementById("o-prod").textContent=P[prod];
   document.getElementById("o-why").textContent=r.why;
-  const parts=[...(r.split?[r.split]:[]),r.code].map(c=>tasksFor(c,r.dir||"import").tasks);
-  const teams=new Set();parts.flat().forEach(t=>people(t).forEach(x=>teams.add(x)));
-  document.getElementById("o-load").textContent=(r.split?parts.map(p=>p.length).join(" + ")+" tasks":parts[0].length+" tasks")+" · "+teams.size+" internal roles";
+  document.getElementById("o-help").textContent="Choose which services OnePort handles on this "+P[prod]+" job. We've picked the one that matches what you ticked"+(r.auto?" (Tier 3: Automobiles).":".");
+  comboSel.innerHTML=ROWS.filter(x=>x[0]===prod).map(x=>`<option value="${x[1]}">${esc(x[2])}</option>`).join("");
+  comboSel.value=r.code;
+  showCombo(r.code);
 }
-document.getElementById("f").addEventListener("change",update);update();
-document.getElementById("o-open").addEventListener("click",()=>{
-  state.prod=last.code.split("-")[0];state.code=last.code;if(last.dir)state.dir=last.dir;renderPB();
-  document.getElementById("playbook").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+document.getElementById("f").addEventListener("change",update);
+comboSel.addEventListener("change",()=>{
+  const code=comboSel.value, f=document.getElementById("f"), mods=modulesFor(code), p=code.split("-")[0];
+  const setBox=(id,on)=>{document.getElementById(id).checked=on};
+  /* freight: OneImport never lists it, so leave the freight tick alone there */
+  if(p!=="OI")setBox("s-f",mods.includes("OF")||mods.includes("AF"));
+  setBox("s-h",mods.includes("H"));
+  setBox("s-c",mods.includes("CBT"));
+  update();
+  if([...comboSel.options].some(o=>o.value===code)&&comboSel.value!==code){comboSel.value=code;showCombo(code)}
 });
+update();
 </script>
 
 </body>
