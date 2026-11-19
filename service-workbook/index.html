@@ -360,33 +360,35 @@ td.sla{min-width:150px;font-size:12.5px}
     <div class="box cls">
       <form id="f" onsubmit="return false">
         <fieldset><legend>Mode</legend><div class="opts">
-          <label><input type="radio" name="mode" id="m-ocean" value="ocean" checked><span>Ocean</span></label>
+          <label><input type="radio" name="mode" id="m-ocean" value="ocean"><span>Ocean</span></label>
           <label><input type="radio" name="mode" id="m-air" value="air"><span>Air</span></label>
         </div></fieldset>
         <fieldset><legend>Route</legend><div class="opts">
-          <label><input type="radio" name="route" id="r-imp" value="import" checked><span>Import into Nigeria</span></label>
+          <label><input type="radio" name="route" id="r-imp" value="import"><span>Import into Nigeria</span></label>
           <label><input type="radio" name="route" id="r-exp" value="export"><span>Export out of Nigeria</span></label>
           <label><input type="radio" name="route" id="r-x" value="cross"><span>Cross-trade (neither end Nigeria)</span></label>
         </div></fieldset>
         <fieldset><legend>Cargo</legend><div class="opts">
-          <label><input type="radio" name="cargo" id="c-gen" value="general" checked><span>General cargo</span></label>
+          <label><input type="radio" name="cargo" id="c-gen" value="general"><span>General cargo</span></label>
           <label><input type="radio" name="cargo" id="c-car" value="car"><span>Automobile</span></label>
         </div></fieldset>
         <fieldset><legend>Services we provide</legend><div class="opts">
-          <label><input type="checkbox" name="svc" id="s-f" value="F" checked><span>Freight</span></label>
-          <label><input type="checkbox" name="svc" id="s-h" value="H" checked><span>Haulage</span></label>
-          <label><input type="checkbox" name="svc" id="s-c" value="CBT" checked><span>Customs &amp; docs</span></label>
+          <label><input type="checkbox" name="svc" id="s-f" value="F"><span>Freight</span></label>
+          <label><input type="checkbox" name="svc" id="s-h" value="H"><span>Haulage</span></label>
+          <label><input type="checkbox" name="svc" id="s-c" value="CBT"><span>Customs &amp; docs</span></label>
         </div></fieldset>
       </form>
       <div class="result" aria-live="polite">
         <div class="lbl">This shipment is</div>
         <div class="prod" id="o-prod"></div>
         <div class="why" id="o-why"></div>
+        <div id="o-body">
         <div class="o-e2e" id="o-e2e"></div>
         <div class="o-combo">
           <label for="o-combo">Service combination</label>
           <p class="o-help" id="o-help">Choose which services OnePort handles on this job. We've picked the one that matches what you ticked.</p>
           <select id="o-combo"></select>
+        </div>
         </div>
       </div>
     </div>
@@ -394,7 +396,7 @@ td.sla{min-width:150px;font-size:12.5px}
 
   
 
-  <section id="playbook">
+  <section id="playbook" hidden>
     <div class="sec-head"><h2>Product Milestones</h2></div>
     <div class="box">
       <p class="pb-showing" id="pb-showing"></p>
@@ -969,10 +971,27 @@ function showCombo(code){
   /* keep Product Milestones on the same product and service combination */
   state.prod=code.split("-")[0];state.code=code;if(last.dir)state.dir=last.dir;renderPB();
 }
+let otherPicked=false;
+function clearMilestones(){
+  document.getElementById("pb-showing").textContent="Set up a shipment in Try a shipment above to see its milestones.";
+  ["pb-note","pb-sum","pb-stages"].forEach(id=>document.getElementById(id).innerHTML="");
+}
 function update(){
   const f=document.getElementById("f");
   const mode=f.mode.value,route=f.route.value,cargo=f.cargo.value;
   const svc=new Set([...f.querySelectorAll('input[name=svc]:checked')].map(i=>i.value));
+  const missing=[!mode&&"a mode",!route&&"a route",!cargo&&"the cargo type",!svc.size&&!otherPicked&&"at least one service"].filter(Boolean);
+  if(missing.length){
+    last=null;
+    document.getElementById("o-prod").textContent="Not classified yet";
+    document.getElementById("o-why").textContent="Choose "+(missing.length>1?missing.slice(0,-1).join(", ")+" and "+missing.slice(-1):missing[0])+".";
+    document.getElementById("o-body").hidden=true;
+    document.getElementById("playbook").hidden=true;
+    clearMilestones();
+    return;
+  }
+  document.getElementById("o-body").hidden=false;
+  document.getElementById("playbook").hidden=false;
   const r=classify(mode,route,cargo,svc);last=r;
   const prod=r.code.split("-")[0];
   document.getElementById("o-prod").textContent=P[prod];
@@ -982,7 +1001,7 @@ function update(){
   comboSel.value=r.code;
   showCombo(r.code);
 }
-document.getElementById("f").addEventListener("change",update);
+document.getElementById("f").addEventListener("change",()=>{otherPicked=false;update()});
 comboSel.addEventListener("change",()=>{
   const code=comboSel.value, f=document.getElementById("f"), mods=modulesFor(code), p=code.split("-")[0];
   const setBox=(id,on)=>{document.getElementById(id).checked=on};
@@ -990,6 +1009,7 @@ comboSel.addEventListener("change",()=>{
   if(p!=="OI")setBox("s-f",mods.includes("OF")||mods.includes("AF"));
   setBox("s-h",mods.includes("H"));
   setBox("s-c",mods.includes("CBT"));
+  otherPicked=code==="VA-OTHER";
   update();
   if([...comboSel.options].some(o=>o.value===code)&&comboSel.value!==code){comboSel.value=code;showCombo(code)}
 });
