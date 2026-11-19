@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>OnePort Service Workbook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one long infographic column, as in the escalation matrix deck: header, banner, white sections on a soft green ground, striped footer */
+:root{
+  --bg:#f7f8f2; --card:#ffffff; --panel:#eef2e3; --line:#dde3d0;
+  --ink:#1d3b29; --text:#2b322c; --muted:#6a7366;
+  --deep:#1d3b29; --on-deep:#ffffff; --deep-soft:#2c5139;
+  --olive:#8ab33a; --olive-soft:#e7f0d2;
+  --mustard:#b3871a; --mustard-soft:#fbf2d6;
+  --red:#c9443d; --red-soft:#fdeceb;
+  --display:"Poppins",ui-sans-serif,system-ui,sans-serif;
+  --body:"Poppins",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111712; --card:#171f18; --panel:#1d2a20; --line:#2c3a2e;
+  --ink:#cfe6c0; --text:#e3e8df; --muted:#9ba696;
+  --deep:#244a32; --on-deep:#f1f6ec; --deep-soft:#2f5b3e;
+  --olive:#a6cf55; --olive-soft:#26331b;
+  --mustard:#dcb247; --mustard-soft:#3a3018;
+  --red:#ec6c63; --red-soft:#3b1f1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111712; --card:#171f18; --panel:#1d2a20; --line:#2c3a2e;
+  --ink:#cfe6c0; --text:#e3e8df; --muted:#9ba696;
+  --deep:#244a32; --on-deep:#f1f6ec; --deep-soft:#2f5b3e;
+  --olive:#a6cf55; --olive-soft:#26331b;
+  --mustard:#dcb247; --mustard-soft:#3a3018;
+  --red:#ec6c63; --red-soft:#3b1f1d; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.55}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 0}
+h1,h2,h3{font-family:var(--display);color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(26px,4.4vw,38px);line-height:1.15;font-weight:700;letter-spacing:-.01em}
+h2{font-size:19px;font-weight:600}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);font-family:var(--display);font-weight:700;font-size:20px;line-height:1}
+.logo small{display:block;color:var(--olive);font-size:13px;font-weight:700;margin-top:2px}
+.top .meta{color:var(--muted);font-size:13px}
+
+.banner{margin:20px 0 34px;background:var(--red-soft);border:1px solid color-mix(in srgb,var(--red) 45%,transparent);border-radius:10px;padding:14px 18px}
+.banner b{color:var(--red);display:block;font-weight:600;margin-bottom:2px}
+
+section{margin-bottom:40px}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--mustard-soft);color:var(--mustard);border:1px solid color-mix(in srgb,var(--mustard) 50%,transparent)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+ul.notes{margin:14px 0 0;padding-left:18px;display:grid;gap:4px}
+ul.notes li::marker{color:var(--olive)}
+
+/* journey */
+.journey{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.phase{border-radius:10px;padding:14px;background:var(--panel);border:1px solid var(--line);display:grid;gap:6px;align-content:start}
+.phase .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:13px;background:var(--deep);color:var(--on-deep)}
+.phase h3{font-size:14px}
+.phase p{font-size:12.5px;color:var(--muted)}
+.scope{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.scope .s{flex:1 1 220px;border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.scope .s .dot{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:700}
+.s.now{background:var(--deep);color:var(--on-deep)} .s.now .dot{background:var(--olive);color:var(--deep)}
+.s.next{background:var(--panel);border:1px solid var(--line)} .s.next .dot{background:var(--mustard);color:var(--card)}
+.s.later{background:var(--panel);border:1px solid var(--line)} .s.later .dot{background:var(--line);color:var(--muted)}
+.s b{display:block;font-size:13px;font-weight:600}
+.s span{font-size:12px;opacity:.85}
+
+/* tier tree */
+.tree{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.t1{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);min-width:0}
+.t1 header{background:var(--deep);color:var(--on-deep);padding:12px 12px 11px}
+.t1 header .lvl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.t1 header h3{color:var(--on-deep);font-size:15px;margin-top:1px}
+.t1 header p{font-size:11.5px;opacity:.8;margin-top:2px;line-height:1.35}
+.t1 ul{list-style:none;margin:0;padding:10px;display:grid;gap:6px}
+.t2{border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:var(--panel)}
+.t2 .c{font-size:10.5px;font-weight:600;color:var(--mustard);letter-spacing:.03em}
+.t2 .nm{font-size:12.5px;font-weight:500;color:var(--text);line-height:1.3}
+.t2.new{border-color:color-mix(in srgb,var(--olive) 60%,transparent)}
+.t2.new .nm::after{content:"new";margin-left:6px;font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:999px;background:var(--olive-soft);color:var(--olive);vertical-align:1px}
+.t3{margin:6px 0 0 8px;padding:6px 8px;border-left:2px solid var(--olive);font-size:11.5px}
+.t3 .c{color:var(--olive)}
+.t1 .count{margin-top:auto;padding:8px 12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:12px;color:var(--muted)}
+.legend b{color:var(--ink);font-weight:600}
+
+/* matrix */
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11.5px;text-align:left;color:var(--ink);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--deep);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.grp{font-weight:600;color:var(--ink);background:var(--panel);border-right:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+tr.first td{border-top:2px solid var(--line)}
+td.code{font-weight:600;color:var(--mustard);white-space:nowrap;font-size:12px}
+td.ctr{text-align:center}
+.yes{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--deep)}
+:root[data-theme="dark"] .yes{background:var(--olive)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .yes{background:var(--olive)}}
+.dir{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+/* rules */
+.rules{display:grid;gap:8px}
+.rule{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line)}
+.rule .n{width:30px;height:30px;border-radius:50%;background:var(--deep);color:var(--on-deep);display:grid;place-items:center;font-weight:600}
+.rule .q{font-weight:500}
+.rule .q small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--deep);color:var(--on-deep);white-space:nowrap}
+.pill.alt{background:var(--olive-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--olive) 55%,transparent)}
+.flowcap{margin-top:12px;background:var(--panel);border-radius:8px;padding:10px 14px;font-size:13px}
+
+/* classifier */
+.cls{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+fieldset{border:0;margin:0 0 14px;padding:0}
+legend{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:6px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{position:relative;cursor:pointer}
+.opts input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opts span{display:inline-block;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:12.5px;color:var(--text)}
+.opts input:checked+span{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
+.opts input:focus-visible+span{outline:2px solid var(--olive);outline-offset:2px}
+.result{border-radius:12px;background:var(--deep);color:var(--on-deep);padding:18px;display:grid;gap:8px;align-content:start}
+.result .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.result .prod{font-family:var(--display);font-size:24px;font-weight:700;line-height:1.15}
+.result .code{display:inline-block;justify-self:start;background:var(--olive);color:#13261a;font-weight:700;font-size:13px;padding:3px 10px;border-radius:6px}
+.result .svc{font-size:14px}
+.result .why{font-size:12.5px;opacity:.85;border-top:1px solid color-mix(in srgb,var(--on-deep) 25%,transparent);padding-top:8px}
+
+/* examples */
+.ex td:first-child{min-width:240px}
+
+/* footer */
+.foot{margin-top:10px;height:18px;background:repeating-linear-gradient(-45deg,var(--olive) 0 8px,transparent 8px 16px)}
+.closing{display:flex;flex-wrap:wrap;gap:10px}
+.closing .k{flex:1 1 200px;display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 12px}
+.closing .k .b{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:12px;background:var(--deep);color:var(--on-deep);flex:none}
+.closing .k b{display:block;font-size:13px;color:var(--ink)}
+.closing .k span{font-size:12px;color:var(--muted)}
+
+@media (max-width:900px){.tree{grid-template-columns:repeat(2,minmax(0,1fr))}.cls{grid-template-columns:1fr}}
+@media (max-width:640px){.journey{grid-template-columns:repeat(2,minmax(0,1fr))}.rule{grid-template-columns:30px minmax(0,1fr)}.rule .pill{grid-column:2;justify-self:start}}
+@media (max-width:440px){.tree,.journey{grid-template-columns:1fr}}
+
+/* Phase 2 additions */
+.phase .span{font-size:11px;font-weight:600;color:var(--ink);margin-top:2px}
+.mods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mod{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--card);display:grid;gap:6px;align-content:start}
+.mod p{font-size:12.5px;color:var(--muted)}
+.formula{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;background:var(--panel);border-radius:8px;padding:10px 14px}
+.formula b{color:var(--ink)}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;line-height:1.5}
+.m-Core{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.m-OF,.m-AF{background:var(--olive-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--olive) 55%,transparent)}
+.m-H{background:var(--mustard-soft);color:var(--mustard);border:1px solid color-mix(in srgb,var(--mustard) 45%,transparent)}
+.m-CBT{background:var(--deep);color:var(--on-deep);border:1px solid var(--deep)}
+.m-AUTO{background:var(--red-soft);color:var(--red);border:1px solid color-mix(in srgb,var(--red) 40%,transparent)}
+.s-SOP{background:var(--card);color:var(--ink);border:1px solid var(--deep)}
+.s-Checklist{background:var(--olive-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--olive) 55%,transparent)}
+.s-Deck{background:var(--mustard-soft);color:var(--mustard);border:1px solid color-mix(in srgb,var(--mustard) 45%,transparent)}
+.s-Draft{background:var(--red-soft);color:var(--red);border:1px dashed var(--red)}
+
+/* roster */
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.rgroup{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;min-width:0}
+.rgroup h3{background:var(--deep);color:var(--on-deep);font-size:13px;padding:9px 12px}
+.rgroup ul{list-style:none;margin:0;padding:6px 12px 10px}
+.rgroup li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.rgroup li:last-child{border-bottom:0}
+.rgroup li span{color:var(--muted);font-size:11.5px;white-space:nowrap}
+.rgroup li .abbr{color:var(--mustard);font-weight:600;font-size:11px;margin-left:4px}
+
+/* team x product matrix */
+.tm th.p{text-align:center;white-space:normal;min-width:84px;line-height:1.25}
+.tm td.role{white-space:nowrap;font-weight:500}
+.tm td.cell{text-align:center}
+.st{display:inline-flex;gap:3px}
+.st i{width:12px;height:12px;border-radius:3px;background:var(--line);display:inline-block}
+.st i.on{background:var(--deep)}
+:root[data-theme="dark"] .st i.on{background:var(--olive)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .st i.on{background:var(--olive)}}
+.stkey{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px;align-items:center}
+
+/* playbook */
+.pb-ctrl{display:grid;gap:12px;margin-bottom:16px}
+.pb-ctrl select{font:inherit;font-size:13px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);max-width:100%}
+.pb-ctrl label.sel{display:grid;gap:4px;font-size:12px;font-weight:600;color:var(--ink)}
+.pb-row{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.pb-note{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;background:var(--panel);border:1px solid var(--line)}
+.pb-note.draft{background:var(--red-soft);border:1px dashed var(--red)}
+.pb-note b{color:var(--ink)}
+.pb-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.pb-sum div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.pb-sum b{display:block;font-size:22px;color:var(--ink);font-family:var(--display);line-height:1.1}
+.pb-sum span{font-size:12px;color:var(--muted)}
+.stage{margin-top:18px}
+.stage-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.stage-h .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:13px;background:var(--deep);color:var(--on-deep)}
+.stage-h .teams{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}
+.stage-h .teams .chip{background:var(--panel);color:var(--text);border:1px solid var(--line);font-weight:500}
+.tasks td{font-size:12.5px;vertical-align:top}
+.tasks td.t{min-width:220px;font-weight:500}
+.tasks td.o{white-space:nowrap}
+.tasks td.o small,.tasks td.t small{display:block;color:var(--muted);font-weight:400;font-size:11.5px}
+.tasks td.d{min-width:200px;color:var(--muted)}
+.tasks tr.draft td{background:color-mix(in srgb,var(--red-soft) 70%,transparent)}
+.tasks tr.draft td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+.tasks td.num{color:var(--muted);font-variant-numeric:tabular-nums;width:28px}
+.empty{font-size:12.5px;color:var(--muted);padding:10px 0}
+.btn{font:inherit;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--on-deep) 40%,transparent);background:transparent;color:var(--on-deep);cursor:pointer;justify-self:start}
+.btn:hover{background:color-mix(in srgb,var(--on-deep) 12%,transparent)}
+.btn:focus-visible,.pb-ctrl select:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.conflicts{display:grid;gap:8px}
+.conflicts div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:12.5px}
+.conflicts b{color:var(--ink);display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.srcs div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);font-size:12.5px;display:grid;gap:4px}
+@media (max-width:760px){.mods,.pb-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.conflicts div{grid-template-columns:1fr}}
+.s-Q4{background:var(--deep);color:var(--on-deep);border:1px solid var(--deep)}
+.chip.opt{background:var(--card);color:var(--mustard);border:1px dashed var(--mustard);font-weight:600;margin-left:4px}
+.tasks td.t small.lk{color:var(--mustard);font-weight:500}
+.tasks tr.optrow td.t{font-style:normal}
+[hidden]{display:none!important}
+.tasks td.o{min-width:120px;white-space:normal}
+.tasks td.t{min-width:190px}
+.tasks td.d{min-width:170px}
+header.title{display:grid;gap:6px;margin-bottom:28px}
+header.title .sub{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:60ch}
+td.svcname{font-weight:500;white-space:nowrap}
+td.expl{color:var(--muted);font-size:12.5px;min-width:240px}
+.subsec{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:18px;display:grid;gap:10px}
+.subsec h3{font-size:15px}
+ul.docs{margin:0;padding-left:16px;display:grid;gap:2px}
+ul.docs li::marker{color:var(--olive)}
+td.out{min-width:170px;font-size:12.5px}
+.logo img{display:block;height:46px;width:auto}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo{background:#dfe8cf;border-radius:10px;padding:6px 10px}}
+:root[data-theme="dark"] .logo{background:#dfe8cf;border-radius:10px;padding:6px 10px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo"><img src="data:image/png;base64,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" alt="OnePort 365" width="175" height="63"></div>
+    <div class="meta">Service Workbook · November 2026</div>
+  </div>
+
+  <header class="title">
+    <h1>OnePort365 Service Workbook</h1>
+    <p class="sub">Which product is this shipment, who works on it, and what do they do?</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><h2>The four stages of every job</h2><span class="tag">Same for all 5 products</span></div>
+    <div class="box">
+      <div class="journey">
+        <div class="phase"><div class="n">1</div><h3>Prospecting</h3><p>Deal created, customer contacted and qualified.</p><div class="span">Ends: customer qualified</div></div>
+        <div class="phase"><div class="n">2</div><h3>Pre-Booking</h3><p>RFQ or order, rates, quote, margin gate, acceptance, credit and terms.</p><div class="span">Ends: quote accepted and moved to Ops</div></div>
+        <div class="phase"><div class="n">3</div><h3>Execution</h3><p>Booking and the shipment itself: build, documents, customs, haulage, carriage.</p><div class="span">Ends: export sailed and final draft BL confirmed, or import delivered and offloaded</div></div>
+        <div class="phase"><div class="n">4</div><h3>Post Shipment</h3><p>Carrier invoices, OBL, empty return, FECD, dispatch, final invoice, filing, closure and SLA review.</p><div class="span">Ends: file closed</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Product Tier</h2><span class="tag">5 products · 20 services</span></div>
+    <div class="box scroll">
+      <table>
+        <thead><tr><th>Tier 1</th><th>Tier 2 service</th><th>What it covers</th><th>Ocean freight</th><th>Air freight</th><th>Haulage</th><th>Customs &amp; docs</th><th>Direction</th></tr></thead>
+        <tbody id="matrix"></tbody>
+      </table>
+    </div>
+    <div class="legend"><span><b>OF</b> Ocean Freight</span><span><b>AF</b> Air Freight</span><span><b>H</b> Haulage</span><span><b>CBT</b> Customs Clearing &amp; Documentation</span></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>How a shipment is classified</h2><span class="tag">First match wins</span></div>
+    <div class="box">
+      <div class="rules">
+        <div class="rule"><div class="n">1</div><div class="q">Is the cargo a car, ocean freight only, and not an export out of Nigeria?<small>A car export out of Nigeria goes to OneExport. If we also clear or deliver the car, see rule 5</small></div><span class="pill">Auto Import</span></div>
+        <div class="rule"><div class="n">2</div><div class="q">Is it moving by air?<small>Includes air exports out of Nigeria</small></div><span class="pill">VAAS</span></div>
+        <div class="rule"><div class="n">3</div><div class="q">Is it an ocean export out of Nigeria?</div><span class="pill">OneExport</span></div>
+        <div class="rule"><div class="n">4</div><div class="q">Is it ocean freight only, on any port pair?</div><span class="pill">FreightSaver</span></div>
+        <div class="rule"><div class="n">5</div><div class="q">Is it an import into Nigeria with haulage or customs work?<small>If we also carry the freight, the job is recorded twice: the freight under FreightSaver (or Auto Import for cars) and the landside work under OneImport</small></div><span class="pill">OneImport</span></div>
+        <div class="rule"><div class="n">6</div><div class="q">None of the above?<small>For example, cross-trade jobs with landside work</small></div><span class="pill alt">VAAS · Other</span></div>
+      </div>
+      <p class="flowcap">The system checks the rules from 1 to 6 and stops at the first one that fits. The services we provide on the job then pick the Tier 2 code inside that product.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Try a shipment</h2><span class="tag">Interactive</span></div>
+    <div class="box cls">
+      <form id="f" onsubmit="return false">
+        <fieldset><legend>Mode</legend><div class="opts">
+          <label><input type="radio" name="mode" id="m-ocean" value="ocean" checked><span>Ocean</span></label>
+          <label><input type="radio" name="mode" id="m-air" value="air"><span>Air</span></label>
+        </div></fieldset>
+        <fieldset><legend>Route</legend><div class="opts">
+          <label><input type="radio" name="route" id="r-imp" value="import" checked><span>Import into Nigeria</span></label>
+          <label><input type="radio" name="route" id="r-exp" value="export"><span>Export out of Nigeria</span></label>
+          <label><input type="radio" name="route" id="r-x" value="cross"><span>Cross-trade (neither end Nigeria)</span></label>
+        </div></fieldset>
+        <fieldset><legend>Cargo</legend><div class="opts">
+          <label><input type="radio" name="cargo" id="c-gen" value="general" checked><span>General cargo</span></label>
+          <label><input type="radio" name="cargo" id="c-car" value="car"><span>Automobile</span></label>
+        </div></fieldset>
+        <fieldset><legend>Services we provide</legend><div class="opts">
+          <label><input type="checkbox" name="svc" id="s-f" value="F" checked><span>Freight</span></label>
+          <label><input type="checkbox" name="svc" id="s-h" value="H" checked><span>Haulage</span></label>
+          <label><input type="checkbox" name="svc" id="s-c" value="CBT" checked><span>Customs &amp; docs</span></label>
+        </div></fieldset>
+      </form>
+      <div class="result" aria-live="polite">
+        <div class="lbl">This shipment is</div>
+        <div class="prod" id="o-prod"></div>
+        <div class="svc" id="o-svc"></div>
+        <div class="why" id="o-why"></div>
+        <div class="why" id="o-load"></div>
+        <button type="button" class="btn" id="o-open">Open its milestones</button>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <section id="playbook">
+    <div class="sec-head"><h2>Product Milestones</h2><span class="tag">Pick a product and service</span></div>
+    <div class="box">
+<div class="subsec"><h3>Tasks are built from four modules</h3><p class="muted">Every job gets the Core tasks, plus the tasks for each service it includes.</p>
+      <div class="mods">
+        <div class="mod"><span class="chip m-Core">Core</span><p>Done on every job: build the shipment, assign the file, invoicing, filing, closure and SLA review.</p></div>
+        <div class="mod"><span class="chip m-OF">OF / AF</span><p>Freight: booking with the line or airline, ERO, SI, draft BL or AWB, vessel or flight tracking, carrier invoices, OBL.</p></div>
+        <div class="mod"><span class="chip m-H">H</span><p>Haulage: vendor and truck allocation, empty pick-up, gate-in, delivery, EIR, waybill and empty return.</p></div>
+        <div class="mod"><span class="chip m-CBT">CBT</span><p>Customs clearing and documentation: NXP, NESS and CCI, Form M and PAAR, assessment, duty, release, FECD.</p></div>
+      </div>
+      <div class="formula">
+        <span><b>OneExport Haulage</b> = Core + H</span><span><b>OneImport H + CBT</b> = Core + H + CBT</span><span><b>VAAS AF + CBT</b> = Core + AF + CBT</span><span><b>FreightSaver</b> = Core + OF</span><span><b>Auto Import</b> = Core + OF + vehicle documents</span>
+      </div>
+    </div>
+      <div class="pb-ctrl">
+        <div class="opts" role="radiogroup" aria-label="Product" id="pb-prod"></div>
+        <div class="pb-row">
+          <label class="sel">Tier 2 service<select id="pb-svc"></select></label>
+          <label class="sel" id="pb-dir-wrap">Direction<select id="pb-dir"><option value="import">Air import</option><option value="export">Air export</option></select></label>
+        </div>
+      </div>
+      <div id="pb-note"></div>
+      <div class="pb-sum" id="pb-sum"></div>
+      <div id="pb-stages"></div>
+
+    </div>
+  </section>
+
+  <section hidden>
+    <div class="sec-head"><h2>Who works on each product</h2><span class="tag">Full service, by stage</span></div>
+    <div class="box scroll">
+      <table class="tm" id="tm"></table>
+      <div class="stkey"><span class="st"><i class="on"></i><i></i><i></i><i></i></span><span>Each square is a stage, in order: Prospecting, Pre-Booking, Execution, Post Shipment. Filled means the team owns or supports a task in that stage.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Team roster</h2><span class="tag" id="roster-tag"></span></div>
+    <div class="roster" id="roster"></div>
+    <p class="muted" style="margin-top:10px;font-size:12.5px">Every role here exists today. Each count is the number of tasks the role owns on a single job. Roles that own no task act as support or escalation points.</p>
+  </section>
+
+  
+
+  
+</div>
+<div class="foot" aria-hidden="true"></div>
+
+<script>
+const P={OE:"OneExport",OI:"OneImport",VA:"VAAS",FS:"FreightSaver",AI:"Auto Import"};
+const ROWS=[
+ ["OE","OE-OF","Ocean Freight","OF","Export"],["OE","OE-H","Haulage","H","Export"],["OE","OE-CBT","Customs Clearing & Docs","CBT","Export"],
+ ["OE","OE-OFH","OF + H","OF H","Export"],["OE","OE-OFCBT","OF + CBT","OF CBT","Export"],["OE","OE-HCBT","H + CBT","H CBT","Export"],["OE","OE-FULL","OF + H + CBT","OF H CBT","Export"],
+ ["OI","OI-H","Haulage","H","Import"],["OI","OI-CBT","Customs Clearing & Docs","CBT","Import"],["OI","OI-HCBT","H + CBT","H CBT","Import"],
+ ["VA","VA-AF","Air Freight","AF","Import & Export"],["VA","VA-H","Air Haulage","H","Import & Export"],["VA","VA-CBT","Air Customs Clearing & Docs","CBT","Import & Export"],
+ ["VA","VA-AFH","AF + H","AF H","Import & Export"],["VA","VA-AFCBT","AF + CBT","AF CBT","Import & Export"],["VA","VA-HCBT","Air H + Air CBT","H CBT","Import & Export"],
+ ["VA","VA-FULL","AF + H + CBT","AF H CBT","Import & Export"],["VA","VA-OTHER","Other Uncategorized","","Any"],
+ ["FS","FS-OF","Ocean Freight","OF","Any, except exports out of Nigeria"],
+ ["AI","AI-OF-AUTO","Ocean Freight (Tier 3: Automobiles)","OF","Import"]];
+const NAME=Object.fromEntries(ROWS.map(r=>[r[1],r[2]]));
+const EXPL={
+"OE-OF": "We book ocean freight out of Nigeria. The shipper handles customs and trucking.",
+"OE-H": "We truck the container: empty pick-up, stuffing and gate-in to port.",
+"OE-CBT": "We handle export customs and documents: NXP, NESS, CCI, inspection and shipping clearance.",
+"OE-OFH": "Ocean freight plus trucking. The shipper handles customs.",
+"OE-OFCBT": "Ocean freight plus export customs. The shipper arranges trucking.",
+"OE-HCBT": "Trucking plus export customs. The shipper books its own freight.",
+"OE-FULL": "End-to-end export: freight, trucking and customs.",
+"OI-H": "We truck the container from port to the customer's warehouse and return the empty.",
+"OI-CBT": "We clear the cargo through Customs: assessment, duty, examination, release and TDO.",
+"OI-HCBT": "Clearing plus delivery to the warehouse. If we also carry the freight, it is recorded under FreightSaver or Auto Import.",
+"VA-AF": "Air freight only, import or export.",
+"VA-H": "Trucking to or from the airport.",
+"VA-CBT": "Customs clearing and documents at the airport.",
+"VA-AFH": "Air freight plus trucking.",
+"VA-AFCBT": "Air freight plus customs clearing.",
+"VA-HCBT": "Airport clearing plus delivery. The customer books the flight.",
+"VA-FULL": "End-to-end air: freight, customs and trucking.",
+"VA-OTHER": "Anything that fits no other product, including cross-trade jobs with landside work. Scoped job by job.",
+"FS-OF": "Ocean freight only, on any port pair except exports out of Nigeria. On imports with clearing or delivery, that landside work is recorded under OneImport.",
+"AI-OF-AUTO": "Ocean freight for cars, not exports out of Nigeria. If we also clear or deliver the car, that part is recorded under OneImport."
+};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- service matrix ---------- */
+(function(){
+  const tb=document.getElementById("matrix");let html="",last="";
+  const counts={};ROWS.forEach(r=>counts[r[0]]=(counts[r[0]]||0)+1);
+  ROWS.forEach(r=>{
+    const has=new Set(r[3].split(" "));const d=k=>`<td class="ctr">${has.has(k)?'<span class="yes" title="Included"></span>':''}</td>`;
+    const first=r[0]!==last;
+    html+=`<tr class="${first&&last?'first':''}">${first?`<td class="grp" rowspan="${counts[r[0]]}">${P[r[0]]}</td>`:''}<td class="svcname">${esc(r[2])}</td><td class="expl">${esc(EXPL[r[1]])}</td>${d("OF")}${d("AF")}${d("H")}${d("CBT")}<td class="dir">${r[4]}</td></tr>`;
+    last=r[0];
+  });
+  tb.innerHTML=html;
+})();
+
+/* ---------- roles ---------- */
+const GROUPS=[
+ ["Sales and Commercial",[["SE","Sales Exec"],["HS","Head of Sales"],["PC","Pricing Coordinator"],["COM","Commercial"],["HC","Head of Commercial"]]],
+ ["Operations / Service Delivery",[["CS","Customer Success Officer"],["CSM","Customer Success Manager"],["OPM","Operations Manager"],["HOO","Head of Operations"],["QA","QA Manager"],["CO","Clearing Officer"],["CL","Clearing Lead / C&F Coordinator"],["TAL","Tally Officer"],["VM","Vendor Manager"],["TM","Transport Manager"],["TO","Transport Officer"],["PR","Port Runner"],["DO","Documentation Officer / Admin"]]],
+ ["Finance and Control",[["FA","Finance Analyst"],["FIN","Finance"],["FO","Finance Officer"],["HOF","Head of Finance"],["IC","Internal Control"]]],
+ ["Leadership and Insight",[["BI","Business Intelligence"],["COS","Chief of Staff"],["CEO","CEO"]]]];
+const EXTERNAL=new Set(["CUST","TOP"]);
+const ROLE={CUST:"Customer",TOP:"Terminal Operator (external)"};GROUPS.forEach(g=>g[1].forEach(([k,n])=>ROLE[k]=n));
+const rn=k=>ROLE[k]||k;
+
+/* ---------- tasks ----------
+   [stage, module, task, owner, with, hands to, documents, expected outcome, source, extra]
+   stage: P Prospecting, B Pre-Booking, E Execution, S Post Shipment
+   extra: {opt:"B"} only when OnePort handles Form M / PAAR; {opt:"Lekki"} Lekki only; {lekki:"..."} Lekki variant note */
+const PROSPECT=[
+ ["P","Core","Deal created","SE","","",[],"Deal recorded in the pipeline","Deck"],
+ ["P","Core","Customer contacted","SE","","",[],"First contact made and logged","Deck"],
+ ["P","Core","Customer qualified (check 1)","FA","","",[],"Customer passes the finance check","Deck"],
+ ["P","Core","Customer qualified (check 2)","SE","","",[],"Customer confirmed as a qualified prospect","Deck"]];
+const QUOTE=[
+ ["B","Core","Rate request","PC","","",[],"Rates obtained for the lane","Deck"],
+ ["B","Core","Quoting","PC","","",["Draft quotation"],"Quote prepared","Deck"],
+ ["B","Core","Margin gate","HC","","",["Draft quotation"],"Margin approved or sent back for repricing","Deck"],
+ ["B","Core","Quote sent to customer","SE","","CUST",["Quotation"],"Customer has the quote","Deck"]];
+const CREDIT=["B","Core","Credit and terms","FA","","",[],"Payment terms agreed for the job","Deck"];
+
+const EXP_OCEAN=[...PROSPECT,
+ ["B","Core","Send loading schedule (forecast)","CS","CUST","OPM, QA",["Loading schedule"],"Monthly and weekly volumes known for capacity planning","Q4 SOP 1.1"],
+ ["B","Core","RFQ logged","SE","","",[],"Request for quote recorded","Deck"],
+ ...QUOTE,
+ ["B","Core","Receive order from client; confirm scope","SE","CUST","COM",["Customer order"],"Scope confirmed; client told the NXP and PI are needed","SOP 2"],
+ ["B","Core","Accept or reject quote; move accepted job to Ops stage","SE","CUST","CS, OPM, VM",["Accepted quotation"],"Job moved to the Ops stage with an execution budget","Deck"],
+ CREDIT,
+ ["E","Core","File entry and activation","CS","CUST","OPM",["Written instruction","Accepted quotation"],"File active on the platform with the mandatory data set","Q4 SOP 1.2"],
+ ["E","CBT","Share NXP / Proforma Invoice","CS","CUST","CO",["NXP","Proforma Invoice (PI)","CAC certificate (new customers)","NEPC certificate (new customers)","COA and MSDS (DG cargo)"],"Export documents on file","Q4 SOP 2.1"],
+ ["E","OF","Place booking; get booking confirmation and ERO","QA","CUST","TO",["Booking confirmation","Empty Release Order (ERO)","Drop-off terminal confirmation email"],"Space booked; empty released; cut-offs recorded","Q4 SOP 2.2"],
+ ["E","Core","Gate 1: assign file to the Clearing Officer","OPM","","CO",["NXP","Proforma Invoice (PI)"],"File owner assigned; Gate 1 passed","Q4 SOP 2.3"],
+ ["E","CBT","Apply to NCS and agencies for outside stuffing","CO","","",["Outside-stuffing application letter"],"Approval to stuff outside the port","Q4 SOP 3.1"],
+ ["E","H","Allocate vendor and truck","VM","","TO",["Vendor allocation"],"Truck vendor booked at agreed price and terms","Q4 SOP 3.2"],
+ ["E","H","Pick up empty container or triangulate","TO","PR","CO",["Authority letter","Indemnity (triangulation)","EIR-out"],"Inspected empty container at the factory or holding bay","Q4 SOP 4.1",{lekki:"Carrier seals procured for triangulated containers diverted from outside Lagos to Lekki"}],
+ ["E","H","Update EDI of units","CO","","",["EDI update"],"Units visible in the Lekki terminal system","Q4 SOP 4.2",{opt:"Lekki"}],
+ ["E","CBT","Stuff container with Customs and agencies","CO","PR, CUST","CS",["Tally sheet","Stuffing photos","Weight report","Proof of loading"],"Container stuffed and sealed; seal number recorded","Q4 SOP 5.1"],
+ ["E","CBT","Send CI and PL to Neroli for NESS; get SI from client","CS","CUST, CO","CO",["Commercial Invoice (CI)","Packing List (PL)","Shipping Instruction (SI)","NESS payment receipt"],"NESS paid and SI in hand","Q4 SOP 6.1"],
+ ["E","CBT","Receive CCI, upload NXP validation, get G2G","CO","CS, QA, CUST","QA",["Clean Certificate of Inspection (CCI)","NXP validation","G2G"],"CCI barcode verified; G2G obtained","Q4 SOP 6.2"],
+ ["E","CBT","Generate assessment","QA","","",["Assessment"],"Export assessment generated","Q4 SOP 6.3"],
+ ["E","OF","Submit SI; get draft BL","QA","CS, CUST","CS",["Shipping Instruction (SI)","Draft Bill of Lading"],"Draft BL checked against SGD, PI and stuffing record and approved by the shipper","Q4 SOP 7.1"],
+ ["E","CBT","Get Inspection Act; submit export documents to the shipping line","CO","","",["Inspection Act","Export documents"],"Export documents lodged with the shipping line","Q4 SOP 7.2"],
+ ["E","OF","Obtain shipping clearance","CO","","QA",["Shipping clearance (acknowledged copy)"],"Cleared to load on the planned vessel","Q4 SOP 8.1"],
+ ["E","H","Exit warehouse or terminal; gate in to port","TO","FIN, CO","",["THC receipt","Gate-in documents","EIR-in"],"Container gated in before cargo cut-off","Q4 SOP 8.2",{lekki:"Transport Manager does gate-in"}],
+ ["E","OF","Vessel confirmation (ETA / ETD); confirm to customer","QA","CS","CS",["Vessel confirmation email"],"Customer knows the vessel and sailing plan","Q4 SOP 9.1"],
+ ["E","OF","Loading on vessel","QA","","",["Loading confirmation"],"Container loaded on the planned vessel, or waiver sought if rolled over","Q4 SOP 9.2"],
+ ["E","OF","Confirm final draft from client; share with Operations","QA","CS, CUST","",["Final draft Bill of Lading","VGM"],"Final BL details agreed with the correct VGM","Q4 SOP 9.3"],
+ ["S","OF","Obtain freight and local invoices","QA","","FIN",["Freight invoice","Local charges invoice"],"Invoices received and checked against budget","Q4 SOP 10.1"],
+ ["S","OF","Pay invoices, get receipt, obtain OBL","QA","FIN, FO, CS","",["Shipping receipt","Original Bill of Lading (OBL)"],"OBL released (NXP revalidated if expired)","Q4 SOP 10.2"],
+ ["S","CBT","Share draft post-shipment documents with client for vetting","QA","CS, FO, CUST","",["Draft Phytosanitary certificate","Draft fumigation certificate","Draft Certificate of Origin"],"Client confirms the drafts before they are processed","Q4 SOP 10.3"],
+ ["S","CBT","Process post-shipment documents","QA","FO, FIN","FIN",["Phytosanitary certificate","Fumigation certificate","Certificate of Origin"],"Final post-shipment documents issued","Q4 SOP 10.4"],
+ ["S","Core","Send closure email with date","QA","FIN","FIN, BI",["Closure email"],"Finance and BI know the shipment is complete","SOP 26"],
+ ["S","Core","Approve and dispatch OBL / FECD to shipper","FIN","FO, DO","CUST",["Original Bill of Lading (OBL)","FECD","Acknowledgement copy"],"Documents released after payment and delivered to the shipper","Q4 SOP 10.5",{lekki:"Internal Control approves dispatch"}],
+ ["S","Core","Reconcile costs against quote","FIN","OPM","",["Liner invoices","Terminal invoices","Vendor invoices"],"Actual cost matched to quote; waivers and variances approved","Checklist 6.6"],
+ ["S","Core","Final invoice","QA","FIN","",["Final invoice"],"Customer invoiced","Q4 SOP 10.6"],
+ ["S","Core","File all documents; Gate 2 closure","QA","","OPM",["Completed checklist"],"All documents filed per Job ID; file closed","Q4 SOP 10.7"],
+ ["S","Core","Monthly SLA review","OPM","BI, QA","",["SLA report"],"Performance reviewed and recurring issues raised","Q4 SOP 11.1"]];
+
+const IMP_OCEAN=[...PROSPECT,
+ ["B","Core","RFQ: confirm scope (compliant or controlled)","SE","COM, OPM","",["Commercial invoice"],"Scope agreed as compliant or controlled","SOP 1"],
+ ...QUOTE,
+ ["B","Core","Receive order / PO; verify NSW and B'Odogwu logins","SE","","COM, CUST",["Purchase order (PO)"],"Order confirmed; customer's Customs platform logins checked","SOP 2"],
+ ["B","Core","Accept or reject quote on Logitude / BO 2.0; move accepted job to Ops stage","SE","CUST","OPM",["Accepted quotation"],"Job moved to the Ops stage","Deck"],
+ CREDIT,
+ ["E","CBT","Customer provides pre-shipment documents","CUST","SE, CO","CS, CO",["Proforma Invoice (PFI)","Marine insurance","Product certificate","NAFDAC certificate","Form M"],"Pre-shipment documents on file","Q4 Flow S1.1"],
+ ["E","CBT","Obtain and validate Form M; check permits","CO","","",["Form M","Product permits"],"Valid Form M and permits in place","Q4 Flow S1.1",{opt:"B"}],
+ ["E","CBT","Upload soft copies, SONCAP and Form M to Customs; generate PAAR","CO","","CS",["SONCAP","Form M","PAAR"],"PAAR issued","Q4 Flow S2.1",{opt:"B"}],
+ ["E","CBT","Pre-alert: receive soft copies and PAAR","CS","CUST","OPM, CO",["Commercial Invoice (CI)","Packing List (PL)","Bill of Lading copy","Form M","PAAR"],"Complete pre-alert at least 14 working days before ETA","Q4 Flow S3.1"],
+ ["E","Core","Gate 1: open file; assign Clearing Officer; record ETA and free time","OPM","","CO",[],"File opened, owner assigned, clock started","Q4 Flow S3.1"],
+ ["E","CBT","Obtain rotation number from the shipping line","CO","","",["Bill of Lading"],"Rotation number confirmed","Q4 Flow S4.1"],
+ ["E","CBT","Generate duty assessment; send to customer for payment","CO","CS","CUST",["PAAR","SGD","Draft assessment","Final Assessment"],"Customer has the assessment to pay duty","Q4 Flow S4.2"],
+ ["E","CBT","Customer pays duty, shares receipt and delivers original documents","CUST","CS","CO, FIN",["Duty payment receipt","Letter of Authority (LOA)","Original Bill of Lading (OBL)","Form M","PAAR","SONCAP","NAFDAC","NESREA"],"Duty paid and originals held (this triggers Customs, THC and exam)","Q4 Flow S5.1–5.3"],
+ ["E","CBT","Obtain shipping invoice and pay","CO","FIN","",["Shipping invoice","Bill of Lading","Authority letter"],"Shipping line paid","Q4 Flow S6.1"],
+ ["E","CBT","Get POP, official receipt and Delivery Order","CO","","",["Proof of payment (POP)","Official receipt","Delivery Order (DO)"],"Delivery Order in hand","Q4 Flow S6.2"],
+ ["E","CBT","Trigger Customs at the bonded terminal","CO","","",["SGD","C number"],"Customs process started at the terminal","Q4 Flow S7.1"],
+ ["E","CBT","Obtain and pay THC","CO","FIN","",["THC invoice","THC receipt"],"Terminal charges paid","Q4 Flow S7.2"],
+ ["E","CBT","Book scanning or examination","CO","","TOP",["Full import document set","Authority letter"],"Examination booked","Q4 Flow S8.1"],
+ ["E","CBT","Containers scanned or dropped for examination","TOP","CO","CO",[],"Container presented for examination","Q4 Flow S8.2"],
+ ["E","CBT","Obtain agencies' report, customs release and DC stamp","CO","","",["Agencies' report","Customs release","DC stamp"],"Cargo released by Customs","Q4 Flow S8.3"],
+ ["E","CBT","Obtain exit and gate pass","CO","","",["Exit note","Gate pass"],"Cargo cleared to leave the terminal","Q4 Flow S9.1"],
+ ["E","CBT","Obtain Terminal Delivery Order","CO","","TM",["Delivery Order (DO)","Terminal Delivery Order (TDO)"],"TDO issued for load-out","Q4 Flow S9.2"],
+ ["E","H","Load containers for dispatch to the warehouse","TM","CO","",["Terminal Delivery Order (TDO)","EIR / gate-out"],"Container out of the port within free time","Q4 Flow S9.3"],
+ ["E","H","Deliver; check seal and cargo; get signed proof of delivery","TM","CUST","CUST",["Signed proof of delivery (POD)"],"Cargo delivered in good condition","Q4 Flow S10.1"],
+ ["E","Core","Daily and weekly wrap-up reports to customer","CS","","CUST",["Wrap-up report"],"Customer kept informed of progress","Q4 Flow R"],
+ ["S","H","Return empty; get EIR; claim deposit refund","TM","FIN","QA",["EIR / container card","Deposit refund claim"],"Empty returned; deposit refund claimed","Q4 Flow S10.2"],
+ ["S","CBT","FECD closure","CO","QA","",["FECD"],"FECD closed","Q4 Flow S11.1"],
+ ["S","Core","Prepare post-delivery documents; upload; send to Finance for invoicing","QA","CO","FIN",["Post-delivery documents"],"Documents complete and Finance can invoice","Q4 Flow S11.2"],
+ ["S","Core","Reconcile vendor costs against quote","FIN","OPM","",["Terminal invoices","Shipping line invoices","Trucking invoices","Agent invoices"],"Actual cost matched to quote; variances approved","Checklist 6.2"],
+ ["S","Core","Issue customer invoice","FIN","","",["Customer invoice"],"Customer invoiced","Checklist 6.4"],
+ ["S","Core","Release original documents after full payment or agreed terms","FIN","","DO",["Payment confirmation"],"Originals cleared for release","Q4 Flow S11.2"],
+ ["S","Core","Dispatch documents; file customer acknowledgement","DO","QA","CUST",["Original documents","Acknowledgement copy"],"Customer has the documents; receipt on file","Q4 Flow S11.2"],
+ ["S","Core","Gate 2: close the file","QA","","OPM",["Completed checklist"],"File marked completed","Q4 Flow S11.2"],
+ ["S","Core","End-to-end supervision; monthly SLA review","OPM","CS, BI","",["Shipment tracker","SLA report"],"Performance reviewed and recurring issues raised","Q4 Flow R"]];
+
+const IMP_AIR=[...PROSPECT,
+ ["B","Core","RFQ: confirm scope (compliant or controlled)","SE","COM, OPM","",["Commercial invoice"],"Scope agreed as compliant or controlled","SOP 1"],
+ ...QUOTE,
+ ["B","Core","Receive order / PO; verify NSW and B'Odogwu logins","SE","","COM, CUST",["Purchase order (PO)"],"Order confirmed; customer's Customs platform logins checked","SOP 2"],
+ ["B","Core","Accept or reject quote (compliant, benchmark or compromise); move accepted job to Ops stage","SE","CUST","QA, CO",["Accepted quotation"],"Job moved to the Ops stage","Deck"],
+ CREDIT,
+ ["E","AF","Book air freight with airline or origin agent; get AWB","QA","","CS",["Booking confirmation","Air Waybill (AWB)"],"Space booked on a flight","Draft"],
+ ["E","AF","Confirm cargo handover at origin airport","CS","CUST","QA",["Cargo receipt"],"Cargo accepted at origin","Draft"],
+ ["E","CBT","Customer provides pre-shipment documents","CUST","SE, CO","CS, CO",["Certificate of Inspection (COI)","Air Waybill (AWB)","Product certificate","NAFDAC certificate","Form M"],"Pre-shipment documents on file","SOP 4"],
+ ["E","CBT","Obtain Form M and apply for PAAR on the customer's behalf","CO","","CS",["Form M","PAAR"],"Form M and PAAR in place","SOP 4",{opt:"B"}],
+ ["E","Core","Build shipment on Back Office","QA","CO","",["Air Waybill (AWB)","Commercial invoice","Letter of Authority (LOA)"],"Shipment live on Back Office","SOP 5"],
+ ["E","Core","Open file; assign Clearing Officer","OPM","","CO",[],"File owner assigned","Checklist 1.7"],
+ ["E","CBT","Pre-alert: receive soft copies and PAAR","CS","CUST","CO",["Commercial Invoice (CI)","Packing List (PL)","Air Waybill (AWB)","Form M","PAAR"],"Complete pre-alert 5 working days before flight ETA","SOP 6"],
+ ["E","AF","Track flight; send ETA to customer","QA","","CS",[],"Customer knows the arrival time","Draft"],
+ ["E","AF","Pay air freight (prepaid or collect); release AWB","FIN","QA","CO",["Freight invoice","Payment receipt"],"Freight paid; AWB released","Draft"],
+ ["E","CBT","Receive original documents including AWB","CO","CUST","",["Letter of Authority (LOA)","Air Waybill (AWB)","Form M","PAAR","SONCAP","NAFDAC","NESREA"],"Originals held before arrival","SOP 7"],
+ ["E","CBT","Draft assessment, customer approval, Final Assessment","CO","CS","CUST",["Draft assessment","Final Assessment"],"Customer approves; Final Assessment generated","SOP 8"],
+ ["E","CBT","Customer pays duty and shares receipt","CUST","FIN","CO",["Duty payment receipt"],"Duty paid","SOP 9"],
+ ["E","CBT","Airline invoice and payment","CO","FIN","",["Airline invoice","Air Waybill (AWB)","Letter of Authority (LOA)"],"Airline paid","SOP 10"],
+ ["E","CBT","Warehouse invoice and payment","CO","FIN","",["Warehouse invoice","Duty payment receipt"],"Warehouse charges paid","SOP 11"],
+ ["E","CBT","Clear cargo: FA, IA, exit note, gate pass","CO","","CUST",["Final Assessment","Inspection Act (IA)","Exit note","Gate pass"],"Cargo released from the airport warehouse","SOP 12"],
+ ["E","H","Deliver cargo to customer","CO","","CUST",["Waybill"],"Cargo delivered","SOP 12"],
+ ["E","H","Customer offloads","CUST","CO","CO",["Delivery waybill"],"Cargo offloaded at the warehouse","SOP 13"],
+ ["S","H","Obtain waybill from driver","CO","","",["Signed waybill"],"Proof of delivery on file","SOP 14"],
+ ["S","Core","Upload and file physical copies","CO","QA","FIN",["All import documents"],"All documents filed","SOP 15"],
+ ["S","CBT","FECD closure; approve delivery of documents to customer","FIN","CO","CUST, OPM",["FECD"],"FECD closed; documents cleared for release","SOP 16"],
+ ["S","Core","Reconcile vendor costs against quote","FIN","OPM","",["Airline invoices","Warehouse invoices","Trucking invoices","Agent invoices"],"Actual cost matched to quote; variances approved","Checklist 6.2"],
+ ["S","Core","Issue customer invoice","FIN","","",["Customer invoice"],"Customer invoiced","Checklist 6.4"],
+ ["S","Core","Close shipment (Gate 2)","OPM","","",["Exception log"],"Shipment closed","Checklist 6.8"],
+ ["S","Core","End-to-end supervision","OPM","","",["Shipment tracker"],"Job delivered within SLA; issues followed up","SOP 17"]];
+
+const EXP_AIR=[...PROSPECT,
+ ["B","Core","RFQ logged","SE","","",[],"Request for quote recorded","Deck"],
+ ...QUOTE,
+ ["B","Core","Accept or reject quote; move accepted job to Ops stage","SE","CUST","QA, OPM",["Accepted quotation"],"Job moved to the Ops stage","Deck"],
+ CREDIT,
+ ["E","Core","File entry and activation","CS","CUST","OPM",["Written instruction","Accepted quotation"],"File active on the platform","Draft"],
+ ["E","Core","Gate 1: assign file to the Clearing Officer","OPM","","CO",[],"File owner assigned","Draft"],
+ ["E","CBT","Share NXP / Proforma Invoice and export permits","CS","CUST","CO",["NXP","Proforma Invoice (PI)","Export permits"],"Export documents on file","Draft"],
+ ["E","AF","Book with airline; get booking and AWB number","QA","","TO",["Booking confirmation","Air Waybill (AWB)"],"Space booked on a flight","Draft"],
+ ["E","H","Allocate vendor and truck","VM","","TO",["Vendor allocation"],"Truck booked","Draft"],
+ ["E","H","Pick up cargo; deliver to airport export warehouse","TO","CUST","CO",["Waybill","Warehouse receipt"],"Cargo at the airport export warehouse","Draft"],
+ ["E","CBT","Export customs processing and inspection at the airport","CO","","QA",["SGD","Inspection report","Export release"],"Cargo cleared for export","Draft"],
+ ["E","AF","Submit AWB details; cargo accepted by handler","QA","","CS",["Air Waybill (AWB)","Cargo acceptance receipt"],"Cargo accepted for the flight","Draft"],
+ ["E","AF","Confirm flight departure to customer","CS","QA","CUST",["Flight confirmation"],"Customer told the cargo has flown","Draft"],
+ ["S","AF","Obtain airline invoice and pay","FIN","QA","",["Airline invoice","Payment receipt"],"Airline paid","Draft"],
+ ["S","CBT","Process post-shipment documents (as ordered)","QA","FIN, DO","DO",["Certificate of Origin","Phytosanitary certificate"],"Post-shipment documents issued","Draft"],
+ ["S","Core","Approve dispatch of documents to customer","FIN","","DO",[],"Documents cleared for release","Draft"],
+ ["S","Core","Deliver closing documents to shipper","DO","","CUST",["Closing documents","Acknowledgement copy"],"Shipper has the documents","Draft"],
+ ["S","Core","Issue final invoice","FIN","","QA",["Final invoice"],"Customer invoiced","Draft"],
+ ["S","Core","Upload and file all documents","QA","","OPM",["Completed checklist"],"All documents filed","Draft"],
+ ["S","Core","Close file and SLA review","OPM","","",["SLA report"],"File closed; performance reviewed","Draft"]];
+
+function freightOnly(auto){
+  return [...PROSPECT,
+  ["B","Core","RFQ logged","SE","","",[],"Request for quote recorded","Deck"],
+  ...QUOTE,
+  ["B","Core","Accept or reject quote; move accepted job to Ops stage","SE","CUST","QA, OPM",["Accepted quotation"],"Job moved to the Ops stage","Deck"],
+  CREDIT,
+  ["E","Core","Build shipment on platform","QA","","",["Accepted quotation"],"Shipment live on the platform","Draft"],
+  ["E","Core","Assign file to Ops officer","OPM","","QA",[],"File owner assigned","Draft"],
+  ...(auto?[["E","AUTO","Collect vehicle documents","CS","CUST","QA",["Vehicle title","Bill of sale","VIN record"],"Vehicle documents on file","Draft"]]:[]),
+  ["E","OF",auto?"Book vehicle with carrier (RoRo or container); get booking confirmation":"Book freight with carrier or origin agent; get booking confirmation","QA","","CS",["Booking confirmation","Sailing schedule"],"Space booked on a vessel","Draft"],
+  ["E","OF","Confirm cargo readiness and pick-up with shipper or origin agent","CS","CUST","QA",[],"Cargo ready and collected at origin","Draft"],
+  ["E","OF","Submit SI; get draft BL; customer confirms","QA","CS, CUST","CS",["Shipping Instruction (SI)","Draft Bill of Lading"],"BL details agreed with the customer","Draft"],
+  ["E","OF","Track vessel; send ETA updates to customer","QA","","CS",[],"Customer knows the arrival time","Draft"],
+  ["E","OF","Arrival notice to consignee","CS","","CUST",["Arrival notice"],"Consignee ready to collect","Draft"],
+  ["S","OF","Obtain and pay freight invoice","FIN","QA","QA",["Freight invoice","Payment receipt"],"Carrier paid","Draft"],
+  ["S","OF","Release OBL or telex release to customer","QA","FIN","CUST",["Original Bill of Lading (OBL) or telex release"],"Customer can take delivery","Draft"],
+  ["S","Core","Issue customer invoice","FIN","","",["Customer invoice"],"Customer invoiced","Draft"],
+  ["S","Core","Upload and file all documents","QA","","OPM",[],"All documents filed per Job ID","Draft"],
+  ["S","Core","Close file and SLA review","OPM","","",["SLA report"],"File closed; performance reviewed","Draft"]];
+}
+const FS=freightOnly(false), AUTO=freightOnly(true);
+
+const STAGES=[["P","Prospecting"],["B","Pre-Booking"],["E","Execution"],["S","Post Shipment"]];
+
+function modulesFor(code){
+  if(code==="VA-OTHER")return [];
+  if(code==="AI-OF-AUTO")return ["OF","AUTO"];
+  const s=code.split("-")[1];
+  if(s==="FULL")return code.startsWith("VA")?["AF","H","CBT"]:["OF","H","CBT"];
+  const out=[];["OF","AF","H","CBT"].forEach(m=>{if(s.includes(m))out.push(m)});
+  if(out.includes("AF")&&out.includes("OF"))out.splice(out.indexOf("OF"),1);
+  return out;
+}
+function flowFor(code,dir){
+  const p=code.split("-")[0], m=modulesFor(code);
+  if(p==="OE")return{flow:EXP_OCEAN,note:null};
+  if(p==="OI")return{flow:IMP_OCEAN,note:null};
+  if(p==="VA"){
+    if(code==="VA-OTHER")return{flow:IMP_AIR,note:"<b>Scoped job by job.</b> Only the Core tasks every job shares are shown. Add modules once the scope is known."};
+    if(dir==="export")return{flow:EXP_AIR,note:"<b>No SOP for air export yet.</b> Execution and Post Shipment tasks are drafts for the team to check."};
+    return{flow:IMP_AIR,note:m.includes("AF")?"<b>Draft tasks included.</b> The air freight tasks are drafts: no SOP covers origin booking on imports yet.":null};
+  }
+  if(p==="FS")return{flow:FS,note:"<b>No SOP for FreightSaver yet.</b> Execution and Post Shipment tasks are drafts for the team to check."};
+  return{flow:AUTO,note:"<b>No SOP for Auto Import yet.</b> Execution and Post Shipment tasks are drafts for the team to check, with a vehicle documents task for Tier 3 Automobiles."};
+}
+function tasksFor(code,dir){
+  const mods=new Set(["Core",...modulesFor(code)]);
+  const {flow,note}=flowFor(code,dir);
+  return{tasks:flow.filter(t=>mods.has(t[1])),note};
+}
+const people=t=>[t[3],...t[4].split(", ")].filter(r=>r&&!EXTERNAL.has(r));
+const srcClass=s=>{const f=s.split(" ")[0];return f==="Q4"?"Q4":f};
+
+/* ---------- playbook UI ---------- */
+const state={prod:"OE",code:"OE-FULL",dir:"import"};
+try{const s=JSON.parse(localStorage.getItem("pb")||"null");if(s&&NAME[s.code]){Object.assign(state,s)}}catch(e){}
+const prodBox=document.getElementById("pb-prod"),svcSel=document.getElementById("pb-svc"),dirSel=document.getElementById("pb-dir"),dirWrap=document.getElementById("pb-dir-wrap");
+prodBox.innerHTML=Object.entries(P).map(([k,v])=>`<label><input type="radio" name="pbp" id="pbp-${k}" value="${k}"><span>${v}</span></label>`).join("");
+function fillSvc(){
+  svcSel.innerHTML=ROWS.filter(r=>r[0]===state.prod).map(r=>`<option value="${r[1]}">${esc(r[2])}</option>`).join("");
+  if(!ROWS.some(r=>r[1]===state.code&&r[0]===state.prod)){state.code=ROWS.find(r=>r[0]===state.prod)[1]}
+  svcSel.value=state.code;
+}
+function renderPB(){
+  document.getElementById("pbp-"+state.prod).checked=true;
+  fillSvc();dirSel.value=state.dir;
+  dirWrap.hidden=!(state.prod==="VA"&&state.code!=="VA-OTHER");
+  const dir=state.prod==="VA"?state.dir:"";
+  const {tasks,note}=tasksFor(state.code,dir);
+  document.getElementById("pb-note").innerHTML=note?`<div class="pb-note draft">${note}</div>`:"";
+  const teams=new Set();tasks.forEach(t=>people(t).forEach(r=>teams.add(r)));
+  const drafts=tasks.filter(t=>t[8]==="Draft").length;
+  const docs=new Set();tasks.forEach(t=>t[6].forEach(d=>docs.add(d)));
+  document.getElementById("pb-sum").innerHTML=`<div><b>${tasks.length}</b><span>tasks</span></div><div><b>${teams.size}</b><span>internal roles</span></div><div><b>${docs.size}</b><span>documents</span></div><div><b>${drafts}</b><span>draft tasks to check</span></div>`;
+  let n=0;
+  document.getElementById("pb-stages").innerHTML=STAGES.map(([s,label],i)=>{
+    const ts=tasks.filter(t=>t[0]===s);
+    const st=new Set();ts.forEach(t=>people(t).forEach(r=>st.add(r)));
+    const rows=ts.map(t=>{n++;const src=srcClass(t[8]),x=t[9]||{};
+      const dr=src==="Draft"?`<span class="chip s-Draft">Draft</span>`:"";
+      const tag=x.opt==="B"?`<span class="chip opt">Only if OnePort handles Form M / PAAR</span>`:x.opt==="Lekki"?`<span class="chip opt">Lekki only</span>`:"";
+      const lk=x.lekki?`<small class="lk">Lekki: ${esc(x.lekki)}</small>`:"";
+      return `<tr class="${src==="Draft"?"draft":""}${x.opt?" optrow":""}"><td class="num">${n}</td><td class="t">${esc(t[2])}${dr?" "+dr:""}${tag?" "+tag:""}${lk}</td><td><span class="chip m-${t[1]}">${t[1]}</span></td><td class="o">${esc(rn(t[3]))}${t[4]?`<small>with ${esc(t[4].split(", ").map(rn).join(", "))}</small>`:""}</td><td class="o">${t[5]?esc(t[5].split(", ").map(rn).join(", ")):"—"}</td><td class="d">${t[6].length?`<ul class="docs">${t[6].map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:"—"}</td><td class="out">${esc(t[7])}</td></tr>`}).join("");
+    return `<div class="stage"><div class="stage-h"><div class="n">${i+1}</div><h3>${label}</h3><div class="teams">${[...st].map(r=>`<span class="chip">${esc(rn(r))}</span>`).join("")}</div></div>
+      ${ts.length?`<div class="scroll"><table class="tasks"><thead><tr><th>#</th><th>Task</th><th>Module</th><th>Owner</th><th>Hands to</th><th>Documents</th><th>Expected outcome</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<p class="empty">No tasks for this service in this stage.</p>`}</div>`;
+  }).join("");
+  try{localStorage.setItem("pb",JSON.stringify(state))}catch(e){}
+}
+prodBox.addEventListener("change",e=>{state.prod=e.target.value;state.code="";renderPB()});
+svcSel.addEventListener("change",()=>{state.code=svcSel.value;renderPB()});
+dirSel.addEventListener("change",()=>{state.dir=dirSel.value;renderPB()});
+renderPB();
+
+/* ---------- team x product matrix ---------- */
+const COLS=[["OneExport","OE-FULL",""],["OneImport","OI-HCBT",""],["VAAS air import","VA-FULL","import"],["VAAS air export","VA-FULL","export"],["FreightSaver","FS-OF",""],["Auto Import","AI-OF-AUTO",""]];
+const usage={},owned={};
+COLS.forEach(([,code,dir],ci)=>{tasksFor(code,dir).tasks.forEach(t=>{
+  people(t).forEach(r=>{usage[r]=usage[r]||COLS.map(()=>new Set());usage[r][ci].add(t[0])});
+})});
+/* tasks a role owns on a single job, across every service and direction */
+const JOBS=[];ROWS.forEach(r=>{if(r[0]==="VA"&&r[1]!=="VA-OTHER"){JOBS.push([r[1],"import"],[r[1],"export"])}else JOBS.push([r[1],""])});
+JOBS.forEach(([code,dir])=>{const c={};tasksFor(code,dir).tasks.forEach(t=>{if(!EXTERNAL.has(t[3]))c[t[3]]=(c[t[3]]||0)+1});
+  Object.entries(c).forEach(([k,v])=>{const o=owned[k]=owned[k]||{min:Infinity,max:0,svc:new Set()};o.min=Math.min(o.min,v);o.max=Math.max(o.max,v);o.svc.add(code)})});
+const ownedTxt=k=>{const o=owned[k];if(!o)return "Support / escalation";const r=o.min===o.max?String(o.max):o.min+"–"+o.max;return r+(r==="1"?" task":" tasks")+" per job"};
+(function(){
+  let h=`<thead><tr><th>Role</th>${COLS.map(c=>`<th class="p">${c[0]}</th>`).join("")}</tr></thead><tbody>`;
+  GROUPS.forEach(([g,roles])=>roles.forEach(([k])=>{
+    if(!usage[k])return;
+    h+=`<tr><td class="role">${esc(rn(k))}</td>${COLS.map((c,ci)=>`<td class="cell"><span class="st" title="${esc(rn(k))} · ${c[0]}">${STAGES.map(([s])=>`<i class="${usage[k][ci].has(s)?"on":""}"></i>`).join("")}</span></td>`).join("")}</tr>`;
+  }));
+  document.getElementById("tm").innerHTML=h+"</tbody>";
+  document.getElementById("roster").innerHTML=GROUPS.map(([g,roles])=>`<div class="rgroup"><h3>${g}</h3><ul>${roles.map(([k,nm])=>`<li><div>${esc(nm)}</div><span>${ownedTxt(k)}</span></li>`).join("")}</ul></div>`).join("");
+  const total=GROUPS.reduce((a,g)=>a+g[1].length,0);
+  document.getElementById("roster-tag").textContent=total+" roles · "+GROUPS.length+" teams";
+})();
+
+/* ---------- classifier ---------- */
+function classify(mode,route,cargo,svc){
+  const F=svc.has("F"),H=svc.has("H"),C=svc.has("CBT");
+  const combo=(pre,fr)=>{const parts=[];if(F)parts.push(fr);if(H)parts.push("H");if(C)parts.push("CBT");
+    if(F&&H&&C)return pre+"-FULL";return pre+"-"+parts.join("");};
+  if(!F&&!H&&!C)return{code:"VA-OTHER",rule:6,why:"No freight, haulage or customs work selected, so it falls to the catch-all."};
+  const freightOnly=F&&!H&&!C;
+  if(cargo==="car"&&mode==="ocean"&&freightOnly&&route!=="export")return{code:"AI-OF-AUTO",rule:1,why:"A car moving by ocean, freight only, not an export out of Nigeria."};
+  if(mode==="air")return{code:combo("VA","AF"),rule:2,dir:route==="export"?"export":"import",why:"Every air job sits in VAAS."};
+  if(route==="export")return{code:combo("OE","OF"),rule:3,why:"An ocean job out of Nigeria."+(cargo==="car"?" Car exports go to OneExport.":"")};
+  if(freightOnly)return{code:"FS-OF",rule:4,why:"Ocean freight only, and not an export out of Nigeria."};
+  if(route==="import"){const land=H&&C?"OI-HCBT":H?"OI-H":"OI-CBT";
+    if(F)return{code:land,split:cargo==="car"?"AI-OF-AUTO":"FS-OF",rule:5,why:"An import into Nigeria where we carry the freight and do landside work: the freight is recorded under "+(cargo==="car"?"Auto Import":"FreightSaver")+" and the landside work under OneImport."};
+    return{code:land,rule:5,why:"An import into Nigeria with landside work only."};}
+  return{code:"VA-OTHER",rule:6,why:"A cross-trade job with landside work fits no other product."};
+}
+let last=null;
+function update(){
+  const f=document.getElementById("f");
+  const mode=f.mode.value,route=f.route.value,cargo=f.cargo.value;
+  const svc=new Set([...f.querySelectorAll('input[name=svc]:checked')].map(i=>i.value));
+  const r=classify(mode,route,cargo,svc);last=r;
+  const nm=c=>P[c.split("-")[0]]+" · "+NAME[c];
+  document.getElementById("o-prod").textContent=r.split?P[r.split.split("-")[0]]+" + "+P[r.code.split("-")[0]]:P[r.code.split("-")[0]];
+  document.getElementById("o-svc").textContent=r.split?"Two records: "+nm(r.split)+" and "+nm(r.code):NAME[r.code];
+  document.getElementById("o-why").textContent="Rule "+r.rule+": "+r.why;
+  const parts=[...(r.split?[r.split]:[]),r.code].map(c=>tasksFor(c,r.dir||"import").tasks);
+  const teams=new Set();parts.flat().forEach(t=>people(t).forEach(x=>teams.add(x)));
+  document.getElementById("o-load").textContent=(r.split?parts.map(p=>p.length).join(" + ")+" tasks":parts[0].length+" tasks")+" · "+teams.size+" internal roles";
+}
+document.getElementById("f").addEventListener("change",update);update();
+document.getElementById("o-open").addEventListener("click",()=>{
+  state.prod=last.code.split("-")[0];state.code=last.code;if(last.dir)state.dir=last.dir;renderPB();
+  document.getElementById("playbook").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+});
+</script>
+
+</body>
+</html>
