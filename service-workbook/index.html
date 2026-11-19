@@ -327,43 +327,7 @@ td.sla{min-width:150px;font-size:12.5px}
     <p class="sub">Which product is this shipment, who works on it, and what do they do?</p>
   </header>
 
-  <section>
-    <div class="sec-head"><h2>The four stages of every job</h2><span class="tag">Same for all 5 products</span></div>
-    <div class="box">
-      <div class="journey">
-        <div class="phase"><div class="n">1</div><h3>Prospecting</h3><p>Deal created, customer contacted and qualified.</p><div class="span">Ends: customer qualified</div></div>
-        <div class="phase"><div class="n">2</div><h3>Pre-Booking</h3><p>RFQ or order, rates, quote, margin gate, acceptance, credit and terms.</p><div class="span">Ends: quote accepted and moved to Ops</div></div>
-        <div class="phase"><div class="n">3</div><h3>Execution</h3><p>File activation and assignment, carrier booking and empty release, customs documents and clearance, duty and terminal payments, trucking, stuffing or delivery, and vessel loading.</p><div class="span">Ends: export sailed and final draft BL confirmed, or import delivered and offloaded</div></div>
-        <div class="phase"><div class="n">4</div><h3>Post Shipment</h3><p>Carrier invoices, OBL, empty return, FECD, dispatch, final invoice, filing, closure and SLA review.</p><div class="span">Ends: file closed</div></div>
-      </div>
-    </div>
-  </section>
 
-  <section>
-    <div class="sec-head"><h2>Product Tier</h2><span class="tag">5 products · 20 services</span></div>
-    <div class="box scroll">
-      <table>
-        <thead><tr><th>Tier 1</th><th>Tier 2 service</th><th>What it covers</th><th>Ocean freight</th><th>Air freight</th><th>Haulage</th><th>Customs &amp; docs</th><th>Direction</th></tr></thead>
-        <tbody id="matrix"></tbody>
-      </table>
-    </div>
-    <div class="legend"><span><b>OF</b> Ocean Freight</span><span><b>AF</b> Air Freight</span><span><b>H</b> Haulage</span><span><b>CBT</b> Customs Clearing &amp; Documentation</span></div>
-  </section>
-
-  <section>
-    <div class="sec-head"><h2>How a shipment is classified</h2><span class="tag">First match wins</span></div>
-    <div class="box">
-      <div class="rules">
-        <div class="rule"><div class="n">1</div><div class="q">Is the cargo a car, ocean freight only, and not an export out of Nigeria?<small>A car export out of Nigeria goes to OneExport. If we also clear or deliver the car, see rule 5</small></div><span class="pill">Auto Import</span></div>
-        <div class="rule"><div class="n">2</div><div class="q">Is it moving by air?<small>Includes air exports out of Nigeria</small></div><span class="pill">VAAS</span></div>
-        <div class="rule"><div class="n">3</div><div class="q">Is it an ocean export out of Nigeria?</div><span class="pill">OneExport</span></div>
-        <div class="rule"><div class="n">4</div><div class="q">Is it ocean freight only, on any port pair?</div><span class="pill">FreightSaver</span></div>
-        <div class="rule"><div class="n">5</div><div class="q">Is it an import into Nigeria with haulage or customs work?</div><span class="pill">OneImport</span></div>
-        <div class="rule"><div class="n">6</div><div class="q">None of the above?<small>For example, cross-trade jobs with landside work</small></div><span class="pill alt">VAAS · Other</span></div>
-      </div>
-      <p class="flowcap">The system checks the rules from 1 to 6 and stops at the first one that fits. The services we provide on the job then pick the Tier 2 code inside that product.</p>
-    </div>
-  </section>
 
   <section>
     <div class="sec-head"><h2>Try a shipment</h2><span class="tag">Interactive</span></div>
@@ -424,54 +388,19 @@ td.sla{min-width:150px;font-size:12.5px}
       </div>
       <div id="pb-note"></div>
       <div class="pb-sum" id="pb-sum"></div>
-      <p class="clock-note">Hours and days are clock hours and calendar days unless marked "working". See the SLAs section for how time is counted.</p>
+      <p class="clock-note">Hours and days are clock hours and calendar days unless marked "working". Working time is 8:00–17:00 WAT, Monday to Saturday.</p>
       <div id="pb-stages"></div>
 
     </div>
   </section>
 
-  <section hidden>
-    <div class="sec-head"><h2>Who works on each product</h2><span class="tag">Full service, by stage</span></div>
-    <div class="box scroll">
-      <table class="tm" id="tm"></table>
-      <div class="stkey"><span class="st"><i class="on"></i><i></i><i></i><i></i></span><span>Each square is a stage, in order: Prospecting, Pre-Booking, Execution, Post Shipment. Filled means the team owns or supports a task in that stage.</span></div>
-    </div>
-  </section>
 
-  <section id="slas">
-    <div class="sec-head"><h2>SLAs</h2><span class="tag">How time is counted</span></div>
-    <div class="box">
-      <div class="defs">
-        <div class="def"><span class="dk">Hours</span><p>An SLA in <b>hours (h)</b> means clock hours, 24 a day. Only where the SOP says <b>working hours</b> is time counted 8:00–17:00 WAT, Monday to Saturday.</p></div>
-        <div class="def"><span class="dk">Days</span><p>An SLA in <b>days</b> means calendar days. Only where the SOP says <b>working days</b> is time counted Monday to Saturday.</p></div>
-        <div class="def"><span class="dk">Working time</span><p>8:00–17:00 WAT, <b>Monday to Saturday</b>. Public holidays count as working days; the clock does not pause.</p></div>
-        <div class="def"><span class="dk">End-to-end</span><p>Every end-to-end SLA is measured in <b>calendar days</b>.</p></div>
-        <div class="def"><span class="dk">Range</span><p>A range such as 24–48 h or 10–14 days is <b>on track up to its upper figure</b> and breached after it.</p></div>
-      </div>
-      <div class="sla-pick" hidden>
-        <div class="pb-ctrl">
-          <div class="opts" role="radiogroup" aria-label="Product" id="sla-prod"></div>
-          <div class="pb-row">
-            <label class="sel">Tier 2 service<select id="sla-svc"></select></label>
-            <label class="sel" id="sla-dir-wrap">Direction<select id="sla-dir"><option value="import">Air import</option><option value="export">Air export</option></select></label>
-          </div>
-        </div>
-        <div class="pb-sum" id="sla-sum"></div>
-        <div id="sla-e2e"></div>
-      </div>
-    </div>
-  </section>
 
   <section>
     <div class="sec-head"><h2>End-to-end SLA by product</h2><span class="tag">Calendar days</span></div>
     <div id="e2e-all"></div>
   </section>
 
-  <section>
-    <div class="sec-head"><h2>Team roster</h2><span class="tag" id="roster-tag"></span></div>
-    <div class="roster" id="roster"></div>
-    <p class="muted" style="margin-top:10px;font-size:12.5px">Every role here exists today. Each count is the number of tasks the role owns on a single job. Roles that own no task act as support or escalation points, which Phase 3 will set out.</p>
-  </section>
 
   
 
@@ -517,7 +446,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 
 /* ---------- service matrix ---------- */
 (function(){
-  const tb=document.getElementById("matrix");let html="",last="";
+  const tb=document.getElementById("matrix");if(!tb)return;let html="",last="";
   const counts={};ROWS.forEach(r=>counts[r[0]]=(counts[r[0]]||0)+1);
   ROWS.forEach(r=>{
     const has=new Set(r[3].split(" "));const d=k=>`<td class="ctr">${has.has(k)?'<span class="yes" title="Included"></span>':''}</td>`;
@@ -911,8 +840,9 @@ renderPB();
 /* ---------- SLA section: its own product and service picker ---------- */
 const slaState={prod:"OE",code:"OE-FULL",dir:"import"};
 const sProd=document.getElementById("sla-prod"),sSvc=document.getElementById("sla-svc"),sDir=document.getElementById("sla-dir"),sDirWrap=document.getElementById("sla-dir-wrap");
-sProd.innerHTML=Object.entries(P).map(([k,v])=>`<label><input type="radio" name="slap" id="slap-${k}" value="${k}"><span>${v}</span></label>`).join("");
+if(sProd)sProd.innerHTML=Object.entries(P).map(([k,v])=>`<label><input type="radio" name="slap" id="slap-${k}" value="${k}"><span>${v}</span></label>`).join("");
 function renderSLA(){
+  if(!sProd)return;
   document.getElementById("slap-"+slaState.prod).checked=true;
   sSvc.innerHTML=ROWS.filter(r=>r[0]===slaState.prod).map(r=>`<option value="${r[1]}">${esc(r[2])}</option>`).join("");
   if(!ROWS.some(r=>r[1]===slaState.code&&r[0]===slaState.prod))slaState.code=ROWS.find(r=>r[0]===slaState.prod)[1];
@@ -924,9 +854,9 @@ function renderSLA(){
   document.getElementById("sla-sum").innerHTML=`<div><b>${tasks.length}</b><span>tasks</span></div><div><b>${withSla}</b><span>tasks with an SLA</span></div><div><b>${tasks.length-withSla}</b><span>tasks not set</span></div><div><b>${drafts}</b><span>draft tasks to check</span></div>`;
   document.getElementById("sla-e2e").innerHTML=e2eCard(e2eKey(slaState.code,dir),slaState.code,dir,true);
 }
-sProd.addEventListener("change",e=>{slaState.prod=e.target.value;slaState.code="";renderSLA()});
-sSvc.addEventListener("change",()=>{slaState.code=sSvc.value;renderSLA()});
-sDir.addEventListener("change",()=>{slaState.dir=sDir.value;renderSLA()});
+if(sProd)sProd.addEventListener("change",e=>{slaState.prod=e.target.value;slaState.code="";renderSLA()});
+if(sSvc)sSvc.addEventListener("change",()=>{slaState.code=sSvc.value;renderSLA()});
+if(sDir)sDir.addEventListener("change",()=>{slaState.dir=sDir.value;renderSLA()});
 renderSLA();
 document.getElementById("e2e-all").innerHTML=`<div class="e2c-grid">${["OE","OI","VI"].map(k=>e2eCard(k)).join("")}</div><div class="e2c-off">${["VE","VO","FS","AI"].map(k=>e2eCard(k)).join("")}</div>`;
 
@@ -942,6 +872,7 @@ JOBS.forEach(([code,dir])=>{const c={};tasksFor(code,dir).tasks.forEach(t=>{if(!
   Object.entries(c).forEach(([k,v])=>{const o=owned[k]=owned[k]||{min:Infinity,max:0,svc:new Set()};o.min=Math.min(o.min,v);o.max=Math.max(o.max,v);o.svc.add(code)})});
 const ownedTxt=k=>{const o=owned[k];if(!o)return "Support / escalation";const r=o.min===o.max?String(o.max):o.min+"–"+o.max;return r+(r==="1"?" task":" tasks")+" per job"};
 (function(){
+  if(!document.getElementById("tm"))return;
   let h=`<thead><tr><th>Role</th>${COLS.map(c=>`<th class="p">${c[0]}</th>`).join("")}</tr></thead><tbody>`;
   GROUPS.forEach(([g,roles])=>roles.forEach(([k])=>{
     if(!usage[k])return;
@@ -977,7 +908,7 @@ function update(){
   const nm=c=>P[c.split("-")[0]]+" · "+NAME[c];
   document.getElementById("o-prod").textContent=r.split?P[r.split.split("-")[0]]+" + "+P[r.code.split("-")[0]]:P[r.code.split("-")[0]];
   document.getElementById("o-svc").textContent=NAME[r.code]+(r.auto?" · Tier 3: Automobiles":"");
-  document.getElementById("o-why").textContent="Rule "+r.rule+": "+r.why;
+  document.getElementById("o-why").textContent=r.why;
   const parts=[...(r.split?[r.split]:[]),r.code].map(c=>tasksFor(c,r.dir||"import").tasks);
   const teams=new Set();parts.flat().forEach(t=>people(t).forEach(x=>teams.add(x)));
   document.getElementById("o-load").textContent=(r.split?parts.map(p=>p.length).join(" + ")+" tasks":parts[0].length+" tasks")+" · "+teams.size+" internal roles";
