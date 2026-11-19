@@ -395,7 +395,7 @@ td.sla{min-width:150px;font-size:12.5px}
   
 
   <section id="playbook">
-    <div class="sec-head"><h2>Product Milestones</h2><span class="tag">Pick a product and service</span></div>
+    <div class="sec-head"><h2>Product Milestones</h2></div>
     <div class="box">
       <p class="pb-showing" id="pb-showing"></p>
       <div id="pb-note"></div>
@@ -477,7 +477,7 @@ const rn=k=>ROLE[k]||k;
 
 /* ---------- tasks ----------
    [stage, module, task, owner, with, hands to, documents, expected outcome, source, extra]
-   stage: P Prospecting, B Pre-Booking, E Execution, S Post Shipment
+   stage: P Prospecting, B Pre-Booking, E then split into K Booking / X Post-Booking (see BOOKING)
    extra: {opt:"B"} only when OnePort handles Form M / PAAR; {opt:"Lekki"} Lekki only; {lekki:"..."} Lekki variant note */
 const PROSPECT=[
  ["P","Core","Deal created","SE","","",[],"Deal recorded in the pipeline","Deck"],
@@ -639,6 +639,59 @@ function freightOnly(auto){
 }
 const FS=freightOnly(false), AUTO=freightOnly(true);
 
+/* stages: Booking (K) runs from quote acceptance to Gate 1; Post-Booking (X) is everything after, to file closure and review */
+const BOOKING={
+ EO:["File entry and activation","Share NXP / Proforma Invoice","Place booking; get booking confirmation and ERO","Gate 1: assign file to the Clearing Officer"],
+ OI:["Customer provides pre-shipment documents","Obtain and validate Form M; check permits","Upload soft copies, SONCAP and Form M to Customs; generate PAAR","Pre-alert: receive soft copies and PAAR","Gate 1: open file; assign Clearing Officer; record ETA and free time"],
+ VI:["Book air freight with airline or origin agent; get AWB","Customer provides pre-shipment documents","Obtain Form M and apply for PAAR on the customer's behalf","Build shipment on Back Office","Open file; assign Clearing Officer","Pre-alert: receive soft copies and PAAR"],
+ VE:["File entry and activation","Gate 1: assign file to the Clearing Officer","Share NXP / Proforma Invoice and export permits","Book with airline; get booking and AWB number"],
+ FO:["Build shipment on platform","Assign file to Ops officer","Collect vehicle documents","Book freight with carrier or origin agent; get booking confirmation","Book vehicle with carrier (RoRo or container); get booking confirmation"]};
+[[EXP_OCEAN,"EO"],[IMP_OCEAN,"OI"],[IMP_AIR,"VI"],[EXP_AIR,"VE"],[FS,"FO"],[AUTO,"FO"]].forEach(([f,k])=>{const b=new Set(BOOKING[k]);f.forEach(t=>{if(t[0]==="E"||t[0]==="S")t[0]=(t[0]==="E"&&b.has(t[2]))?"K":"X"})});
+
+/* documents: one name per document, no bundles, and records moved into the expected outcome */
+const DOC_ALIAS={"NAFDAC":"NAFDAC certificate","Bill of Lading copy":"Bill of Lading","Commercial invoice":"Commercial Invoice (CI)","Proforma Invoice (PFI)":"Proforma Invoice (PI)",
+ "Airline invoices":"Airline invoice","Warehouse invoices":"Warehouse invoice","Shipping line invoices":"Shipping invoice","Signed waybill":"Waybill","Delivery waybill":"Waybill",
+ "EIR / gate-out":"EIR","EIR / container card":"EIR","Inspection Act (IA)":"Inspection Act"};
+const DOC_ALIAS_IMPORT={"Authority letter":"Letter of Authority (LOA)"};
+const DOC_DROP=new Set([/* bundles */"Full import document set","All import documents","Original documents","Post-delivery documents","Export documents","Closing documents","Gate-in documents",
+ /* records */"SLA report","Shipment tracker","Wrap-up report","Completed checklist","Exception log","Closure email","Vessel confirmation email","Drop-off terminal confirmation email",
+ "Loading confirmation","Vendor allocation","EDI update","Stuffing photos","Flight confirmation","Payment confirmation","C number","DC stamp"]);
+const DOC_SPLIT={"Liner invoices":["Freight invoice","Local charges invoice"]};
+const OUTCOME_EDIT={
+ "Place booking; get booking confirmation and ERO":"Space booked; empty released; drop-off terminal confirmed by email; cut-offs recorded",
+ "Allocate vendor and truck":"Vendor allocated; truck booked at agreed price and terms",
+ "Update EDI of units":"EDI updated; units visible in the Lekki terminal system",
+ "Stuff container with Customs and agencies":"Container stuffed and sealed; seal number and stuffing photos recorded",
+ "Vessel confirmation (ETA / ETD); confirm to customer":"Vessel confirmed by email; customer told the sailing plan",
+ "Loading on vessel":"Loading confirmed on the planned vessel, or waiver sought if rolled over",
+ "Send closure email with date":"Closure email sent; Finance and BI know the shipment is complete",
+ "File all documents; Gate 2 closure":"Checklist complete; all documents filed per Job ID; file closed",
+ "Monthly SLA review":"SLA report reviewed; recurring issues raised",
+ "Trigger Customs at the bonded terminal":"Customs process started at the terminal; C number recorded",
+ "Obtain agencies' report, customs release and DC stamp":"Cargo released by Customs; DC stamp obtained",
+ "Daily and weekly wrap-up reports to customer":"Daily and weekly wrap-up reports sent; customer kept informed",
+ "Release original documents after full payment or agreed terms":"Full payment confirmed; originals cleared for release",
+ "Dispatch documents; file customer acknowledgement":"Original documents delivered to the customer; acknowledgement on file",
+ "Gate 2: close the file":"Closure checklist complete; file marked completed",
+ "End-to-end supervision; monthly SLA review":"Shipment tracker and SLA report reviewed; recurring issues raised",
+ "Prepare post-delivery documents; upload; send to Finance for invoicing":"Post-delivery documents complete and uploaded; Finance can invoice",
+ "Upload and file physical copies":"All import documents filed",
+ "Close shipment (Gate 2)":"Exception log updated; shipment closed",
+ "End-to-end supervision":"Shipment tracker reviewed; job delivered within SLA and issues followed up",
+ "Confirm flight departure to customer":"Flight departure confirmed to the customer",
+ "Upload and file all documents":"Checklist complete; all documents filed per Job ID",
+ "Close file and SLA review":"File closed; SLA report reviewed",
+ "Deliver closing documents to shipper":"Closing documents delivered to the shipper; acknowledgement on file",
+ "Get Inspection Act; submit export documents to the shipping line":"Inspection Act obtained; export documents lodged with the shipping line",
+ "Exit warehouse or terminal; gate in to port":"Gate-in documents processed; container gated in before cargo cut-off",
+ "Book scanning or examination":"Examination booked with the full import document set"};
+const tidied=new Set();
+[[EXP_OCEAN,false],[IMP_OCEAN,true],[IMP_AIR,true],[EXP_AIR,false],[FS,false],[AUTO,false]].forEach(([f,imp])=>f.forEach(t=>{
+  if(tidied.has(t))return;tidied.add(t);
+  const out=[];t[6].forEach(d=>{(DOC_SPLIT[d]||[d]).forEach(x=>{x=(imp&&DOC_ALIAS_IMPORT[x])||DOC_ALIAS[x]||x;if(!DOC_DROP.has(x)&&!out.includes(x))out.push(x)})});
+  t[6]=out; if(OUTCOME_EDIT[t[2]])t[7]=OUTCOME_EDIT[t[2]];
+}));
+
 
 /* ---------- SLAs (Phase 3) ----------
    All hours and days are working hours and days, Monday to Saturday. Public holidays do not pause the clock.
@@ -748,7 +801,7 @@ const E2E={
  FS:{label:"FreightSaver",why:"No SOP for FreightSaver yet"},
  AI:{label:"Auto Import",why:"No SOP for Auto Import yet"}};
 function e2eKey(code,dir){const p=code.split("-")[0];if(p!=="VA")return p;if(code==="VA-OTHER")return "VO";return dir==="export"?"VE":"VI"}
-const STAGE_ORDER={P:0,B:1,E:2,S:3};
+const STAGE_ORDER={P:0,B:1,K:2,X:3};
 const HIDDEN_STAGES=new Set(["P","B"]);
 function serials(code,dir){const ts=tasksFor(code,dir).tasks.filter(t=>!HIDDEN_STAGES.has(t[0])).sort((a,b)=>STAGE_ORDER[a[0]]-STAGE_ORDER[b[0]]);const m={};ts.forEach((t,i)=>m[t[2]]=i+1);return m}
 function trig(x,ser){
@@ -774,7 +827,7 @@ function e2eCard(k,code,dir,compact){
   </div>`;
 }
 
-const STAGES=[["P","Prospecting"],["B","Pre-Booking"],["E","Execution"],["S","Post Shipment"]];
+const STAGES=[["P","Prospecting"],["B","Pre-Booking"],["K","Booking"],["X","Post-Booking"]];
 
 function modulesFor(code){
   if(code==="VA-OTHER")return [];
@@ -791,11 +844,11 @@ function flowFor(code,dir){
   if(p==="OI")return{flow:IMP_OCEAN,note:null};
   if(p==="VA"){
     if(code==="VA-OTHER")return{flow:IMP_AIR,note:"<b>Scoped job by job.</b> Only the Core tasks every job shares are shown. Add modules once the scope is known."};
-    if(dir==="export")return{flow:EXP_AIR,note:"<b>No SOP for air export yet.</b> Execution and Post Shipment tasks are drafts for the team to check."};
+    if(dir==="export")return{flow:EXP_AIR,note:"<b>No SOP for air export yet.</b> Booking and Post-Booking tasks are drafts for the team to check."};
     return{flow:IMP_AIR,note:m.includes("AF")?"<b>Draft tasks included.</b> The air freight tasks are drafts: no SOP covers origin booking on imports yet.":null};
   }
-  if(p==="FS")return{flow:FS,note:"<b>No SOP for FreightSaver yet.</b> Execution and Post Shipment tasks are drafts for the team to check."};
-  return{flow:AUTO,note:"<b>No SOP for Auto Import yet.</b> Execution and Post Shipment tasks are drafts for the team to check, with a vehicle documents task for Tier 3 Automobiles."};
+  if(p==="FS")return{flow:FS,note:"<b>No SOP for FreightSaver yet.</b> Booking and Post-Booking tasks are drafts for the team to check."};
+  return{flow:AUTO,note:"<b>No SOP for Auto Import yet.</b> Booking and Post-Booking tasks are drafts for the team to check, with a vehicle documents task for Tier 3 Automobiles."};
 }
 function tasksFor(code,dir){
   const mods=new Set(["Core",...modulesFor(code)]);
