@@ -266,7 +266,7 @@ td.out{min-width:170px;font-size:12.5px}
       <div class="journey">
         <div class="phase"><div class="n">1</div><h3>Prospecting</h3><p>Deal created, customer contacted and qualified.</p><div class="span">Ends: customer qualified</div></div>
         <div class="phase"><div class="n">2</div><h3>Pre-Booking</h3><p>RFQ or order, rates, quote, margin gate, acceptance, credit and terms.</p><div class="span">Ends: quote accepted and moved to Ops</div></div>
-        <div class="phase"><div class="n">3</div><h3>Execution</h3><p>Booking and the shipment itself: build, documents, customs, haulage, carriage.</p><div class="span">Ends: export sailed and final draft BL confirmed, or import delivered and offloaded</div></div>
+        <div class="phase"><div class="n">3</div><h3>Execution</h3><p>File activation and assignment, carrier booking and empty release, customs documents and clearance, duty and terminal payments, trucking, stuffing or delivery, and vessel loading.</p><div class="span">Ends: export sailed and final draft BL confirmed, or import delivered and offloaded</div></div>
         <div class="phase"><div class="n">4</div><h3>Post Shipment</h3><p>Carrier invoices, OBL, empty return, FECD, dispatch, final invoice, filing, closure and SLA review.</p><div class="span">Ends: file closed</div></div>
       </div>
     </div>
@@ -291,7 +291,7 @@ td.out{min-width:170px;font-size:12.5px}
         <div class="rule"><div class="n">2</div><div class="q">Is it moving by air?<small>Includes air exports out of Nigeria</small></div><span class="pill">VAAS</span></div>
         <div class="rule"><div class="n">3</div><div class="q">Is it an ocean export out of Nigeria?</div><span class="pill">OneExport</span></div>
         <div class="rule"><div class="n">4</div><div class="q">Is it ocean freight only, on any port pair?</div><span class="pill">FreightSaver</span></div>
-        <div class="rule"><div class="n">5</div><div class="q">Is it an import into Nigeria with haulage or customs work?<small>If we also carry the freight, the job is recorded twice: the freight under FreightSaver (or Auto Import for cars) and the landside work under OneImport</small></div><span class="pill">OneImport</span></div>
+        <div class="rule"><div class="n">5</div><div class="q">Is it an import into Nigeria with haulage or customs work?</div><span class="pill">OneImport</span></div>
         <div class="rule"><div class="n">6</div><div class="q">None of the above?<small>For example, cross-trade jobs with landside work</small></div><span class="pill alt">VAAS · Other</span></div>
       </div>
       <p class="flowcap">The system checks the rules from 1 to 6 and stops at the first one that fits. The services we provide on the job then pick the Tier 2 code inside that product.</p>
@@ -373,7 +373,7 @@ td.out{min-width:170px;font-size:12.5px}
   <section>
     <div class="sec-head"><h2>Team roster</h2><span class="tag" id="roster-tag"></span></div>
     <div class="roster" id="roster"></div>
-    <p class="muted" style="margin-top:10px;font-size:12.5px">Every role here exists today. Each count is the number of tasks the role owns on a single job. Roles that own no task act as support or escalation points.</p>
+    <p class="muted" style="margin-top:10px;font-size:12.5px">Every role here exists today. Each count is the number of tasks the role owns on a single job. Roles that own no task act as support or escalation points, which Phase 3 will set out.</p>
   </section>
 
   
@@ -404,7 +404,7 @@ const EXPL={
 "OE-FULL": "End-to-end export: freight, trucking and customs.",
 "OI-H": "We truck the container from port to the customer's warehouse and return the empty.",
 "OI-CBT": "We clear the cargo through Customs: assessment, duty, examination, release and TDO.",
-"OI-HCBT": "Clearing plus delivery to the warehouse. If we also carry the freight, it is recorded under FreightSaver or Auto Import.",
+"OI-HCBT": "Clearing plus delivery to the warehouse.",
 "VA-AF": "Air freight only, import or export.",
 "VA-H": "Trucking to or from the airport.",
 "VA-CBT": "Customs clearing and documents at the airport.",
@@ -413,8 +413,8 @@ const EXPL={
 "VA-HCBT": "Airport clearing plus delivery. The customer books the flight.",
 "VA-FULL": "End-to-end air: freight, customs and trucking.",
 "VA-OTHER": "Anything that fits no other product, including cross-trade jobs with landside work. Scoped job by job.",
-"FS-OF": "Ocean freight only, on any port pair except exports out of Nigeria. On imports with clearing or delivery, that landside work is recorded under OneImport.",
-"AI-OF-AUTO": "Ocean freight for cars, not exports out of Nigeria. If we also clear or deliver the car, that part is recorded under OneImport."
+"FS-OF": "Ocean freight only, on any port pair except exports out of Nigeria.",
+"AI-OF-AUTO": "Ocean freight for cars, freight only, not an export out of Nigeria."
 };
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -711,8 +711,7 @@ function classify(mode,route,cargo,svc){
   if(route==="export")return{code:combo("OE","OF"),rule:3,why:"An ocean job out of Nigeria."+(cargo==="car"?" Car exports go to OneExport.":"")};
   if(freightOnly)return{code:"FS-OF",rule:4,why:"Ocean freight only, and not an export out of Nigeria."};
   if(route==="import"){const land=H&&C?"OI-HCBT":H?"OI-H":"OI-CBT";
-    if(F)return{code:land,split:cargo==="car"?"AI-OF-AUTO":"FS-OF",rule:5,why:"An import into Nigeria where we carry the freight and do landside work: the freight is recorded under "+(cargo==="car"?"Auto Import":"FreightSaver")+" and the landside work under OneImport."};
-    return{code:land,rule:5,why:"An import into Nigeria with landside work only."};}
+    return{code:land,rule:5,auto:cargo==="car",why:"An import into Nigeria with haulage or customs work."};}
   return{code:"VA-OTHER",rule:6,why:"A cross-trade job with landside work fits no other product."};
 }
 let last=null;
@@ -723,7 +722,7 @@ function update(){
   const r=classify(mode,route,cargo,svc);last=r;
   const nm=c=>P[c.split("-")[0]]+" · "+NAME[c];
   document.getElementById("o-prod").textContent=r.split?P[r.split.split("-")[0]]+" + "+P[r.code.split("-")[0]]:P[r.code.split("-")[0]];
-  document.getElementById("o-svc").textContent=r.split?"Two records: "+nm(r.split)+" and "+nm(r.code):NAME[r.code];
+  document.getElementById("o-svc").textContent=NAME[r.code]+(r.auto?" · Tier 3: Automobiles":"");
   document.getElementById("o-why").textContent="Rule "+r.rule+": "+r.why;
   const parts=[...(r.split?[r.split]:[]),r.code].map(c=>tasksFor(c,r.dir||"import").tasks);
   const teams=new Set();parts.flat().forEach(t=>people(t).forEach(x=>teams.add(x)));
